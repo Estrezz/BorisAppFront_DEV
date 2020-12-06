@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <body>
+       <h2>Hola, {{ user.username }}!</h2>
+       <h3>Estos son tus últimos pedidos</h3>
+       {% for pedido in pedidos %}
+       <div>
+           <p> 
+               {{ pedido.sku}}  
+            <b>{{ pedido.descripcion }}</b >
+            <b>{{ pedido.color }}</b >
+            <b>{{ pedido.cantidad }}</b >
+            </p>
+        </div>
+       {% endfor %}
+{% endblock %}
