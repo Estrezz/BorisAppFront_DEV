@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect
 from app import app
 from app.forms import LoginForm
+from app.email import send_email
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/index')
 def index():
     return render_template('index.html', title='Home')    
@@ -36,4 +37,10 @@ def pedidos():
         }
     ]
     return render_template('pedidos.html', title='Pedidos', user=user, pedidos = pedidos)
+
+
+@app.route('/envio_mail')
+def envio_mail():
+    send_email('prueba', 'erezzonico@borisreturns.com', 'erezzoni@outlook.com', 'esta es una prueba', '<h1>html_body</h1>')
+    return render_template('envio.html', title='Envio de Mail')
 
