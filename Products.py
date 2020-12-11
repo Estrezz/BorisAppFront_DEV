@@ -1,5 +1,4 @@
 import requests
-import pandas as pd
 
 url = "https://api.tiendanube.com/v1/1447373/products"
 

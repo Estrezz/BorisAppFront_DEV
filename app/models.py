@@ -1,4 +1,3 @@
-import requests
 from datetime import datetime
 from app import db
 
@@ -46,12 +45,4 @@ class Orders(db.Model):
     def __repr__(self):
         return '<Order {}>'.format(self.number)
 
-    def buscar_orden_mail(email):
-        url = "https://api.tiendanube.com/v1/1447373/orders?q=<email>"
-        payload={}
-        headers = {
-            'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-            'Content-Type': 'application/json',
-            'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-        }
-        return requests.request("GET", url, headers=headers, data=payload).json()
+  
