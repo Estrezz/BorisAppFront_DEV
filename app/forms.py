@@ -5,4 +5,4 @@ from wtforms.validators import DataRequired
 class LoginForm(FlaskForm):
     ordernum = StringField('Orden', validators=[DataRequired()])
     ordermail = StringField('Email', validators=[DataRequired()])
-    submit = SubmitField('Sign In')
+    submit = SubmitField('Buscar')

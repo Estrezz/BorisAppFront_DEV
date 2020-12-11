@@ -1,33 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {% if title %}
-        <title>{{ title }} - Boris</title>
-        {% else %}
-        <title> Boris </title>
-        {% endif %}
-    </head>
-    <body>
-        <div> Boris: 
-            <a href="/index">Home</a>
-            <a href="/login">Login</a>
-            <a href="/pedidos">Pedidos</a>
-            <a href="/envio_mail">Mail</a>
+{% extends 'bootstrap/base.html' %}
+
+
+{% block title %}
+    {% if title %}{{ title }} - Boris {% else %}Boris{% endif %}
+{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index">Boris</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('buscar') }}">Busca Tu pedido</a></li>
+                    <li><a href="{{ url_for('pedidos') }}">Cambio/devolucion</a></li>
+                    <li><a href="{{ url_for('envio_mail') }}">Mail</a></li>
+                </ul>
+                
+            </div>
         </div>
-        
-        <hr>
+    </nav>
+{% endblock %}
+{% block content %}
+    <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul>
-            {%for message in messages%}
-            <li> {{ message }}</li>
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
             {% endfor %}
-        </ul>
         {% endif %}
         {% endwith %}
 
-
-        {% block content %}{% endblock %}
-    </body>
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
