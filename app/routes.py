@@ -3,6 +3,7 @@ from app import app
 from app.forms import LoginForm
 from app.email import send_email
 from app.models import Customer, Orders
+from app.interface import buscar_pedido
 import requests
 
 @app.route('/', methods=['GET', 'POST'])
@@ -10,23 +11,17 @@ import requests
 def buscar():
     form = LoginForm()
     if form.validate_on_submit():
+        pedido = buscar_pedido(1447373, form)
 
-        flash('Buscar pedido Nro {}'.format(form.ordernum.data))
-        
-        url = "https://api.tiendanube.com/v1/1447373/orders?q"+form.ordermail.data
-        payload={}
-        headers = {
-            'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-            'Content-Type': 'application/json',
-            'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-        }
-        order = requests.request("GET", url, headers=headers, data=payload).json()
-        flash('Mail {}'.format(form.ordermail))
-        flash('URL {}' .format(url))
-        flash('Order {}'.format(order))
-
-        ## commit orden / ordenes ##
-
+        if pedido == 'None':
+            flash('No se encontro un pedido para esa combinación Pedido-Email')
+            return render_template('buscar.html', title='Busca tu Pedido', form=form)
+        else:
+            flash('Order {}'.format(pedido))
+            flash('Tipo {}'.format(type(pedido)))
+            #flash('Order ID Tipo {}'.format(type(pedido['number'])))
+            #flash('Producto {}'.format(pedido['products']))
+                 
         return redirect(url_for('pedidos'))
 
     return render_template('buscar.html', title='Busca tu Pedido', form=form)
