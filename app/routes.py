@@ -71,7 +71,7 @@ def buscar():
     return render_template('buscar.html', title='Busca tu Pedido', form=form)
 
 
-@app.route('/pedidos')
+@app.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
     user = Customer.query.first()
     order = Order.query.first()
