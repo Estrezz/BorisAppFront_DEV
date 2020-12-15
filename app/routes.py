@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, url_for
-from app import app
+from app import app, db
 from app.forms import LoginForm
 from app.email import send_email
-from app.models import Customer, Orders
+from app.models import Customer, Order, Producto
 from app.interface import buscar_pedido
+from flask import request
 import requests
 
 @app.route('/', methods=['GET', 'POST'])
@@ -17,12 +18,51 @@ def buscar():
             flash('No se encontro un pedido para esa combinación Pedido-Email')
             return render_template('buscar.html', title='Busca tu Pedido', form=form)
         else:
-            flash('Order {}'.format(pedido))
-            flash('Tipo {}'.format(type(pedido)))
+            ## Borrar todos los datos de la base de datos ##
+            Customer.query.delete()
+            Order.query.delete()
+            Producto.query.delete()
+            db.session.commit()
+            #### fin borrado #################################
+
+
+            unCliente = Customer(
+                id = pedido['customer']['id'],
+                name =pedido['customer']['name'],
+                email = pedido['customer']['email']
+            )
+                        
+            unaOrden = Order(
+                id = pedido['id'],
+                Order_Number = pedido['number'],
+                Order_Original_Id = pedido['id'],
+                buyer = unCliente
+            )       
+
+            for x in range(len(pedido['products'])): 
+                unProducto = Producto(
+                    id = pedido['products'][x]['id'],
+                    name = pedido['products'][x]['name'],
+                    price = pedido['products'][x]['price'],
+                    quantity = pedido['products'][x]['quantity'],
+                    #variant = pedido['products'][x]['variant'],
+                    articulos = unaOrden
+                )
+                db.session.add(unProducto)
+                db.session.commit()
+            #for i =1 to  in pedido['products']
+            #   flash('ID {}'.format(i['id'])
+            #    flash('NAME {}'.format(producto['name'])
+            #flash('Order {}'.format(pedido))
+            #flash('Tipo {}'.format(type(pedido)))
             #flash('Order ID Tipo {}'.format(type(pedido['number'])))
-            #flash('Producto {}'.format(pedido['products']))
-                 
-        return redirect(url_for('pedidos'))
+            flash('Cliente {}'.format(pedido['customer']))
+            flash('Producto {}'.format(pedido['products']))
+            flash('Producto Cantidad {}'.format(len(pedido['products']))) 
+            #flash('Producto {}'.format(pedido['products'][0]))   
+            #flash('Producto {}'.format(pedido['products'][0]['id']))            
+            flash('Producto tipo {}'.format(type(pedido['products'])))
+            return redirect(url_for('pedidos'))
 
     return render_template('buscar.html', title='Busca tu Pedido', form=form)
 
@@ -30,21 +70,8 @@ def buscar():
 @app.route('/pedidos')
 def pedidos():
     user = {'username': 'Usuario Prueba'}
-    pedidos = [
-        {
-            'sku': 'A100B',
-            'descripcion': 'Zapato DOS',
-            'color': 'Azul',
-            'cantidad': '1'
-        },
-        {
-            'sku': 'A2009',
-            'descripcion': 'Zapato UNO',
-            'Color': 'Rojo',
-            'cantidad': '2'
-        }
-    ]
-    return render_template('pedidos.html', title='Pedidos', user=user, pedidos = pedidos)
+    
+    return render_template('pedido.html', title='Pedido', user=user)
 
 
 @app.route('/envio_mail')
