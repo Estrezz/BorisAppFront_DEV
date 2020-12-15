@@ -45,7 +45,7 @@ def buscar():
                     price = pedido['products'][x]['price'],
                     quantity = pedido['products'][x]['quantity'],
                     #variant = pedido['products'][x]['variant'],
-                    image = pedido['products'][0]['image']['src'],
+                    image = pedido['products'][x]['image']['src'],
                     accion = "Ninguna",
                     motivo =  "Ninguno",
                     articulos = unaOrden
@@ -60,8 +60,8 @@ def buscar():
             #flash('Tipo {}'.format(type(pedido)))
             #flash('Order ID Tipo {}'.format(type(pedido['number'])))
             #flash('Cliente {}'.format(pedido['customer']))
-            flash('Producto {}'.format(pedido['products']))
-            flash('Producto {}'.format(pedido['products'][0]['image']['src']))
+            #flash('Producto {}'.format(pedido['products']))
+            #flash('Producto {}'.format(pedido['products'][0]['image']['src']))
             #flash('Producto Cantidad {}'.format(len(pedido['products']))) 
             #flash('Producto {}'.format(pedido['products'][0]))   
             #flash('Producto {}'.format(pedido['products'][0]['id']))            

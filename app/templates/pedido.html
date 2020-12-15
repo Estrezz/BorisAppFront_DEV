@@ -4,18 +4,21 @@
     <body>
        <h2>Hola, {{ user.name }}!</h2>
        <h3>Este es tu pedido {{ order.order_number}}</h3>
-
-       {% for producto in productos %}
-       <div>
-           <p> 
-               {{ producto['id']}}  
-               {{ producto['name']}}
-               {{ producto['quantity']}}
-               {{ producto['price']}}  
-               {{ producto['image']}} 
-               {{ producto['accion']}}   
-               {{ producto['motivo']}}   
-            </p>
-        </div>
-       {% endfor %}
+       <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Articulo</th>
+                    <th>Cantidad</th>
+                    <th>Precio Uni.</th>
+                    <th>Acción</th>
+                    <th>Motivo</th>
+                <tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                    {% include '_producto.html' %}
+                {% endfor %}
+            </tbody> 
+        </table>
 {% endblock %}
