@@ -13,14 +13,14 @@ class Customer(db.Model):
 
 class Order(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
-    Order_Number = db.Column(db.Integer)
-    Order_Original_Id = db.Column(db.Integer)
+    order_number = db.Column(db.Integer)
+    order_original_id = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     products = db.relationship('Producto', backref='articulos', lazy='dynamic')
 
     def __repr__(self):
-        return '<Order {}>'.format(self.Order_Number)
+        return '<Order {}>'.format(self.order_number)
 
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,6 +28,9 @@ class Producto(db.Model):
     price = db.Column(db.Integer)
     quantity = db.Column(db.Integer)
     variant = db.Column(db.Integer)
+    accion = db.Column(db.String(10))
+    motivo = db.Column(db.String(50))
+    image = db.Column(db.String(100))
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
 
     def __repr__(self):

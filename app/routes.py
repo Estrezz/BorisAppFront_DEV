@@ -25,7 +25,6 @@ def buscar():
             db.session.commit()
             #### fin borrado #################################
 
-
             unCliente = Customer(
                 id = pedido['customer']['id'],
                 name =pedido['customer']['name'],
@@ -34,8 +33,8 @@ def buscar():
                         
             unaOrden = Order(
                 id = pedido['id'],
-                Order_Number = pedido['number'],
-                Order_Original_Id = pedido['id'],
+                order_number = pedido['number'],
+                order_original_id = pedido['id'],
                 buyer = unCliente
             )       
 
@@ -46,22 +45,27 @@ def buscar():
                     price = pedido['products'][x]['price'],
                     quantity = pedido['products'][x]['quantity'],
                     #variant = pedido['products'][x]['variant'],
+                    image = pedido['products'][0]['image']['src'],
+                    accion = "Ninguna",
+                    motivo =  "Ninguno",
                     articulos = unaOrden
                 )
                 db.session.add(unProducto)
                 db.session.commit()
+
             #for i =1 to  in pedido['products']
             #   flash('ID {}'.format(i['id'])
             #    flash('NAME {}'.format(producto['name'])
             #flash('Order {}'.format(pedido))
             #flash('Tipo {}'.format(type(pedido)))
             #flash('Order ID Tipo {}'.format(type(pedido['number'])))
-            flash('Cliente {}'.format(pedido['customer']))
+            #flash('Cliente {}'.format(pedido['customer']))
             flash('Producto {}'.format(pedido['products']))
-            flash('Producto Cantidad {}'.format(len(pedido['products']))) 
+            flash('Producto {}'.format(pedido['products'][0]['image']['src']))
+            #flash('Producto Cantidad {}'.format(len(pedido['products']))) 
             #flash('Producto {}'.format(pedido['products'][0]))   
             #flash('Producto {}'.format(pedido['products'][0]['id']))            
-            flash('Producto tipo {}'.format(type(pedido['products'])))
+            #flash('Producto tipo {}'.format(type(pedido['products'])))
             return redirect(url_for('pedidos'))
 
     return render_template('buscar.html', title='Busca tu Pedido', form=form)
@@ -69,9 +73,11 @@ def buscar():
 
 @app.route('/pedidos')
 def pedidos():
-    user = {'username': 'Usuario Prueba'}
+    user = Customer.query.first()
+    order = Order.query.first()
+    productos = Producto.query.all()
     
-    return render_template('pedido.html', title='Pedido', user=user)
+    return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
 
 @app.route('/envio_mail')
