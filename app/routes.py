@@ -46,8 +46,8 @@ def buscar():
                     quantity = pedido['products'][x]['quantity'],
                     #variant = pedido['products'][x]['variant'],
                     image = pedido['products'][x]['image']['src'],
-                    accion = "Ninguna",
-                    motivo =  "Ninguno",
+                    accion = "ninguna",
+                    motivo =  "",
                     articulos = unaOrden
                 )
                 db.session.add(unProducto)
@@ -76,6 +76,15 @@ def pedidos():
     user = Customer.query.first()
     order = Order.query.first()
     productos = Producto.query.all()
+
+    if request.method == "POST": 
+        prod_id = request.form.get("Prod_Id")
+        accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
+        motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
+        item = Producto.query.get(prod_id)
+        item.accion = accion
+        item.motivo = motivo
+        db.session.commit()
     
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
