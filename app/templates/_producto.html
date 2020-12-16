@@ -58,5 +58,13 @@
                 </div>
             </td>
         </form> 
-            
+        
+        <form id="producto{{ producto['id'] }}" 
+        action="{{ url_for('pedidos') }}" method="POST"> 
+        <p align="center">
+            <a href=vmd_timestamp >
+            <button class=grey style="height:75px;width:150px">Confirmar</button>
+        </a>
+        </p>
+        </form>
 </tr>

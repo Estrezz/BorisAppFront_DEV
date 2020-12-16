@@ -42,20 +42,3 @@
         {% block app_content %}{% endblock %}
     </div>
 {% endblock %}
-
-{% block scripts %}
-    <script>
-        function Actualiza_articulo(prod_id, accion, motivo) {
-            $(prod_id).html('<img src="./static/loading.gif>');
-            $.post('/pedidos_actualiza', {
-                Producto: $(prod_id).text(),
-                accion: sourceLang,
-                motivo: destLang
-            }).done(function(response) {
-                $(prod_id).text(response['text'])
-            }).fail(function() {
-                $(prod_id).text("Error");
-            });
-        }
-    </script>
-{% endblock %}
