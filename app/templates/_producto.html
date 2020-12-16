@@ -9,6 +9,8 @@
             <input type="hidden" id="{{ producto['id'] }}" name="Prod_Id" value="{{ producto['id'] }}">
             <td> {{ producto['name'] }} </td>
             <td> {{ producto['quantity']}} </td>
+            <td> <input type="number" id="accion_cantidad" name="accion_cantidad{{ producto['id'] }}" 
+                min="1" max="{{ producto['quantity'] }}" value="{{ producto['accion_cantidad'] }}" > </td>
             <td> {{ producto['price']}} </td> 
             <td>     
                 <div>
@@ -58,13 +60,4 @@
                 </div>
             </td>
         </form> 
-        
-        <form id="producto{{ producto['id'] }}" 
-        action="{{ url_for('pedidos') }}" method="POST"> 
-        <p align="center">
-            <a href=vmd_timestamp >
-            <button class=grey style="height:75px;width:150px">Confirmar</button>
-        </a>
-        </p>
-        </form>
 </tr>

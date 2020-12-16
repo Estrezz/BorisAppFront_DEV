@@ -29,6 +29,7 @@ class Producto(db.Model):
     quantity = db.Column(db.Integer)
     variant = db.Column(db.Integer)
     accion = db.Column(db.String(10))
+    accion_cantidad = db.Column(db.Integer)
     motivo = db.Column(db.String(50))
     image = db.Column(db.String(100))
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))

@@ -48,6 +48,7 @@ def buscar():
                     image = pedido['products'][x]['image']['src'],
                     accion = "ninguna",
                     motivo =  "",
+                    accion_cantidad = pedido['products'][x]['quantity'],
                     articulos = unaOrden
                 )
                 db.session.add(unProducto)
@@ -80,9 +81,11 @@ def pedidos():
     if request.method == "POST": 
         prod_id = request.form.get("Prod_Id")
         accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
+        accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
         motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
         item = Producto.query.get(prod_id)
         item.accion = accion
+        item.accion_cantidad = accion_cantidad
         item.motivo = motivo
         db.session.commit()
     
@@ -93,4 +96,14 @@ def pedidos():
 def envio_mail():
     send_email('prueba', 'erezzonico@borisreturns.com', 'erezzoni@outlook.com', 'esta es una prueba', '<h1>html_body</h1>')
     return render_template('envio.html', title='Envio de Mail')
+
+
+@app.route('/Confirmar',methods=['GET', 'POST'])
+def confirma_cambios():
+    user = Customer.query.first()
+    order = Order.query.first()
+    # productos = Producto.query.all()
+    productos = Producto.query.filter((Producto.accion != 'ninguna'))
+
+    return render_template('new_pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
 
