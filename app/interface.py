@@ -28,4 +28,16 @@ def buscar_pedido(storeid, form):
   else:
     order = buscar_nro_pedido(order_tmp, form.ordernum.data)
     return order
+
+
+#############################################################################
+# Busca promo para un articulo -- devuelve [nombre promo. precio promocional]
+#############################################################################
+def buscar_promo(promociones, Id_Producto ):
+  promo = ("",0)
+  for x in promociones: 
+    if x['id'] == Id_Producto:
+      promo = (x['discount_script_type'], x['discount_amount'])
+      return promo
+  return promo
   

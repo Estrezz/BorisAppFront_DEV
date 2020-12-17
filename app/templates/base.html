@@ -15,19 +15,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/index">Boris</a>
+                <a class="navbar-brand" href="{{ url_for('buscar') }}">Boris</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('buscar') }}">Busca Tu pedido</a></li>
-                    <li><a href="{{ url_for('pedidos') }}">Cambio/devolucion</a></li>
-                    <li><a href="{{ url_for('envio_mail') }}">Mail</a></li>
+                    <li><a href="{{ url_for('buscar') }}">Buscar pedido</a></li>
                 </ul>
                 
             </div>
         </div>
     </nav>
+    <div>
+    <div class="container">
+        {%- for breadcrumb in breadcrumbs -%}
+            <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+            {{ '/' if not loop.last }}
+        {%- endfor -%}
+    </div>
+        </div>
 {% endblock %}
+
 {% block content %}
     <div class="container">
         {% with messages = get_flashed_messages() %}

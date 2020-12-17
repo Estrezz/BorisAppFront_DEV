@@ -3,11 +3,13 @@ from app import app, db
 from app.forms import LoginForm
 from app.email import send_email
 from app.models import Customer, Order, Producto
-from app.interface import buscar_pedido
+from app.interface import buscar_pedido, buscar_promo
 from flask import request
 import requests
 
+
 @app.route('/', methods=['GET', 'POST'])
+
 @app.route('/buscar', methods=['GET', 'POST'])
 def buscar():
     form = LoginForm()
@@ -39,6 +41,8 @@ def buscar():
             )       
 
             for x in range(len(pedido['products'])): 
+                promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
+ 
                 unProducto = Producto(
                     id = pedido['products'][x]['id'],
                     name = pedido['products'][x]['name'],
@@ -49,7 +53,10 @@ def buscar():
                     accion = "ninguna",
                     motivo =  "",
                     accion_cantidad = pedido['products'][x]['quantity'],
+                    promo_descuento = promo_tmp[1],
+                    promo_nombre = promo_tmp[0],
                     articulos = unaOrden
+                    
                 )
                 db.session.add(unProducto)
                 db.session.commit()
@@ -105,5 +112,5 @@ def confirma_cambios():
     # productos = Producto.query.all()
     productos = Producto.query.filter((Producto.accion != 'ninguna'))
 
-    return render_template('new_pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
+    return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
 

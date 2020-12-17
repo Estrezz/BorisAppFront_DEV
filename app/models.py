@@ -32,6 +32,8 @@ class Producto(db.Model):
     accion_cantidad = db.Column(db.Integer)
     motivo = db.Column(db.String(50))
     image = db.Column(db.String(100))
+    promo_descuento = db.Column(db.Float)
+    promo_nombre = db.Column(db.String(10))
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
 
     def __repr__(self):
