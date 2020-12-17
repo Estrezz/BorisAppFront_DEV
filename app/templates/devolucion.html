@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class='container'>
+    <div class='order-info-content'>
+
+        <form id="item{{ item['id'] }}" action="{{ url_for('pedidos') }}" method="POST"> 
+            <table class='order-table'>
+            <tbody>
+                <tr>
+                    <td><img src="{{ item['image'] }}" style="height:150px; text-align:center; vertical-align:middle"> </img> <td>
+                    <td>  
+                    <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
+                    <td> 
+                        {{ item['name'] }} 
+                    <br> Cantidad:  {{ item['quantity']}} 
+                    <br> Precio: {{ item['price']}} 
+                    <td>     
+                        <div>
+                            {% if  item['accion'] == 'cambiar' %}
+                            <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar" checked=true>  
+                            <label for="cambiar">Cambiar</label>
+                            {% else %}
+                            <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar">  
+                            <label for="cambiar">Cambiar</label>
+                            {% endif %}
+                            {% if  item['accion'] == 'devolver' %}
+                            <input type="radio" id="devolver"
+                            name="accion{{ item['id'] }}" value="devolver" checked=true>
+                            <label for="devolver">Devolver</label>
+                            {% else %}
+                            <input type="radio" id="devolver"
+                            name="accion{{ item['id'] }}" value="devolver">
+                            <label for="devolver">Devolver</label>
+                            {% endif %}
+                            {% if  item['accion'] == 'ninguna' %}
+                            <input type="radio" id="ninguna"
+                            name="accion{{ item['id'] }}" value="ninguna" checked=true>
+                            <label for="ninguna">Ninguna</label>
+                            {% else %}
+                            <input type="radio" id="ninguna"
+                            name="accion{{ item['id'] }}" value="ninguna">
+                            <label for="ninguna">Ninguna</label>
+                            {% endif %}
+                        </div>
+                        <div>
+                            Que cantidad ? 
+                            <input type="number" id="accion_cantidad" name="accion_cantidad{{ item['id'] }}" 
+                                min="1" max="{{ item['quantity'] }}" value="{{ item['accion_cantidad'] }}" > 
+                            <br>
+                            Motivo : 
+                            <input name="motivo{{ item['id'] }}" id=motivo 
+                            value = "{{ item['motivo']}}" list="motivos">
+                            <datalist id="motivos">
+                                <option value="Es grande">
+                                <option value="Es chico">
+                                <option value="Mala calidad">
+                                <option value="Tiene fallas">    
+                            </datalist>
+                        </div>
+                    </td>
+                </div>
+                    
+                    <td> <input type="submit"> </td>
+                </tr> 
+            </tbody>
+            </table>
+        <br>
+        </form>
+    </div>
+</div>
+  {% endblock %}

@@ -31,13 +31,8 @@
 
       <div class='total'>
             <span>
-              <div> Descuentos </div>
-              <div> Costo Envío </div>
+              <div> Total Descuentos {{ productos | sum(attribute='promo_descuento') }} </div>
               TOTAL
-            </span>
-            <span>
-              <div> $ 1.000 </div>
-              $ 1.150
             </span>
       </div>
   </div>

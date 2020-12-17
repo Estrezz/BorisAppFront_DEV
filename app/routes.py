@@ -99,11 +99,17 @@ def pedidos():
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
 
-@app.route('/envio_mail')
-def envio_mail():
-    send_email('prueba', 'erezzonico@borisreturns.com', 'erezzoni@outlook.com', 'esta es una prueba', '<h1>html_body</h1>')
-    return render_template('envio.html', title='Envio de Mail')
+@app.route('/pedidos_unitarios', methods=['GET', 'POST'])
+def pedidos_unitarios():
+    
 
+    if request.method == "POST": 
+        prod_id = request.form.get("Prod_Id")
+        user = Customer.query.first()
+        order = Order.query.first()
+        item = Producto.query.get(prod_id)
+    
+    return render_template('devolucion.html', title='Accion', user=user, order = order, item = item)
 
 @app.route('/Confirmar',methods=['GET', 'POST'])
 def confirma_cambios():
@@ -113,4 +119,10 @@ def confirma_cambios():
     productos = Producto.query.filter((Producto.accion != 'ninguna'))
 
     return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
+
+@app.route('/envio_mail')
+def envio_mail():
+    send_email('prueba', 'erezzonico@borisreturns.com', 'erezzoni@outlook.com', 'esta es una prueba', '<h1>html_body</h1>')
+    return render_template('envio.html', title='Envio de Mail')
+
 
