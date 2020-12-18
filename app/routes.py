@@ -83,7 +83,7 @@ def pedidos():
     order = Order.query.first()
     productos = Producto.query.all()
 
-    if request.method == "POST" : 
+    if request.method == "POST" and request.form.get("form_item") == "elegir_item" : 
         prod_id = request.form.get("Prod_Id")
         accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
         accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
@@ -97,13 +97,14 @@ def pedidos():
 
         if accion == 'cambiar' and item.accion_reaccion == False:
             alternativas = buscar_alternativas(1447373, item.prod_id, motivo)
-            flash('Alternativas {}'.format(alternativas))
             user = Customer.query.first()
             order = Order.query.first()
             item = Producto.query.get(prod_id)
             return render_template('devolucion.html', title='Cambio', user=user, order = order, item = item, alternativas = alternativas)
            # return render_template('cambios.html', title='Cambios', alternativas = alternativas)
-           
+
+    if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
+        flash('cambiar Item x {}'.format(request.form))
     
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
