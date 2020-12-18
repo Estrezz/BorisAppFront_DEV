@@ -3,7 +3,7 @@ from app import app, db
 from app.forms import LoginForm
 from app.email import send_email
 from app.models import Customer, Order, Producto
-from app.interface import buscar_pedido, buscar_promo
+from app.interface import buscar_pedido, buscar_promo, buscar_alternativas
 from flask import request
 import requests
 
@@ -44,7 +44,8 @@ def buscar():
                 promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
  
                 unProducto = Producto(
-                    id = pedido['products'][x]['id'],
+                    id =  pedido['products'][x]['id'],
+                    prod_id = pedido['products'][x]['product_id'],
                     name = pedido['products'][x]['name'],
                     price = pedido['products'][x]['price'],
                     quantity = pedido['products'][x]['quantity'],
@@ -60,10 +61,7 @@ def buscar():
                 )
                 db.session.add(unProducto)
                 db.session.commit()
-
-            #for i =1 to  in pedido['products']
-            #   flash('ID {}'.format(i['id'])
-            #    flash('NAME {}'.format(producto['name'])
+            
             #flash('Order {}'.format(pedido))
             #flash('Tipo {}'.format(type(pedido)))
             #flash('Order ID Tipo {}'.format(type(pedido['number'])))
@@ -85,23 +83,33 @@ def pedidos():
     order = Order.query.first()
     productos = Producto.query.all()
 
-    if request.method == "POST": 
+    if request.method == "POST" : 
         prod_id = request.form.get("Prod_Id")
         accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
         accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
         motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
         item = Producto.query.get(prod_id)
         item.accion = accion
+        item.accion_reaccion = False 
         item.accion_cantidad = accion_cantidad
         item.motivo = motivo
         db.session.commit()
+
+        if accion == 'cambiar' and item.accion_reaccion == False:
+            alternativas = buscar_alternativas(1447373, item.prod_id, motivo)
+            flash('Alternativas {}'.format(alternativas))
+            user = Customer.query.first()
+            order = Order.query.first()
+            item = Producto.query.get(prod_id)
+            return render_template('devolucion.html', title='Cambio', user=user, order = order, item = item, alternativas = alternativas)
+           # return render_template('cambios.html', title='Cambios', alternativas = alternativas)
+           
     
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
 
 @app.route('/pedidos_unitarios', methods=['GET', 'POST'])
-def pedidos_unitarios():
-    
+def pedidos_unitarios():   
 
     if request.method == "POST": 
         prod_id = request.form.get("Prod_Id")

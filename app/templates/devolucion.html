@@ -2,10 +2,9 @@
 
 {% block app_content %}
 <div class='container'>
-    <div class='order-info-content'>
-
+    <div>
         <form id="item{{ item['id'] }}" action="{{ url_for('pedidos') }}" method="POST"> 
-            <table class='order-table'>
+            <table>
             <tbody>
                 <tr>
                     <td><img src="{{ item['image'] }}" style="height:150px; text-align:center; vertical-align:middle"> </img> <td>
@@ -55,7 +54,8 @@
                                 <option value="Es grande">
                                 <option value="Es chico">
                                 <option value="Mala calidad">
-                                <option value="Tiene fallas">    
+                                <option value="Tiene fallas">
+                                <option value="No gusta color">
                             </datalist>
                         </div>
                     </td>
@@ -68,5 +68,39 @@
         <br>
         </form>
     </div>
+
+    {% if title == 'Cambio' %}
+    <form id="realizaCambio" action="{{ url_for('pedidos') }}" method="POST"> 
+     <table>
+    <!-- 
+        {% for key, value in alternativas.items() %}
+            <tr>
+                <th>{{ key }} </th>
+                {% for item in value %}
+                        <td> 
+                            {{ item }} 
+                        </td>
+               {% endfor %}
+            </tr>
+    {% endfor %}
+    -->
+     {% for key, value in alternativas.items() %}
+            <tr>
+                <th>{{ key }} </th>
+                {% for item in value %}
+                        <td> 
+                            <input type="radio" id="{{key}}" name="{{ key }}" value="cambiar" checked=true>  
+                            <label for="{{key}}">{{item}}</label>
+                        </td>
+               {% endfor %}
+            </tr>
+    {% endfor %}
+    </table> 
+    <br> <input type="submit"> 
+    </form>
+
+    
+
+    {% endif %}
 </div>
   {% endblock %}

@@ -24,11 +24,13 @@ class Order(db.Model):
 
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    prod_id = db.Column(db.Integer, index=True)
     name = db.Column(db.String(120))
     price = db.Column(db.Integer)
     quantity = db.Column(db.Integer)
     variant = db.Column(db.Integer)
     accion = db.Column(db.String(10))
+    accion_reaccion = db.Column(db.Boolean)
     accion_cantidad = db.Column(db.Integer)
     motivo = db.Column(db.String(50))
     image = db.Column(db.String(100))
@@ -39,4 +41,10 @@ class Producto(db.Model):
     def __repr__(self):
         return '<Product {}>'.format(self.name)
 
-  
+class Atributo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    orden = db.Column(db.Integer) 
+    descripcion = db.Column(db.String(20), index=True)
+
+    def __repr__(self):
+        return '<Atributo {}>'.format(self.descripcion)
