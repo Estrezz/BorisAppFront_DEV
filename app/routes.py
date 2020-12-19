@@ -101,10 +101,12 @@ def pedidos():
             order = Order.query.first()
             item = Producto.query.get(prod_id)
             return render_template('devolucion.html', title='Cambio', user=user, order = order, item = item, alternativas = alternativas)
-           # return render_template('cambios.html', title='Cambios', alternativas = alternativas)
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
-        flash('cambiar Item x {}'.format(request.form))
+        opciones = request.form.to_dict(flat=True)
+        for i in request.form :
+            flash('Item i {}'.format(type(i)))
+            flash('Item i {}'.format(request.form.get(i)))
     
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
@@ -133,5 +135,25 @@ def confirma_cambios():
 def envio_mail():
     send_email('prueba', 'erezzonico@borisreturns.com', 'erezzoni@outlook.com', 'esta es una prueba', '<h1>html_body</h1>')
     return render_template('envio.html', title='Envio de Mail')
+
+
+@app.route('/buscar_aletrnativa2',methods=['GET', 'POST'])
+#############################################################################
+# Busca alternativas para cambiar un articulo según el motivo de cambio
+# devuelve lista con productos alternativos
+#############################################################################
+def buscar_aletrnativa2(storeid, prod_id, motivo):
+  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)+"/variants"
+    
+  payload={}
+  headers = {
+    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
+    'Content-Type': 'application/json',
+    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
+   }
+  variantes = requests.request("GET", url, headers=headers, data=payload).json()
+  
+  return variantes
+
 
 

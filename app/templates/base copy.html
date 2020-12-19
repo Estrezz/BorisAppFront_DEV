@@ -49,25 +49,3 @@
         {% block app_content %}{% endblock %}
     </div>
 {% endblock %}
-
-
-
-
-{% block scripts %}
- {{ super() }}
-
-
- <script>
-        function busca_alternativa(destElem, prod_id, motivo) {
-            $.post('/buscar_aletrnativa2', {
-                storeid : 1447373,
-                prod_id_cambio: prod_id,
-                motivo_cambio: motivo
-            }).done(function(response) {
-                $(destElem).text(response['text'])
-            }).fail(function() {
-                $(destElem).text("No hay alternativas para este producto");
-            });
-        }
-    </script>
-{% endblock %}

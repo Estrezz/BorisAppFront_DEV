@@ -70,17 +70,6 @@
         </form>
     </div>
 
-    <span id="alternativas{{ item['id'] }}"> </span>
-
-    <span id="Busca_alternativa{{ item['id'] }}">
-        <a href="javascript:buscar_Alternativa2(
-                    '#alternativas{{ item['id'] }}',
-                    '{{ item.id }}',
-                    'motivo{{ item['id'] }}'
-                    );">buscar</a>
-                        
-    </span>
-
     {% if title == 'Cambio' %}
     <form id="realizaCambio" action="{{ url_for('pedidos') }}" method="POST"> 
         <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
