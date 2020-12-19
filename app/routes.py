@@ -85,9 +85,9 @@ def pedidos():
 
     if request.method == "POST" and request.form.get("form_item") == "elegir_item" : 
         prod_id = request.form.get("Prod_Id")
-        accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
-        accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
-        motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
+        accion = request.form.get("accion")
+        accion_cantidad = request.form.get("accion_cantidad")
+        motivo = request.form.get("motivo")
         item = Producto.query.get(prod_id)
         item.accion = accion
         item.accion_reaccion = False 
@@ -137,23 +137,30 @@ def envio_mail():
     return render_template('envio.html', title='Envio de Mail')
 
 
-@app.route('/buscar_aletrnativa2',methods=['GET', 'POST'])
+@app.route('/buscar_alternativa2',methods=['GET', 'POST'])
 #############################################################################
 # Busca alternativas para cambiar un articulo según el motivo de cambio
 # devuelve lista con productos alternativos
 #############################################################################
-def buscar_aletrnativa2(storeid, prod_id, motivo):
-  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)+"/variants"
-    
-  payload={}
-  headers = {
-    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-    'Content-Type': 'application/json',
-    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-   }
-  variantes = requests.request("GET", url, headers=headers, data=payload).json()
+#def buscar_aletrnativa2(storeid, prod_id, motivo):
+def buscar_alternativa2():
+  var_a = 123
+  flash ('var {}'.format(var_a))
+  flash ('Prod {}'.format(request.form['prod_id']))
+  flash ('var {}'.format(request.form['accion']))
+  flash ('var {}'.format(request.form['accion2']))
+  #url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)+"/variants"
+  #  
+  #payload={}
+  #headers = {
+  #  'User-Agent': 'Boris (erezzonico@borisreturns.com)',
+  #  'Content-Type': 'application/json',
+  #  'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
+  # }
+  #variantes = requests.request("GET", url, headers=headers, data=payload).json()
   
-  return variantes
+  return ('success')
+  
 
 
 

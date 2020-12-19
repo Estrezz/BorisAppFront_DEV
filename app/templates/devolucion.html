@@ -3,7 +3,9 @@
 {% block app_content %}
 <div class='container'>
     <div>
-        <form id="item" action="{{ url_for('pedidos') }}" method="POST"> 
+        <form id="item" action="javascript:busca_alternativa2(
+            '{{item['id']}}',
+             '#accion.val()' );" method="POST"> 
             <table>
             <tbody>
                 <tr>
@@ -18,38 +20,34 @@
                     <td>     
                         <div>
                             {% if  item['accion'] == 'cambiar' %}
-                            <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar" checked=true>  
+                            <input type="radio" id="cambiar" name="accion" value="cambiar" checked=true>  
                             <label for="cambiar">Cambiar</label>
                             {% else %}
-                            <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar">  
+                            <input type="radio" id="cambiar" name="accion" value="cambiar">  
                             <label for="cambiar">Cambiar</label>
                             {% endif %}
                             {% if  item['accion'] == 'devolver' %}
-                            <input type="radio" id="devolver"
-                            name="accion{{ item['id'] }}" value="devolver" checked=true>
+                            <input type="radio" id="devolver" name="accion" value="devolver" checked=true>
                             <label for="devolver">Devolver</label>
                             {% else %}
-                            <input type="radio" id="devolver"
-                            name="accion{{ item['id'] }}" value="devolver">
+                            <input type="radio" id="devolver" name="accion" value="devolver">
                             <label for="devolver">Devolver</label>
                             {% endif %}
                             {% if  item['accion'] == 'ninguna' %}
-                            <input type="radio" id="ninguna"
-                            name="accion{{ item['id'] }}" value="ninguna" checked=true>
-                            <label for="ninguna">Ninguna</label>
+                            <input type="radio" id="ninguna" name="accion" value="ninguna" checked=true>
+                            <label for="ninguna">Me lo quedo</label>
                             {% else %}
-                            <input type="radio" id="ninguna"
-                            name="accion{{ item['id'] }}" value="ninguna">
-                            <label for="ninguna">Ninguna</label>
+                            <input type="radio" id="ninguna" name="accion" value="ninguna">
+                            <label for="ninguna">Me lo quedo</label>
                             {% endif %}
                         </div>
                         <div>
                             Que cantidad ? 
-                            <input type="number" id="accion_cantidad" name="accion_cantidad{{ item['id'] }}" 
+                            <input type="number" id="accion_cantidad" name="accion_cantidad}" 
                                 min="1" max="{{ item['quantity'] }}" value="{{ item['accion_cantidad'] }}" > 
                             <br>
                             Motivo : 
-                            <input name="motivo{{ item['id'] }}" id=motivo 
+                            <input name="motivo" id= motivo 
                             value = "{{ item['motivo']}}" list="motivos">
                             <datalist id="motivos">
                                 <option value="Es grande">
@@ -70,15 +68,11 @@
         </form>
     </div>
 
-    <span id="alternativas{{ item['id'] }}"> </span>
-
-    <span id="Busca_alternativa{{ item['id'] }}">
-        <a href="javascript:buscar_Alternativa2(
-                    '#alternativas{{ item['id'] }}',
-                    '{{ item.id }}',
-                    'motivo{{ item['id'] }}'
-                    );">buscar</a>
-                        
+    <span id="Busca_alternativa">
+        <a href="javascript:busca_alternativa2(
+            '{{item['id']}}',
+            $('#accion').val() );">buscar</a>
+                                    
     </span>
 
     {% if title == 'Cambio' %}
@@ -105,3 +99,5 @@
     {% endif %}
 </div>
   {% endblock %}
+
+  
