@@ -49,23 +49,3 @@
         {% block app_content %}{% endblock %}
     </div>
 {% endblock %}
-
-
-
-
-{% block scripts %}
-
-{{ super() }}
-
- <script type="text/javascript">
-    function busca_alternativa2(prod_id, accion) {
-        accion2 = $('accion').val()
-        $.post('/buscar_alternativa2', {
-            prod_id, accion, accion2 })        
-    };       
-
-
-        
-
-</script>
-{% endblock %}
