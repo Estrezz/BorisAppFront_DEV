@@ -100,17 +100,20 @@ def pedidos():
             item = Producto.query.get(prod_id)
             flash('item: {}'.format(item.variant))
             alternativas = buscar_alternativas2(1447373, item.prod_id, motivo, item.variant)
-            flash('Tipo alternativas {}'.format(type(alternativas)))
             user = Customer.query.first()
             order = Order.query.first()
             item = Producto.query.get(prod_id)
-            return render_template('devolucion.html', title='Cambio', user=user, order = order, item = item, alternativas=alternativas)
+            return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas)
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
-        opciones = request.form.to_dict(flat=True)
-        for i in request.form :
-            flash('Item i {}'.format(type(i)))
-            flash('Item i {}'.format(request.form.get(i)))
+        prod_id = request.form.get("Prod_Id")
+        item = Producto.query.get(prod_id)
+        item.accion_reaccion = True
+        item.accion_cambiar_por = request.form.get("variante")
+        db.session.commit()
+        
+        
+        
     
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 

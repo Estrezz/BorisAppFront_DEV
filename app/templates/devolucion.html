@@ -71,11 +71,16 @@
 
     
         {% if title == 'Cambio' %}
-        <table>     
+        <form id="Alternativas" action="{{ url_for('pedidos') }}" method="POST"> 
+        <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
+        <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
+        <table> 
+        <tr> 
+            <td>
             {% for x in alternativas %}
                 <tr>
                 <td>
-                    <input type="radio" id="variante" name="variante" value="{{ alternativas['id'] }}" > 
+                    <input type="radio" id="variante" name="variante" value="{{ x['id'] }}" > 
                 </td>
                 {% for i in x['values'] %}
                     <td>
@@ -85,8 +90,14 @@
                 </tr>
                 <br>
             {% endfor %}
+            </td>
+
+            <td>
+                <input type="submit" value="seleccionar"> 
+            </td>
+        </tr>
         </table>
-    
+    </form>
 
     {% endif %}
 </div>
