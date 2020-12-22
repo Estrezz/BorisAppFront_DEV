@@ -110,11 +110,8 @@ def pedidos():
         item = Producto.query.get(prod_id)
         item.accion_reaccion = True
         item.accion_cambiar_por = request.form.get("variante")
-        db.session.commit()
+        db.session.commit() 
         
-        
-        
-    
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
 

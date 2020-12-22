@@ -137,30 +137,3 @@ def envio_mail():
     return render_template('envio.html', title='Envio de Mail')
 
 
-@app.route('/buscar_alternativa2',methods=['GET', 'POST'])
-#############################################################################
-# Busca alternativas para cambiar un articulo según el motivo de cambio
-# devuelve lista con productos alternativos
-#############################################################################
-#def buscar_aletrnativa2(storeid, prod_id, motivo):
-def buscar_alternativa2():
-  var_a = 123
-  flash ('var {}'.format(var_a))
-  flash ('Prod {}'.format(request.form['prod_id']))
-  flash ('var {}'.format(request.form['accion']))
-  flash ('var {}'.format(request.form['accion2']))
-  #url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)+"/variants"
-  #  
-  #payload={}
-  #headers = {
-  #  'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-  #  'Content-Type': 'application/json',
-  #  'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-  # }
-  #variantes = requests.request("GET", url, headers=headers, data=payload).json()
-  
-  return ('success')
-  
-
-
-
