@@ -85,3 +85,28 @@ def buscar_alternativas(storeid, prod_id, motivo):
     opciones[k] = list(opciones_set)
 
   return opciones
+
+
+
+#############################################################################
+# Busca alternativas para cambiar un articulo según el motivo de cambio
+# devuelve lista con productos alternativos
+#############################################################################
+def buscar_alternativas2(storeid, prod_id, motivo, item_variant):
+  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)+"/variants"
+  
+  payload={}
+  headers = {
+    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
+    'Content-Type': 'application/json',
+    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
+   }
+  variantes_tmp = requests.request("GET", url, headers=headers, data=payload).json()
+  variantes = []
+
+  for x in variantes_tmp:
+    if x['stock'] > 1 and x['id'] != item_variant :
+      variantes.append(x)
+
+  return variantes
+

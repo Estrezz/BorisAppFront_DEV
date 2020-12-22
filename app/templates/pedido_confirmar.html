@@ -15,6 +15,12 @@
             <td>
               <br> {{ producto['name'] }} 
               <br> {{ producto['accion']}} - {{ producto['accion_cantidad'] }} Unid.
+              <br> 
+                {% if producto['accion'] == 'cambiar' %}
+                 por  {{ producto['accion_cambiar_por']}}
+                {% endif %}
+
+              <br> 
               <br> {{ producto['motivo']}} <br><br>
               <div> Precio : $ {{ producto['price']}}
               {% if producto['promo_descuento'] %}

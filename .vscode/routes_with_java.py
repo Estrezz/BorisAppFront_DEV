@@ -3,7 +3,7 @@ from app import app, db
 from app.forms import LoginForm
 from app.email import send_email
 from app.models import Customer, Order, Producto
-from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_alternativas2
+from app.interface import buscar_pedido, buscar_promo, buscar_alternativas
 from flask import request
 import requests
 
@@ -49,7 +49,7 @@ def buscar():
                     name = pedido['products'][x]['name'],
                     price = pedido['products'][x]['price'],
                     quantity = pedido['products'][x]['quantity'],
-                    variant = pedido['products'][x]['variant_id'],
+                    #variant = pedido['products'][x]['variant'],
                     image = pedido['products'][x]['image']['src'],
                     accion = "ninguna",
                     motivo =  "",
@@ -85,9 +85,9 @@ def pedidos():
 
     if request.method == "POST" and request.form.get("form_item") == "elegir_item" : 
         prod_id = request.form.get("Prod_Id")
-        accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
-        accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
-        motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
+        accion = request.form.get("accion")
+        accion_cantidad = request.form.get("accion_cantidad")
+        motivo = request.form.get("motivo")
         item = Producto.query.get(prod_id)
         item.accion = accion
         item.accion_reaccion = False 
@@ -95,23 +95,19 @@ def pedidos():
         item.motivo = motivo
         db.session.commit()
 
-
         if accion == 'cambiar' and item.accion_reaccion == False:
-            item = Producto.query.get(prod_id)
-            flash('item: {}'.format(item.variant))
-            alternativas = buscar_alternativas2(1447373, item.prod_id, motivo, item.variant)
+            alternativas = buscar_alternativas(1447373, item.prod_id, motivo)
             user = Customer.query.first()
             order = Order.query.first()
             item = Producto.query.get(prod_id)
-            return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas)
+            return render_template('devolucion.html', title='Cambio', user=user, order = order, item = item, alternativas = alternativas)
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
-        prod_id = request.form.get("Prod_Id")
-        item = Producto.query.get(prod_id)
-        item.accion_reaccion = True
-        item.accion_cambiar_por = request.form.get("variante")
-        db.session.commit() 
-        
+        opciones = request.form.to_dict(flat=True)
+        for i in request.form :
+            flash('Item i {}'.format(type(i)))
+            flash('Item i {}'.format(request.form.get(i)))
+    
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
 
