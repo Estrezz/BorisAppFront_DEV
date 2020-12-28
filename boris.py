@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import Customer, Orders
+from app.models import Customer, Orders, Producto
 
 
 

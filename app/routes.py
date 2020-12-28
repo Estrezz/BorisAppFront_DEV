@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm
+from app.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Customer, Order, Producto
 from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_alternativas2
@@ -30,7 +30,15 @@ def buscar():
             unCliente = Customer(
                 id = pedido['customer']['id'],
                 name =pedido['customer']['name'],
-                email = pedido['customer']['email']
+                email = pedido['customer']['email'],
+                address = pedido['shipping_address']['address'],
+                number = pedido['shipping_address']['number'],
+                floor = pedido['shipping_address']['floor'],
+                zipcode = pedido['shipping_address']['zipcode'],
+                locality = pedido['shipping_address']['locality'],
+                city = pedido['shipping_address']['city'],
+                Province = pedido['shipping_address']['province'],
+                country = pedido['shipping_address']['country']
             )
                         
             unaOrden = Order(
@@ -135,35 +143,41 @@ def confirma_cambios():
 
     return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
 
+
+@app.route('/direccin', methods=['GET', 'POST'])
+def direccion():
+    user = Customer.query.first()
+    form = DireccionForm()
+    if request.method == 'GET':
+        form.address.data = user.address
+        form.number.data = user.number
+        form.floor.data = user.floor
+        form.zipcode.data = user.zipcode
+        form.locality.data = user.locality
+        form.city.data = user.city
+        form.province.data = user.Province
+        form.country.data = user.country
+
+    if form.validate_on_submit():
+        form.populate_obj(obj=user)
+        db.session.commit() 
+        return redirect(url_for('confirma_cambios'))
+    
+    return render_template('direccion.html', form=form, user=user)
+
+
+@app.route('/confirma_solicitud', methods=['GET', 'POST'])
+def confirma_solicitud():
+    return render_template('envio.html',)
+
+
+
 @app.route('/envio_mail')
 def envio_mail():
     send_email('prueba', 'erezzonico@borisreturns.com', 'erezzoni@outlook.com', 'esta es una prueba', '<h1>html_body</h1>')
     return render_template('envio.html', title='Envio de Mail')
 
 
-@app.route('/buscar_alternativa2',methods=['GET', 'POST'])
-#############################################################################
-# Busca alternativas para cambiar un articulo según el motivo de cambio
-# devuelve lista con productos alternativos
-#############################################################################
-#def buscar_aletrnativa2(storeid, prod_id, motivo):
-def buscar_alternativa2():
-  var_a = 123
-  flash ('var {}'.format(var_a))
-  flash ('Prod {}'.format(request.form['prod_id']))
-  flash ('var {}'.format(request.form['accion']))
-  flash ('var {}'.format(request.form['accion2']))
-  #url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)+"/variants"
-  #  
-  #payload={}
-  #headers = {
-  #  'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-  #  'Content-Type': 'application/json',
-  #  'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-  # }
-  #variantes = requests.request("GET", url, headers=headers, data=payload).json()
-  
-  return ('success')
   
 
 

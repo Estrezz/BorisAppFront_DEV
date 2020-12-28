@@ -6,3 +6,14 @@ class LoginForm(FlaskForm):
     ordernum = IntegerField('Orden', validators=[DataRequired()])
     ordermail = StringField('Email', validators=[DataRequired()])
     submit = SubmitField('Buscar')
+
+class DireccionForm(FlaskForm):
+    address = StringField('Calle', validators=[DataRequired()]) 
+    number = StringField('Numero', validators=[DataRequired()])
+    floor = StringField('Piso')
+    zipcode = StringField('Codigo Postal', validators=[DataRequired()])
+    locality = StringField('Localidad', validators=[DataRequired()])
+    city = StringField('Ciudad', validators=[DataRequired()])
+    province = StringField('Provincia', validators=[DataRequired()])
+    country = StringField('Pais', validators=[DataRequired()])
+    submit = SubmitField('Guardar')
