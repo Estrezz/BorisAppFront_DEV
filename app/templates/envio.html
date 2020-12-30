@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+git 
+
+{% block app_content %}
+    <h2 style="text-align:center"> Tu pedido ha sido confirmado</h2>
+    <h5 style="text-align:center"> Un mensajero pasara a retirarlo</h5>
+
+    <br>{{ user.name }}
+    <br>{{ user.email }}
+    <br>{{ user.phone }}
+
+    <br> direccion
+    <br>{{ user.address }}
+    <br>{{ user.number }}
+    <br>{{ user.floor }}
+    <br>{{ user.zipcode }}
+    <br>{{ user.locality }}
+    <br>{{ user.city }}
+    <br>{{ user.province }}
+    <br>{{ user.country }}
+
+
+    {% for producto in productos %}
+        <br> {{ producto['name'] }} 
+        <br> {{ producto['accion_cantidad'] }} Unid.
+    {% endfor %}
+
+    <br>Order ID: {{ order.id }}
+    <br>Order Number: {{ order.order_number }}
+    <br>Orden Originial: {{ order.order_original_id }}
+    <br>Fecha :{{ order.timestamp }}
+    <br>
+    <br>{{ company.company_name }}
+    <br>{{ company.contact_name }}
+    <br>{{ company.contact_email }}
+    <br>{{ company.contact_phone }}
+    <br>
+    <br> direccion
+    <br>{{ company.shipping_address }}
+    <br>{{ company.shipping_number }}
+    <br>{{ company.shipping_floor }}
+    <br>{{ company.shipping_zipcode }}
+    <br>{{ company.shipping_locality }}
+    <br>{{ company.shipping_city }}
+    <br>{{ company.shipping_province }}
+    <br>{{ company.shipping_country }}
+  
+{% endblock%}

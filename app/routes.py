@@ -1,9 +1,9 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, jsonify
 from app import app, db
 from app.forms import LoginForm, DireccionForm
 from app.email import send_email
-from app.models import Customer, Order, Producto
-from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_alternativas2
+from app.models import Customer, Order, Producto, Company
+from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio
 from flask import request
 import requests
 
@@ -12,33 +12,42 @@ import requests
 
 @app.route('/buscar', methods=['GET', 'POST'])
 def buscar():
+    ## Borrar todos los datos de la base de datos ##
+    Company.query.delete()
+    Customer.query.delete()
+    Order.query.delete()
+    Producto.query.delete()
+    db.session.commit()
+    #### fin borrado #################################
+    ID_del_Store = request.args.get('store_id')
+
+    #### Buscar StoreID en API ####
+    if ID_del_Store == None:
+        flash('No hay arg')
+  
+    unaEmpresa = buscar_empresa()
     form = LoginForm()
     if form.validate_on_submit():
-        pedido = buscar_pedido(1447373, form)
+        pedido = buscar_pedido(unaEmpresa.store_id, form)
 
         if pedido == 'None':
             flash('No se encontro un pedido para esa combinación Pedido-Email')
             return render_template('buscar.html', title='Busca tu Pedido', form=form)
         else:
-            ## Borrar todos los datos de la base de datos ##
-            Customer.query.delete()
-            Order.query.delete()
-            Producto.query.delete()
-            db.session.commit()
-            #### fin borrado #################################
-
             unCliente = Customer(
                 id = pedido['customer']['id'],
                 name =pedido['customer']['name'],
                 email = pedido['customer']['email'],
+                phone = pedido['customer']['phone'],
                 address = pedido['shipping_address']['address'],
                 number = pedido['shipping_address']['number'],
                 floor = pedido['shipping_address']['floor'],
                 zipcode = pedido['shipping_address']['zipcode'],
                 locality = pedido['shipping_address']['locality'],
                 city = pedido['shipping_address']['city'],
-                Province = pedido['shipping_address']['province'],
-                country = pedido['shipping_address']['country']
+                province = pedido['shipping_address']['province'],
+                country = pedido['shipping_address']['country'],
+                pertenece = unaEmpresa
             )
                         
             unaOrden = Order(
@@ -70,16 +79,6 @@ def buscar():
                 db.session.add(unProducto)
                 db.session.commit()
             
-            #flash('Order {}'.format(pedido))
-            #flash('Tipo {}'.format(type(pedido)))
-            #flash('Order ID Tipo {}'.format(type(pedido['number'])))
-            #flash('Cliente {}'.format(pedido['customer']))
-            #flash('Producto {}'.format(pedido['products']))
-            #flash('Producto {}'.format(pedido['products'][0]['image']['src']))
-            #flash('Producto Cantidad {}'.format(len(pedido['products']))) 
-            #flash('Producto {}'.format(pedido['products'][0]))   
-            #flash('Producto {}'.format(pedido['products'][0]['id']))            
-            #flash('Producto tipo {}'.format(type(pedido['products'])))
             return redirect(url_for('pedidos'))
 
     return render_template('buscar.html', title='Busca tu Pedido', form=form)
@@ -87,10 +86,10 @@ def buscar():
 
 @app.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
+    company = Company.query.first()
     user = Customer.query.first()
     order = Order.query.first()
     productos = Producto.query.all()
-
     if request.method == "POST" and request.form.get("form_item") == "elegir_item" : 
         prod_id = request.form.get("Prod_Id")
         accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
@@ -103,11 +102,10 @@ def pedidos():
         item.motivo = motivo
         db.session.commit()
 
-
         if accion == 'cambiar' and item.accion_reaccion == False:
             item = Producto.query.get(prod_id)
             flash('item: {}'.format(item.variant))
-            alternativas = buscar_alternativas2(1447373, item.prod_id, motivo, item.variant)
+            alternativas = buscar_alternativas(1447373, item.prod_id, motivo, item.variant)
             user = Customer.query.first()
             order = Order.query.first()
             item = Producto.query.get(prod_id)
@@ -119,20 +117,20 @@ def pedidos():
         item.accion_reaccion = True
         item.accion_cambiar_por = request.form.get("variante")
         db.session.commit() 
-        
+
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
 
 @app.route('/pedidos_unitarios', methods=['GET', 'POST'])
 def pedidos_unitarios():   
-
     if request.method == "POST": 
         prod_id = request.form.get("Prod_Id")
         user = Customer.query.first()
         order = Order.query.first()
         item = Producto.query.get(prod_id)
-    
     return render_template('devolucion.html', title='Accion', user=user, order = order, item = item)
+
+
 
 @app.route('/Confirmar',methods=['GET', 'POST'])
 def confirma_cambios():
@@ -140,7 +138,6 @@ def confirma_cambios():
     order = Order.query.first()
     # productos = Producto.query.all()
     productos = Producto.query.filter((Producto.accion != 'ninguna'))
-
     return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
 
 
@@ -155,20 +152,23 @@ def direccion():
         form.zipcode.data = user.zipcode
         form.locality.data = user.locality
         form.city.data = user.city
-        form.province.data = user.Province
+        form.province.data = user.province
         form.country.data = user.country
-
     if form.validate_on_submit():
         form.populate_obj(obj=user)
         db.session.commit() 
         return redirect(url_for('confirma_cambios'))
-    
     return render_template('direccion.html', form=form, user=user)
 
 
 @app.route('/confirma_solicitud', methods=['GET', 'POST'])
 def confirma_solicitud():
-    return render_template('envio.html',)
+    company = Company.query.first()
+    user = Customer.query.first()
+    order = Order.query.first()
+    productos = Producto.query.filter((Producto.accion != 'ninguna'))
+    crea_envio(company, user, order, productos)
+    return render_template('envio.html', company = company, user = user, order = order, productos = productos)
 
 
 

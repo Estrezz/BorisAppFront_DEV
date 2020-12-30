@@ -1,5 +1,8 @@
 import requests
 import json
+from app.models import Company
+from flask import jsonify
+
 
 from app import app
 
@@ -14,7 +17,6 @@ def buscar_nro_pedido(lista, valor):
 
 def buscar_pedido(storeid, form):
   url = "https://api.tiendanube.com/v1/"+str(storeid)+"/orders?q="+form.ordermail.data    
-  ## url = "https://api.tiendanube.com/v1/1447373/orders?q"+form.ordermail.data
   payload={}
   headers = {
     'User-Agent': 'Boris (erezzonico@borisreturns.com)',
@@ -47,52 +49,7 @@ def buscar_promo(promociones, Id_Producto ):
 # Busca alternativas para cambiar un articulo según el motivo de cambio
 # devuelve lista con productos alternativos
 #############################################################################
-def buscar_alternativas(storeid, prod_id, motivo):
-  #url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)+"/variants"
-  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)
-  
-  payload={}
-  headers = {
-    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-    'Content-Type': 'application/json',
-    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-   }
-  producto = requests.request("GET", url, headers=headers, data=payload).json()
-  
-  # carga los atributos del producto para ver en que posicion estan Talle y Color
-  # para buscar despues las alternativas que correspondan segun el motivo
-  atributos = []
-  for i in range(len(producto['attributes'])):
-    atributos.append([producto['attributes'][i]['es'],i])
-  
-  ######################################################
-  ## Calcula las variantes existentes 
-  ## arma diccionario {atributo : [valores]}
-  ######################################################
-  opciones = {}
-  for i in range(len(producto['attributes'])):
-    _key = producto['attributes'][i]['es']
-    for x in producto['variants']:
-      _val = x['values'][i]['es']
-      if _key in opciones:
-        opciones[_key].append(_val)
-      else:
-        opciones[_key] = [_val]
-  
-  #### extrae los valor duplicados """"
-  for k in opciones:
-    opciones_set = set(opciones[k])
-    opciones[k] = list(opciones_set)
-
-  return opciones
-
-
-
-#############################################################################
-# Busca alternativas para cambiar un articulo según el motivo de cambio
-# devuelve lista con productos alternativos
-#############################################################################
-def buscar_alternativas2(storeid, prod_id, motivo, item_variant):
+def buscar_alternativas(storeid, prod_id, motivo, item_variant):
   url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)+"/variants"
   
   payload={}
@@ -110,3 +67,68 @@ def buscar_alternativas2(storeid, prod_id, motivo, item_variant):
 
   return variantes
 
+
+def buscar_empresa():
+  unaEmpresa = Company(
+    platform = 'TiendaNube',
+    store_id = '1447373',
+    company_name = 'Tienda Boris',
+    admin_email = 'admin@borisreturns.com',
+    logo = '/images/logo1.png',
+    correo_usado = 'Moova',
+    correo_apikey = 'b23920003684e781d87e7e5b615335ad254bdebc',
+    correo_id = 'b22bc380-439f-11eb-8002-a5572ae156e7',
+    contact_name = 'Pepito Perez',
+    contact_email = 'pepito@borisreturns.com',
+    contact_phone = '+5491151064817',
+    shipping_address = 'Virrey Loreto',
+    shipping_number = '2259',
+    shipping_floor = '',
+    shipping_zipcode = '1426',
+    shipping_city = 'CABA',
+    shipping_province = 'CABA',
+    shipping_country = 'AR',
+    shipping_info = 'Entregar a pepito'
+  )
+  return unaEmpresa
+
+
+def crea_envio(company, user, order, productos):
+
+  url = "https://api-dev.moova.io/b2b/shippings"
+
+  headers = {
+    'Authorization': 'API_KEY',
+    'application_id': 'b22bc380-439f-11eb-8002-a5572ae156e7',
+    'Content-Type': 'application/json',
+    'API_KEY': 'b23920003684e781d87e7e5b615335ad254bdebc'
+   }
+
+  solicitud = {
+        "currency" :'ARS',
+        "type" : 'regular',
+        "flow" : 'semi-automatc',
+        "from" : {
+            "street": user.address,
+            "number": user.number,
+            "floor": user.floor,
+            "apartment": "",
+            "city": user.city,
+            "state": user.province,
+            "postalCode": user.zipcode,
+            "country": user.country,
+            "instructions": "",
+            "contact": {
+                "firstName": user.name,
+                "lastName": "",
+                "email": user.email,
+                "phone": user.phone
+            }
+        }
+    }
+
+  #solicitud_correo = requests.request("POST", url, headers=headers, data=jsonify(solicitud))
+  #flash('interface {}'.format(solicitud_correo))
+  return solicitud
+  
+ 
