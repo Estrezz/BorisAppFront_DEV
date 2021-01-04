@@ -3,24 +3,24 @@ from app import app, db
 from app.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Customer, Order, Producto, Company
-from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro
+from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido
 from flask import request
 import requests
 
 
 @app.route('/', methods=['GET', 'POST'])
-
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     if request.args.get('store_id') == None:
         return redirect(url_for('buscar', empresa = 'Ninguna'))    
     else:
         if request.args.get('order_id') == None:
+            # unaEmpresa = buscar_empresa(request.args.get('store_id'))
             return redirect(url_for('buscar', empresa = request.args.get('store_id')))
         else: 
             unaEmpresa = buscar_empresa(request.args.get('store_id'))
-            pedido = buscar_pedido_conNro(unaEmpresa.store_id, request.args.get('order_id'))
-            cargar_pedido(unaEmpresa, pedido)
+            pedido = buscar_pedido_conNro(ID_del_Store, request.args.get('order_id'))
+            cargar_pedido(punaEmpresa, pedido)
             return redirect(url_for('pedidos'))
 
 
@@ -34,16 +34,26 @@ def buscar():
     db.session.commit()
     #### fin borrado #################################
 
-    unaEmpresa = buscar_empresa(request.args['empresa'])
+    #ID_del_Store = request.args.get('store_id')
 
+    #### Buscar StoreID en API ####
+    if request.args['empresa'] == 'Ninguna':
+        flash('No hay arg')
+        unaEmpresa = buscar_empresa(request.args['empresa'])
+    else :
+        unaEmpresa = buscar_empresa(request.args['empresa'])
+        flash('empresa 1er else{}'.format(unaEmpresa.store_id))
     form = LoginForm()
     if form.validate_on_submit():
         pedido = buscar_pedido(unaEmpresa.store_id, form)
 
         if pedido == 'None':
+            #flash('No se encontro un pedido para esa combinación Pedido-Email')
             return render_template('buscar.html', title='Busca tu Pedido', form=form)
         else:
-            cargar_pedido(unaEmpresa, pedido)
+            #flash('empresa 2do else{}'.format(unaEmpresa.store_id))
+            #flash('empresa desc {}'.format(unaEmpresa))
+            cargar_pedido(request.args['empresa'], pedido)
             return redirect(url_for('pedidos'))
 
     return render_template('buscar.html', title='Busca tu Pedido', form=form)
