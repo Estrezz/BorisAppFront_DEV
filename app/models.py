@@ -1,6 +1,30 @@
 from datetime import datetime
 from app import db
 
+class Store(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    platform = db.Column(db.String(64), index=True)
+    store_id = db.Column(db.String(64), index=True)
+    store_name = db.Column(db.String(64))
+    admin_email = db.Column(db.String(120))
+    param_logo = db.Column(db.String(120))
+    param_fondo = db.Column(db.String(120))
+    param_config = db.Column(db.String(120))
+    contact_name = db.Column(db.String(64))
+    contact_phone = db.Column(db.String(15))
+    contact_email = db.Column(db.String(120))
+    correo_usado = db.Column(db.String(64))
+    correo_apikey = db.Column(db.String(50))
+    correo_id = db.Column(db.String(50))
+    shipping_address = db.Column(db.String(64))
+    shipping_number = db.Column(db.String(64))
+    shipping_floor = db.Column(db.String(64))
+    shipping_zipcode = db.Column(db.String(64))
+    shipping_city = db.Column(db.String(64))
+    shipping_province = db.Column(db.String(64))
+    shipping_country = db.Column(db.String(64))
+    shipping_info = db.Column(db.String(120))
+    
 
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)

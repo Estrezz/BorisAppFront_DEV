@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: d4f5c0699db9
+Revision ID: 035f26b2e77e
 Revises: 
-Create Date: 2020-12-29 10:40:57.415154
+Create Date: 2021-01-04 11:15:59.262425
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd4f5c0699db9'
+revision = '035f26b2e77e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -48,6 +48,34 @@ def upgrade():
     sa.Column('shipping_info', sa.String(length=120), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index(op.f('ix_company_store_id'), 'company', ['store_id'], unique=False)
+    op.create_table('store',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('platform', sa.String(length=64), nullable=True),
+    sa.Column('store_id', sa.String(length=64), nullable=True),
+    sa.Column('store_name', sa.String(length=64), nullable=True),
+    sa.Column('admin_email', sa.String(length=120), nullable=True),
+    sa.Column('param_logo', sa.String(length=120), nullable=True),
+    sa.Column('param_fondo', sa.String(length=120), nullable=True),
+    sa.Column('param_config', sa.String(length=120), nullable=True),
+    sa.Column('contact_name', sa.String(length=64), nullable=True),
+    sa.Column('contact_phone', sa.String(length=15), nullable=True),
+    sa.Column('contact_email', sa.String(length=120), nullable=True),
+    sa.Column('correo_usado', sa.String(length=64), nullable=True),
+    sa.Column('correo_apikey', sa.String(length=50), nullable=True),
+    sa.Column('correo_id', sa.String(length=50), nullable=True),
+    sa.Column('shipping_address', sa.String(length=64), nullable=True),
+    sa.Column('shipping_number', sa.String(length=64), nullable=True),
+    sa.Column('shipping_floor', sa.String(length=64), nullable=True),
+    sa.Column('shipping_zipcode', sa.String(length=64), nullable=True),
+    sa.Column('shipping_city', sa.String(length=64), nullable=True),
+    sa.Column('shipping_province', sa.String(length=64), nullable=True),
+    sa.Column('shipping_country', sa.String(length=64), nullable=True),
+    sa.Column('shipping_info', sa.String(length=120), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_store_platform'), 'store', ['platform'], unique=False)
+    op.create_index(op.f('ix_store_store_id'), 'store', ['store_id'], unique=False)
     op.create_table('customer',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('company_id', sa.Integer(), nullable=True),
@@ -109,6 +137,10 @@ def downgrade():
     op.drop_index(op.f('ix_customer_name'), table_name='customer')
     op.drop_index(op.f('ix_customer_email'), table_name='customer')
     op.drop_table('customer')
+    op.drop_index(op.f('ix_store_store_id'), table_name='store')
+    op.drop_index(op.f('ix_store_platform'), table_name='store')
+    op.drop_table('store')
+    op.drop_index(op.f('ix_company_store_id'), table_name='company')
     op.drop_table('company')
     op.drop_index(op.f('ix_atributo_descripcion'), table_name='atributo')
     op.drop_table('atributo')
