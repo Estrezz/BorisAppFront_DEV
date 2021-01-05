@@ -109,9 +109,9 @@ def buscar_empresa(empresa):
     unaEmpresa = Company(
       platform = 'TiendaNube',
       store_id = '1447373',
-      company_name = 'Tienda Boris',
+      company_name = 'Boris sin Tienda',
       admin_email = 'admin@borisreturns.com',
-      logo = '/images/logo1.png',
+      logo = '/static/images/Boris_Naranja.png',
       correo_usado = 'Moova',
       correo_apikey = 'b23920003684e781d87e7e5b615335ad254bdebc',
       correo_id = 'b22bc380-439f-11eb-8002-a5572ae156e7',
@@ -173,8 +173,6 @@ def crea_envio(company, user, order, productos):
 
 
 def cargar_pedido(unaEmpresa, pedido ):
-
-  #unaEmpresa = buscar_empresa(storeid)
 
   unCliente = Customer(
     id = pedido['customer']['id'],

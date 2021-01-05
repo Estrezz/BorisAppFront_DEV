@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+       
+<div class='container'>
+  <div class='order-info-content'>
+    <h2>Hola, {{ user.name }}!</h2>
+    <h3> Este es tu pedido #{{ order.order_number}}</h3>
+    <p> Selecciona los articulos que queres cambiar o devolver y luego presiona Confirmar</p>
+             
+      {% for producto in productos %}
+      <form id="producto{{ producto['id'] }}" action="{{ url_for('pedidos_unitarios') }}" method="POST"> 
+        <table class='order-table'>
+        <tbody>
+          <tr>
+            <td><img src="{{ producto['image'] }}" style="height:150px; text-align:center; vertical-align:middle"> </img> <td>
+            <td>
+              <input type="hidden" id="{{ producto['id'] }}" name="Prod_Id" value="{{ producto['id'] }}">
+              <br> {{ producto['name'] }} 
+              <br>  {% if producto['accion'] != 'ninguna' %}
+                      {{ producto['accion']}} - 
+                    {% endif %}
+                {{ producto['accion_cantidad'] }} Unid.
+
+              <br> 
+                {% if producto['accion'] == 'cambiar' %}
+                 por  {{ producto['accion_cambiar_por']}}
+                {% endif %}
+
+              <br> 
+              <br> {{ producto['motivo']}} <br><br>
+              <div> Precio : $ {{ producto['price']}}
+              {% if producto['promo_descuento'] %}
+                <br> Precio promoción: ({{ producto['promo_nombre'] }}) {{ producto['promo_descuento'] }}
+              {% endif %}
+              </div>
+            </td>
+            <td> <div> <input type="submit" value="Cambiar/Devolver"> </div> </td>
+          </tr>
+        </tbody>
+        </table>
+        <br>
+      </form>
+      {% endfor %}
+      <form id="confirma_cambios" 
+        action="{{ url_for('confirma_cambios') }}" method="POST"> 
+        <p align="center">
+            <a href="{{ url_for('confirma_cambios') }}" >
+            <button class=grey>Confirmar</button>
+        </a>
+        </p>
+        </form>
+        
+{% endblock %}

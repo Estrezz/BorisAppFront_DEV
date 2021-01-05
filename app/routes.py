@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, jsonify
+from flask import render_template, flash, redirect, url_for
 from app import app, db
 from app.forms import LoginForm, DireccionForm
 from app.email import send_email
@@ -41,12 +41,13 @@ def buscar():
         pedido = buscar_pedido(unaEmpresa.store_id, form)
 
         if pedido == 'None':
-            return render_template('buscar.html', title='Busca tu Pedido', form=form)
+            flash('No se encontro un pedido para esa combinación Pedido-Email')
+            return render_template('buscar.html', title='Inicia tu gestión', form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
         else:
             cargar_pedido(unaEmpresa, pedido)
             return redirect(url_for('pedidos'))
 
-    return render_template('buscar.html', title='Busca tu Pedido', form=form)
+    return render_template('buscar.html', title='Inicia tu Gestión', form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
 
 
 @app.route('/pedidos', methods=['GET', 'POST'])
@@ -69,7 +70,6 @@ def pedidos():
 
         if accion == 'cambiar' and item.accion_reaccion == False:
             item = Producto.query.get(prod_id)
-            flash('item: {}'.format(item.variant))
             alternativas = buscar_alternativas(1447373, item.prod_id, motivo, item.variant)
             user = Customer.query.first()
             order = Order.query.first()
