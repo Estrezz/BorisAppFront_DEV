@@ -14,11 +14,11 @@
       <form id="producto{{ producto['id'] }}" action="{{ url_for('pedidos_unitarios') }}" method="POST"> 
 
             <div class="row">
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+              <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
                 <img src="{{ producto['image'] }}" class="img-responsive center-block"  > </img> 
               </div>
 
-              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+              <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
                 <input type="hidden" id="{{ producto['id'] }}" name="Prod_Id" value="{{ producto['id'] }}">
                 <br> <strong> {{ producto['name'] }} </strong>
                 <br>  {% if producto['accion'] != 'ninguna' %}
@@ -38,7 +38,7 @@
       
               </div>
               
-              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="text-align: left">
+              <div class="col-xs-2 col-sm-2 col-md-4 col-lg-4" style="text-align: left">
                 <input type="submit" value="Cambiar/Devolver">
               </div>
             </div>
