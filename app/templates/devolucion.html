@@ -2,103 +2,108 @@
 
 {% block app_content %}
 <div class='container'>
-    <div>
-        <form id="item" action="{{ url_for('pedidos') }}" method="POST"> 
-            <table>
-            <tbody>
-                <tr>
-                    <td><img src="{{ item['image'] }}" style="height:150px; text-align:center; vertical-align:middle"> </img> <td>
-                    <td>  
-                    <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
-                    <input type="hidden" id="form_item" name="form_item" value="elegir_item">
-                    <td> 
-                        {{ item['name'] }} 
-                    <br> Cantidad:  {{ item['quantity']}} 
-                    <br> Precio: {{ item['price']}} 
-                    <td>     
-                        <div>
-                            {% if  item['accion'] == 'cambiar' %}
-                            <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar" checked=true>  
-                            <label for="cambiar">Cambiar</label>
-                            {% else %}
-                            <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar">  
-                            <label for="cambiar">Cambiar</label>
-                            {% endif %}
-                            {% if  item['accion'] == 'devolver' %}
-                            <input type="radio" id="devolver"
-                            name="accion{{ item['id'] }}" value="devolver" checked=true>
-                            <label for="devolver">Devolver</label>
-                            {% else %}
-                            <input type="radio" id="devolver"
-                            name="accion{{ item['id'] }}" value="devolver">
-                            <label for="devolver">Devolver</label>
-                            {% endif %}
-                            {% if  item['accion'] == 'ninguna' %}
-                            <input type="radio" id="ninguna"
-                            name="accion{{ item['id'] }}" value="ninguna" checked=true>
-                            <label for="ninguna">Ninguna</label>
-                            {% else %}
-                            <input type="radio" id="ninguna"
-                            name="accion{{ item['id'] }}" value="ninguna">
-                            <label for="ninguna">Ninguna</label>
-                            {% endif %}
-                        </div>
-                        <div>
-                            Que cantidad ? 
-                            <input type="number" id="accion_cantidad" name="accion_cantidad{{ item['id'] }}" 
-                                min="1" max="{{ item['quantity'] }}" value="{{ item['accion_cantidad'] }}" > 
-                            <br>
-                            Motivo : 
-                            <input name="motivo{{ item['id'] }}" id=motivo 
-                            value = "{{ item['motivo']}}" list="motivos">
-                            <datalist id="motivos">
-                                <option value="Es grande">
-                                <option value="Es chico">
-                                <option value="Mala calidad">
-                                <option value="Tiene fallas">
-                                <option value="No gusta color">
-                            </datalist>
-                        </div>
-                    </td>
-                </div>  
-                    <td> <input type="submit"> </td>
-                </tr> 
-            </tbody>
-            </table>
-        </form>
-    </div>
+    <form id="item" action="{{ url_for('pedidos') }}" method="POST"> 
 
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
+                <img src="{{ item['image'] }}"  class="img-responsive img-thumbnail" style="text-align:center; vertical-align:middle"> </img> 
+         
+                <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
+                <input type="hidden" id="form_item" name="form_item" value="elegir_item">
+                <br> <strong> {{ item['name'] }} </strong>
+                <br> Cantidad:  {{ item['quantity']}} 
+               <!-- <br> Precio: {{ item['price']}}   -->
+            </div>
 
-    
-        {% if title == 'Cambio' %}
-        <form id="Alternativas" action="{{ url_for('pedidos') }}" method="POST"> 
-        <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
-        <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
-        <table> 
-        <tr> 
-            <td>
-            {% for x in alternativas %}
-                <tr>
-                <td>
-                    <input type="radio" id="variante" name="variante" value="{{ x['id'] }}" > 
-                </td>
-                {% for i in x['values'] %}
-                    <td>
-                         {{ i['es'] }}
-                    </td> 
-                {% endfor %}
-                </tr>
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="text-align:left">
+                <p style="text-align:left"> Qué deseas hacer? </p>
+                {% if  item['accion'] == 'cambiar' %}
+                    <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar" checked=true>  
+                    <label for="cambiar">Cambiar</label> 
+                    <br>
+                {% else %}
+                    <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar">  
+                    <label for="cambiar">Cambiar</label>
+                    <br>
+                {% endif %}
+                {% if  item['accion'] == 'devolver' %}
+                    <input type="radio" id="devolver"
+                    name="accion{{ item['id'] }}" value="devolver" checked=true>
+                    <label for="devolver">Devolver</label>
+                    <br>
+                {% else %}
+                    <input type="radio" id="devolver"
+                    name="accion{{ item['id'] }}" value="devolver">
+                    <label for="devolver">Devolver</label>
+                    <br>
+                {% endif %}
+                {% if  item['accion'] == 'ninguna' %}
+                    <input type="radio" id="ninguna"
+                    name="accion{{ item['id'] }}" value="ninguna" checked=true>
+                    <label for="ninguna">Me lo quedo!</label>
+                    <br>
+                {% else %}
+                    <input type="radio" id="ninguna"
+                    name="accion{{ item['id'] }}" value="ninguna">
+                    <label for="ninguna">Me lo quedo!</label>
+                    <br>
+                {% endif %}
+
+                <p style="text-align:left"> Qué cantidad ? </p>
+                <input type="number" id="accion_cantidad" name="accion_cantidad{{ item['id'] }}" 
+                    min="1" max="{{ item['quantity'] }}" value="{{ item['accion_cantidad'] }}"> 
                 <br>
-            {% endfor %}
-            </td>
+                <br>
+                <input name="motivo{{ item['id'] }}" id=motivo 
+                value = "{{ item['motivo']}}" list="motivos" placeholder="Motivo">
+                <datalist id="motivos">
+                    <option value="Es grande">
+                    <option value="Es chico">
+                    <option value="Mala calidad">
+                    <option value="Tiene fallas">
+                    <option value="No gusta color">
+                </datalist>
+                <br>
+                <br>
+                <button class="btn btn-default" type="submit">Confirmar</button>
+            </div>
 
-            <td>
-                <input type="submit" value="seleccionar"> 
-            </td>
-        </tr>
-        </table>
+        </div>
     </form>
+</div>
+<br>
+<div class='container'>
+    {% if title == 'Cambio' %}
+    <form id="Alternativas" action="{{ url_for('pedidos') }}" method="POST"> 
+        <div class="row">
+            <div class="col-xs-8 col-sm-8 col-md-4 col-lg-4">
+                <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
+                <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
 
+                <table class="table">
+                    <tr>
+                        <th></th>
+                        {% for x in atributos %}
+                            <th scope="col"> {{ x['es'] }} </th>
+                        {% endfor %}
+                    </tr>
+                    
+                    {% for x in alternativas %}     
+                        <tr>
+                            <td>
+                                <input type="radio" id="variante" name="variante" value="{{ x['id'] }}" > 
+                            </td>
+                            {% for i in x['values'] %}
+                                <td> {{ i['es'] }} </td> 
+                            {% endfor %}
+                        </tr>
+                    {% endfor %} 
+                </table>      
+                <br>
+            <button class="btn btn-default" type="submit">Seleccionar</button>
+        </div>
+    </form>
     {% endif %}
 </div>
-  {% endblock %}
+   
+{% endblock %}

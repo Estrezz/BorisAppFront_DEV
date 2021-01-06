@@ -3,7 +3,7 @@ from app import app, db
 from app.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Customer, Order, Producto, Company
-from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro
+from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, buscar_atributos
 from flask import request
 import requests
 
@@ -56,6 +56,7 @@ def pedidos():
     user = Customer.query.first()
     order = Order.query.first()
     productos = Producto.query.all()
+
     if request.method == "POST" and request.form.get("form_item") == "elegir_item" : 
         prod_id = request.form.get("Prod_Id")
         accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
@@ -69,12 +70,13 @@ def pedidos():
         db.session.commit()
 
         if accion == 'cambiar' and item.accion_reaccion == False:
-            item = Producto.query.get(prod_id)
-            alternativas = buscar_alternativas(1447373, item.prod_id, motivo, item.variant)
+            
             user = Customer.query.first()
             order = Order.query.first()
             item = Producto.query.get(prod_id)
-            return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas)
+            alternativas = buscar_alternativas(company.store_id, item.prod_id, motivo, item.variant)
+            atributos = buscar_atributos(company.store_id, item.prod_id)
+            return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas, atributos=atributos)
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
         prod_id = request.form.get("Prod_Id")
