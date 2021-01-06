@@ -89,6 +89,7 @@ class Producto(db.Model):
     accion = db.Column(db.String(10))
     accion_reaccion = db.Column(db.Boolean)
     accion_cambiar_por = db.Column(db.Integer)
+    accion_cambiar_por_desc = db.Column(db.String(100))
     accion_cantidad = db.Column(db.Integer)
     motivo = db.Column(db.String(50))
     image = db.Column(db.String(100))

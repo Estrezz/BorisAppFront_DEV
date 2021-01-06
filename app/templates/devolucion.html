@@ -91,7 +91,8 @@
                     {% for x in alternativas %}     
                         <tr>
                             <td>
-                                <input type="radio" id="variante" name="variante" value="{{ x['id'] }}" > 
+                             <!--   <input type="radio" id="variante" name="variante" value="{{ x['id'] }}" >  -->
+                                <input type="radio" id="variante" name="variante" value="{{ x }}" > 
                             </td>
                             {% for i in x['values'] %}
                                 <td> {{ i['es'] }} </td> 

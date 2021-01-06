@@ -3,9 +3,10 @@ from app import app, db
 from app.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Customer, Order, Producto, Company
-from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, buscar_atributos
+from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, describir_variante
 from flask import request
 import requests
+import ast
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -69,20 +70,20 @@ def pedidos():
         item.motivo = motivo
         db.session.commit()
 
-        if accion == 'cambiar' and item.accion_reaccion == False:
-            
+        if accion == 'cambiar' and item.accion_reaccion == False:   
             user = Customer.query.first()
             order = Order.query.first()
             item = Producto.query.get(prod_id)
             alternativas = buscar_alternativas(company.store_id, item.prod_id, motivo, item.variant)
-            atributos = buscar_atributos(company.store_id, item.prod_id)
-            return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas, atributos=atributos)
+            return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
         prod_id = request.form.get("Prod_Id")
         item = Producto.query.get(prod_id)
         item.accion_reaccion = True
-        item.accion_cambiar_por = request.form.get("variante")
+        variante = ast.literal_eval(request.form.get("variante"))
+        item.accion_cambiar_por = variante['id']
+        item.accion_cambiar_por_desc = describir_variante(variante['values'])
         db.session.commit() 
 
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)

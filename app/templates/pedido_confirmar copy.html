@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+       
+<div class='container'>
+  <div class='order-info-content'>
+    <h2>Hola, {{ user.name }}!</h2>
+    <h3> Confirma tu solicitud </h3>
+         
+      {% for producto in productos %}
+        <table class='order-table'>
+        <tbody>
+          <tr>
+            <td><img src="{{ producto['image'] }}" style="height:150px; text-align:center; vertical-align:middle"> </img> <td>
+            <td>
+              <br> {{ producto['name'] }} 
+              <br> {{ producto['accion']}} - {{ producto['accion_cantidad'] }} Unid.
+              <br> 
+                {% if producto['accion'] == 'cambiar' %}
+                 por  {{ producto['accion_cambiar_por']}}
+                {% endif %}
+
+              <br> 
+              <br> {{ producto['motivo']}} <br><br>
+              <div> Precio : $ {{ producto['price']}}
+              {% if producto['promo_descuento'] %}
+                <br> Precio promoción: ({{ producto['promo_nombre'] }}) {{ producto['promo_descuento'] }}
+              {% endif %}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+        
+        <br>
+      {% endfor %}
+      
+      <table>
+      <td>
+        <tr>
+          <th>Calle</th>
+          <td> {{  user.address }} </td>
+        </tr>
+        <tr>
+          <th>Numero</th>
+          <td> {{  user.number }} </td>
+        </tr>
+        <tr>
+          <th>Piso</th>
+          <td> {{  user.floor }} </td>
+        </tr>
+        <tr>
+          <th>Codigo Postal</th>
+          <td> {{  user.zipcode }} </td>
+        </tr>
+        <tr>
+          <th>Localidad</th>
+          <td> {{  user.locality }} </td>
+        </tr>
+        <tr>
+          <th>Ciudad</th>
+          <td> {{  user.city }} </td>
+        </tr>
+        <tr>
+          <th>Provincia</th>
+          <td> {{  user.province }} </td>
+        </tr>
+        <tr>
+          <th>País</th>
+          <td> {{  user.country }} </td>
+        </tr>
+      </td>
+      <td> 
+       <!--  <form id="Confirma direccion" action="{{ url_for('direccion') }}" method="POST">  -->
+          <a href="{{ url_for('direccion') }}" >
+            <button class=grey>Cambiar direccion</button>
+       <!--  </form> -->
+      </td> 
+      
+      </table>
+
+          <a href="{{ url_for('confirma_solicitud') }}" >
+          <button class=grey>Confirmar</button>
+
+      <div class='total'>
+            <span>
+              <div> Total Descuentos {{ productos | sum(attribute='promo_descuento') }} </div>
+              TOTAL
+            </span>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -28,7 +28,7 @@
                   {{ producto['accion_cantidad'] }} Unid.
                
                   {% if producto['accion'] == 'cambiar' %}
-                    por  {{ producto['accion_cambiar_por']}}
+                    por  {{ producto['accion_cambiar_por_desc']}}
                   {% endif %}
                 <br> {{ producto['motivo']}} <br>
                 <div> Precio : $ {{ producto['price']}}

@@ -58,10 +58,10 @@ def buscar_promo(promociones, Id_Producto ):
   return promo
   
 
-#############################################################################
+#####################################################################################################
 # Busca alternativas para cambiar un articulo según el motivo de cambio
-# devuelve lista con productos alternativos
-#############################################################################
+# devuelve lista con productos alternativos y le oden de los atributos (para tener como encabezados)
+#####################################################################################################
 def buscar_alternativas(storeid, prod_id, motivo, item_variant):
   url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)
   
@@ -78,21 +78,20 @@ def buscar_alternativas(storeid, prod_id, motivo, item_variant):
     if x['stock'] > 1 and x['id'] != item_variant :
       variantes.append(x)
 
-  return variantes
+  devolver = [variantes, product['attributes']]
+  return devolver
 
 
-def buscar_atributos(storeid, prod_id):
-  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)
-  
-  payload={}
-  headers = {
-    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-    'Content-Type': 'application/json',
-    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-   }
-  product = requests.request("GET", url, headers=headers, data=payload).json()
-  
-  return product['attributes']
+## Arma string con las descripcion de las variantes
+def describir_variante(values):
+  desc = ''
+  for i in values:
+    if desc != '':
+      desc = desc + ' - '
+    desc = desc + i['es'] 
+  return desc
+
+
 
 
 def buscar_empresa(empresa):
@@ -230,3 +229,5 @@ def cargar_pedido(unaEmpresa, pedido ):
       )
   db.session.add(unProducto)
   db.session.commit()
+
+  
