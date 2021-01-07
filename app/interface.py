@@ -191,18 +191,25 @@ def crea_envio(company, user, order, productos):
   "conf": {
     "assurance": False,
     "items": [
-      {
-        "item": {
-          "description": "iPhone",
-          "price": 150
-        }
-      }
     ]
   }
 }
 
-  solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp)).json()
+  items_envio = []
+  for i in productos:
+    items_envio.append (   
+    {
+        "item": {
+          "description": i.name,
+          "price": i.price
+        }
+      }
+    )
 
+  solicitud_tmp['conf']['items'] = items_envio
+  
+  solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp)).json()
+  flash('itens {}'.format(items_envio))
   return solicitud
 
 
