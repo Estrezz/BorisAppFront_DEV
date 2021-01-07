@@ -91,9 +91,6 @@ def describir_variante(values):
     desc = desc + i['es'] 
   return desc
 
-
-
-
 def buscar_empresa(empresa):
   if empresa != 'Ninguna':
     empresa_tmp = Store.query.filter(Store.store_id == empresa).first()
@@ -144,44 +141,68 @@ def buscar_empresa(empresa):
 
   
 
-
-
 def crea_envio(company, user, order, productos):
 
   url = "https://api-dev.moova.io/b2b/shippings"
 
   headers = {
-    'Authorization': 'API_KEY',
-    'application_id': 'b22bc380-439f-11eb-8002-a5572ae156e7',
+    'Authorization': 'b23920003684e781d87e7e5b615335ad254bdebc',
     'Content-Type': 'application/json',
-    'API_KEY': 'b23920003684e781d87e7e5b615335ad254bdebc'
    }
 
-  solicitud = {
-        "currency" :'ARS',
-        "type" : 'regular',
-        "flow" : 'semi-automatc',
-        "from" : {
-            "street": user.address,
-            "number": user.number,
-            "floor": user.floor,
-            "apartment": "",
-            "city": user.city,
-            "state": user.province,
-            "postalCode": user.zipcode,
-            "country": user.country,
-            "instructions": "",
-            "contact": {
-                "firstName": user.name,
-                "lastName": "",
-                "email": user.email,
-                "phone": user.phone
-            }
-        }
-    }
+  params = {'appId': 'b22bc380-439f-11eb-8002-a5572ae156e7'}
 
-  #solicitud_correo = requests.request("POST", url, headers=headers, data=jsonify(solicitud))
-  #flash('interface {}'.format(solicitud_correo))
+
+  #####
+  solicitud_tmp = {
+  "currency": "ARS",
+  "type": "regular",
+  "flow": "semi-automatic",
+  "from": {
+    "street": user.address,
+    "number": user.number,
+    "floor": user.floor,
+    "city": user.city,
+    "state": user.province,
+    "postalCode": user.zipcode,
+    "country": user.country,
+    "contact": {
+      "firstName": user.name,
+      "email": user.email
+    }
+  },
+  "to": {
+    "street": company.shipping_address,
+    "number": company.shipping_number,
+    "floor": company.shipping_floor,
+    "city": company.shipping_city,
+    "state": company.shipping_province,
+    "postalCode": company.shipping_zipcode,
+    "country": company.shipping_country,
+    "contact": {
+      "firstName": company.contact_name,
+      "email": company.contact_email,
+      "phone": company.contact_phone
+    },
+    "message": ""
+  },
+  "internalCode": "XX475738YY",
+  "extra": {},
+  "conf": {
+    "assurance": False,
+    "items": [
+      {
+        "item": {
+          "description": "iPhone",
+          "price": 150
+        }
+      }
+    ]
+  }
+}
+
+  solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp)).json()
+
   return solicitud
 
 

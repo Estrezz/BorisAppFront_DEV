@@ -1,94 +1,61 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-       
+
+
+
 <div class='container'>
-  <div class='order-info-content'>
-    <h2>Hola, {{ user.name }}!</h2>
-    <h3> Confirma tu solicitud </h3>
-         
-      {% for producto in productos %}
-        <table class='order-table'>
-        <tbody>
-          <tr>
-            <td><img src="{{ producto['image'] }}" style="height:150px; text-align:center; vertical-align:middle"> </img> <td>
-            <td>
-              <br> {{ producto['name'] }} 
-              <br> {{ producto['accion']}} - {{ producto['accion_cantidad'] }} Unid.
-              <br> 
-                {% if producto['accion'] == 'cambiar' %}
-                 por  {{ producto['accion_cambiar_por']}}
-                {% endif %}
+    <h3>Confirmá tu solicitud </h3>
+    {% for producto in productos %}
+       <!--
+      <form id="producto{{ producto['id'] }}" action="{{ url_for('pedidos_unitarios') }}" method="POST"> 
+      -->    
+      <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+          <img src="{{ producto['image'] }}" class="img-responsive img-thumbnail"  > </img> 
+        </div>
 
-              <br> 
-              <br> {{ producto['motivo']}} <br><br>
-              <div> Precio : $ {{ producto['price']}}
-              {% if producto['promo_descuento'] %}
-                <br> Precio promoción: ({{ producto['promo_nombre'] }}) {{ producto['promo_descuento'] }}
-              {% endif %}
-              </div>
-            </td>
-          </tr>
-        </tbody>
-        </table>
-        
-        <br>
-      {% endfor %}
-      
-      <table>
-      <td>
-        <tr>
-          <th>Calle</th>
-          <td> {{  user.address }} </td>
-        </tr>
-        <tr>
-          <th>Numero</th>
-          <td> {{  user.number }} </td>
-        </tr>
-        <tr>
-          <th>Piso</th>
-          <td> {{  user.floor }} </td>
-        </tr>
-        <tr>
-          <th>Codigo Postal</th>
-          <td> {{  user.zipcode }} </td>
-        </tr>
-        <tr>
-          <th>Localidad</th>
-          <td> {{  user.locality }} </td>
-        </tr>
-        <tr>
-          <th>Ciudad</th>
-          <td> {{  user.city }} </td>
-        </tr>
-        <tr>
-          <th>Provincia</th>
-          <td> {{  user.province }} </td>
-        </tr>
-        <tr>
-          <th>País</th>
-          <td> {{  user.country }} </td>
-        </tr>
-      </td>
-      <td> 
-       <!--  <form id="Confirma direccion" action="{{ url_for('direccion') }}" method="POST">  -->
-          <a href="{{ url_for('direccion') }}" >
-            <button class=grey>Cambiar direccion</button>
-       <!--  </form> -->
-      </td> 
-      
-      </table>
-
-          <a href="{{ url_for('confirma_solicitud') }}" >
-          <button class=grey>Confirmar</button>
-
-      <div class='total'>
-            <span>
-              <div> Total Descuentos {{ productos | sum(attribute='promo_descuento') }} </div>
-              TOTAL
-            </span>
+        <div class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
+          <br> <strong>{{ producto['accion']}} </strong> - {{ producto['accion_cantidad'] }} Unid.
+          <br> {{ producto['name'] }} 
+          <br> 
+          {% if producto['accion'] == 'cambiar' %}
+           por  {{ producto['accion_cambiar_por_desc']}}
+          {% endif %}
+          <br> 
+          <br> Motivo: {{ producto['motivo']}} <br><br>
+        </div>
       </div>
+      <br>
+      {% endfor %}
+</div> 
+
+<br>
+
+<div class='container'>
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+      <strong>Datos de Contacto</strong>
+      <br><br>
+      <strong>{{  user.name }}</strong> <br>
+      {{  user.email }} <br>
+      {{  user.phone }} <br>
+      {{  user.address }} {{  user.number }} {{  user.floor }} <br>
+      {{  user.locality }}  {{  user.zipcode }} <br>
+      {{  user.city }} {{  user.province }} <br>
+      {{  user.country }} <br>
+      <br>
+      <a href="{{ url_for('direccion') }}">
+            <button class="btn btn-default">Corregir datos</button>
+      </a>
+    </div>  
+
   </div>
+      <br>
+      <br>
+      <a href="{{ url_for('confirma_solicitud') }}" >
+          <button class="btn btn-primary" style="margin:auto;display:block">Confirmar Solicitud</button>
+      </a>
 </div>
 
 {% endblock %}

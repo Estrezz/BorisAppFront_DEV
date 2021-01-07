@@ -8,6 +8,9 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Buscar')
 
 class DireccionForm(FlaskForm):
+    name = StringField('Nombre y Apellido', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    phone = StringField('Telefono', validators=[DataRequired()]) 
     address = StringField('Calle', validators=[DataRequired()]) 
     number = StringField('Numero', validators=[DataRequired()])
     floor = StringField('Piso')

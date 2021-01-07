@@ -104,7 +104,6 @@ def pedidos_unitarios():
 def confirma_cambios():
     user = Customer.query.first()
     order = Order.query.first()
-    # productos = Producto.query.all()
     productos = Producto.query.filter((Producto.accion != 'ninguna'))
     return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
 
@@ -114,6 +113,9 @@ def direccion():
     user = Customer.query.first()
     form = DireccionForm()
     if request.method == 'GET':
+        form.name.data = user.name
+        form.email.data = user.email
+        form.phone.data = user.phone
         form.address.data = user.address
         form.number.data = user.number
         form.floor.data = user.floor
@@ -135,8 +137,9 @@ def confirma_solicitud():
     user = Customer.query.first()
     order = Order.query.first()
     productos = Producto.query.filter((Producto.accion != 'ninguna'))
-    crea_envio(company, user, order, productos)
-    return render_template('envio.html', company = company, user = user, order = order, productos = productos)
+    envio = crea_envio(company, user, order, productos)
+    flash('ENVIO {}:'.format(envio))
+    return render_template('envio.html', company=company, user=user, order=order, productos=productos)
 
 
 
