@@ -186,7 +186,7 @@ def crea_envio(company, user, order, productos):
     },
     "message": ""
   },
-  "internalCode": "XX475738YY",
+  "internalCode": order.id,
   "extra": {},
   "conf": {
     "assurance": False,

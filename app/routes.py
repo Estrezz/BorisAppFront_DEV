@@ -138,8 +138,8 @@ def confirma_solicitud():
     order = Order.query.first()
     productos = Producto.query.filter((Producto.accion != 'ninguna'))
     envio = crea_envio(company, user, order, productos)
-    flash('ENVIO {}:'.format(envio))
-    return render_template('envio.html', company=company, user=user, order=order, productos=productos)
+    #flash('ENVIO {}:'.format(envio))
+    return render_template('envio.html', company=company, user=user, order=order, productos=productos, envio=envio)
 
 
 
