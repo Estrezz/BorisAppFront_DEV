@@ -146,14 +146,15 @@ def crea_envio(company, user, order, productos):
   url = "https://api-dev.moova.io/b2b/shippings"
 
   headers = {
-    'Authorization': 'b23920003684e781d87e7e5b615335ad254bdebc',
+    'Authorization': company.correo_apikey,
+    #'Authorization': 'b23920003684e781d87e7e5b615335ad254bdebc',
     'Content-Type': 'application/json',
    }
 
-  params = {'appId': 'b22bc380-439f-11eb-8002-a5572ae156e7'}
+  params = {'appId': company.correo_id}
+  #params = {'appId': 'b22bc380-439f-11eb-8002-a5572ae156e7'}
 
 
-  #####
   solicitud_tmp = {
   "currency": "ARS",
   "type": "regular",
@@ -207,9 +208,7 @@ def crea_envio(company, user, order, productos):
     )
 
   solicitud_tmp['conf']['items'] = items_envio
-  
   solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp)).json()
-  flash('itens {}'.format(items_envio))
   return solicitud
 
 
