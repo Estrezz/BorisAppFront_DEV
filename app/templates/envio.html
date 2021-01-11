@@ -7,8 +7,15 @@ git
     <h3 style="text-align:center"> EL Id del pedido es {{envio.id}}</h3>
     <h3 style="text-align:center"> tu numero  secreto es {{envio['secretCode']}} </h3>
 
-    <h5 style="text-align:center"> Un mensajero pasara a retirarlo</h5>
-    <h5 style="text-align:center"> En los próximos minutos recibiras un mail con las intrsucciones</h5>
+
+    <!-- READY o DRAFT dependiendo de customer / company--> 
+    <p style="text-align:center">El estado de tu pedido es {{envio.status}}</p>
+    {% if envio.status == 'DRAFT' %}
+        <p style="text-align:center">En breve recibiras un mail con las intrucciones para realizar el pago del el envío</p>
+    {% else %}
+        <p style="text-align:center"> Un mensajero pasara a retirarlo</p>
+    {% endif %}
+
     <h5 style="text-align:center"> Podes hacer el seguimiento de tu pedido acá:
         https://dev.moova.io/external/{{envio.id}}</h5>
 
