@@ -228,12 +228,83 @@ def crea_envio(company, user, order, productos):
     )
 
   solicitud_tmp['conf']['items'] = items_envio
-  #solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp)).json()
   solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
   if solicitud.status_code != 201:
-    flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.staus_code))
- 
+    flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
+  else:
+    almacena_envio(company, user, order, productos, solicitud.json())
   return solicitud.json()
+
+
+
+def almacena_envio(company, user, order, productos, solicitud):
+  url='app/logs/pedido-'+str(order.id)+'.json'
+  ################################################
+  data = {
+  "orden": order.id,
+  "correo":{
+    "correo_id": solicitud['id'],
+    "correo_status": solicitud['status']
+  },
+  "cliente": {
+    "id": user.id,
+    "name": user.name,
+    "email":user.email,
+    "phone":user.phone,
+    "address": {
+      "street":user.address,
+      "number":user.number,
+      "floor":user.floor,
+      "zipcode":user.zipcode,
+      "locality":user.locality,
+      "city":user.city,
+      "province":user.province,
+      "country":user.country
+    }
+  },
+  "company": {
+    "id": company.id,
+    "platform": company.platform,
+    "store_id": company.store_id,
+    "name": company.company_name,
+    "admin_email": company.admin_email,
+    "logo": company.logo,
+    "address":{
+      "street": company.shipping_address,
+      "number": company.shipping_number,
+      "floor": company.shipping_floor,
+      "city": company.shipping_city,
+      "state": company.shipping_province,
+      "postalCode": company.shipping_zipcode,
+      "country": company.shipping_country
+    },
+    "contact": {
+      "firstName": company.contact_name,
+      "email": company.contact_email,
+      "phone": company.contact_phone
+    },
+    "producto": []
+  }
+  }
+
+  productos_tmp = []
+  for i in productos:
+    productos_tmp.append (   
+    {
+      "id": i.prod_id,
+      "name": i.name,
+      "accion": i.accion,
+      "accion_cantidad": i.accion_cantidad,
+      "accion_cambiar_por": i.accion_cambiar_por,
+      "motivo": i.motivo
+    }
+    )
+
+  data['producto'] = productos_tmp
+  
+  with open(url, "w") as outfile:
+    json.dump(data, outfile)
+
 
 
 def cargar_pedido(unaEmpresa, pedido ):
