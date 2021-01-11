@@ -1,5 +1,4 @@
 
-
 from app import db
 from app.models import Store
 
@@ -12,7 +11,7 @@ store1 = Store(
    admin_email = 'admin@borisreturns.com',
    param_logo = '/static/images/Demo_boris.png',
    param_fondo = '/static/images/logo1.png',
-   param_config = '/static/images/logo1.png',
+   param_config = 'app/static/conf/boris.json',
    correo_usado = 'Moova',
    correo_apikey = 'b23920003684e781d87e7e5b615335ad254bdebc',
    correo_id = 'b22bc380-439f-11eb-8002-a5572ae156e7',

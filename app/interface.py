@@ -2,8 +2,8 @@ import requests
 import json
 from app import db
 from app.models import Customer, Order, Producto, Company, Store
-from flask import jsonify, flash
-
+from flask import session, flash
+#import os
 
 from app import app
 
@@ -94,6 +94,10 @@ def describir_variante(values):
 def buscar_empresa(empresa):
   if empresa != 'Ninguna':
     empresa_tmp = Store.query.filter(Store.store_id == empresa).first()
+    #### guarda settings de la empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+    session['paga_correo'] = settings['shipping']
+
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
       store_id = empresa_tmp.store_id,
@@ -115,7 +119,9 @@ def buscar_empresa(empresa):
       shipping_country = empresa_tmp.shipping_country,
       shipping_info = empresa_tmp.shipping_info
     )
-  else:   
+  else: 
+    settings = guardar_settings('app/static/conf/boris.json')
+    session['paga_correo'] = settings['shipping']
     unaEmpresa = Company(
       platform = 'TiendaNube',
       store_id = '1447373',
@@ -139,7 +145,15 @@ def buscar_empresa(empresa):
     )
   return unaEmpresa
 
-  
+
+######## Carga el archivo de settings desde el campo param_config ########
+############ de la base de empresas ######################################
+def guardar_settings(url):
+  with open(url) as json_file:
+    data = json.load(json_file)
+    return data
+
+
 
 def crea_envio(company, user, order, productos):
 
@@ -147,18 +161,23 @@ def crea_envio(company, user, order, productos):
 
   headers = {
     'Authorization': company.correo_apikey,
-    #'Authorization': 'b23920003684e781d87e7e5b615335ad254bdebc',
     'Content-Type': 'application/json',
    }
 
   params = {'appId': company.correo_id}
-  #params = {'appId': 'b22bc380-439f-11eb-8002-a5572ae156e7'}
 
+  if 'paga_correo' in session:  
+    if session['paga_correo'] == 'customer':
+      paga_correo = 'manual'
+    else: 
+      paga_correo ='semi-automatic'
+  else:
+    paga_correo ='semi-automatic'
 
   solicitud_tmp = {
   "currency": "ARS",
   "type": "regular",
-  "flow": "semi-automatic",
+  "flow": paga_correo,
   "from": {
     "street": user.address,
     "number": user.number,
@@ -202,14 +221,90 @@ def crea_envio(company, user, order, productos):
     {
         "item": {
           "description": i.name,
-          "price": i.price
+          "price": i.price,
+          "quantity": i.accion_cantidad
         }
       }
     )
 
   solicitud_tmp['conf']['items'] = items_envio
-  solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp)).json()
-  return solicitud
+  solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
+  if solicitud.status_code != 201:
+    flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
+  else:
+    almacena_envio(company, user, order, productos, solicitud.json())
+  return solicitud.json()
+
+
+
+def almacena_envio(company, user, order, productos, solicitud):
+  url='app/logs/pedido-'+str(order.id)+'.json'
+  ################################################
+  data = {
+  "orden": order.id,
+  "correo":{
+    "correo_id": solicitud['id'],
+    "correo_status": solicitud['status']
+  },
+  "cliente": {
+    "id": user.id,
+    "name": user.name,
+    "email":user.email,
+    "phone":user.phone,
+    "address": {
+      "street":user.address,
+      "number":user.number,
+      "floor":user.floor,
+      "zipcode":user.zipcode,
+      "locality":user.locality,
+      "city":user.city,
+      "province":user.province,
+      "country":user.country
+    }
+  },
+  "company": {
+    "id": company.id,
+    "platform": company.platform,
+    "store_id": company.store_id,
+    "name": company.company_name,
+    "admin_email": company.admin_email,
+    "logo": company.logo,
+    "address":{
+      "street": company.shipping_address,
+      "number": company.shipping_number,
+      "floor": company.shipping_floor,
+      "city": company.shipping_city,
+      "state": company.shipping_province,
+      "postalCode": company.shipping_zipcode,
+      "country": company.shipping_country
+    },
+    "contact": {
+      "firstName": company.contact_name,
+      "email": company.contact_email,
+      "phone": company.contact_phone
+    },
+    "producto": []
+  }
+  }
+
+  productos_tmp = []
+  for i in productos:
+    productos_tmp.append (   
+    {
+      "id": i.prod_id,
+      "name": i.name,
+      "accion": i.accion,
+      "accion_cantidad": i.accion_cantidad,
+      "accion_cambiar_por": i.accion_cambiar_por,
+      "motivo": i.motivo
+    }
+    )
+
+  data['producto'] = productos_tmp
+  
+  with open(url, "w") as outfile:
+    json.dump(data, outfile)
+
 
 
 def cargar_pedido(unaEmpresa, pedido ):
