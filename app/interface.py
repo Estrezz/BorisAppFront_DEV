@@ -50,10 +50,10 @@ def buscar_pedido_conNro(storeid, orderid):
 # devuelve [nombre promo. precio promocional]
 #############################################################################
 def buscar_promo(promociones, Id_Producto ):
-  promo = ("",0)
+  promo = ("",0,0)
   for x in promociones: 
     if x['id'] == Id_Producto:
-      promo = (x['discount_script_type'], x['discount_amount'])
+      promo = (x['discount_script_type'], x['discount_amount'], x['final_price'])
       return promo
   return promo
   
@@ -242,6 +242,8 @@ def almacena_envio(company, user, order, productos, solicitud):
   ################################################
   data = {
   "orden": order.id,
+  "orden_medio_de_pago": order.metodo_de_pago,
+  "orden_tarjeta_de_pago": order.tarjeta_de_pago,
   "correo":{
     "correo_id": solicitud['id'],
     "correo_status": solicitud['status']
@@ -296,6 +298,7 @@ def almacena_envio(company, user, order, productos, solicitud):
       "accion": i.accion,
       "accion_cantidad": i.accion_cantidad,
       "accion_cambiar_por": i.accion_cambiar_por,
+      "monto_a_devolver": i.promo_precio_final,
       "motivo": i.motivo
     }
     )
@@ -329,6 +332,8 @@ def cargar_pedido(unaEmpresa, pedido ):
     id = pedido['id'],
     order_number = pedido['number'],
     order_original_id = pedido['id'],
+    metodo_de_pago = pedido['payment_details']['method'],
+    tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
     buyer = unCliente
     )       
 
@@ -345,6 +350,7 @@ def cargar_pedido(unaEmpresa, pedido ):
       accion = "ninguna",
       motivo =  "",
       accion_cantidad = pedido['products'][x]['quantity'],
+      promo_precio_final = promo_tmp[2],
       promo_descuento = promo_tmp[1],
       promo_nombre = promo_tmp[0],
       articulos = unaOrden

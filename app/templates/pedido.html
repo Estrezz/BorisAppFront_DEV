@@ -33,7 +33,7 @@
                 <br> {{ producto['motivo']}} <br>
                 <div> Precio : $ {{ producto['price']}}
                 {% if producto['promo_descuento'] %}
-                  <br> Precio promoción: ({{ producto['promo_nombre'] }}) {{ producto['promo_descuento'] }}
+                  <br> Precio Abonado: {{ producto['promo_descuento'] }} - ({{ producto['promo_nombre'] }}) 
                 {% endif %}
                 </div>
                 <br>

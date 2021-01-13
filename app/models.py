@@ -73,6 +73,8 @@ class Order(db.Model):
     order_number = db.Column(db.Integer)
     order_original_id = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    metodo_de_pago = db.Column(db.String(10))
+    tarjeta_de_pago = db.Column(db.String(10))
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     products = db.relationship('Producto', backref='articulos', lazy='dynamic')
 
@@ -95,6 +97,7 @@ class Producto(db.Model):
     image = db.Column(db.String(100))
     promo_descuento = db.Column(db.Float)
     promo_nombre = db.Column(db.String(10))
+    promo_precio_final = db.Column(db.Float)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
 
     def __repr__(self):

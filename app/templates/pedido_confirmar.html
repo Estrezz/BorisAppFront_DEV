@@ -20,9 +20,19 @@
           <br> {{ producto['name'] }} 
           <br> 
           {% if producto['accion'] == 'cambiar' %}
-           por  {{ producto['accion_cambiar_por_desc']}}
+           por  {{ producto['accion_cambiar_por_desc']}}<br> 
           {% endif %}
-          <br> 
+          {% if producto['accion'] != 'cambiar' %}
+            {% if producto['promo_descuento'] %}
+              <strong>Monto a devolver: ${{ producto['promo_precio_final'] * producto['accion_cantidad'] }}</strong> <br>
+            {% else %}
+            <strong>Monto a devolver: ${{ producto['price'] * producto['accion_cantidad'] }} </strong> <br>
+            {% endif %}
+            Método de devolución: {{ order['metodo_de_pago'] }} 
+            {% if order['tarjeta_de_pago'] != None %}
+              {{ order['tarjeta_de_pago']}}
+            {% endif %}  
+          {% endif %}
           <br> Motivo: {{ producto['motivo']}} <br><br>
         </div>
       </div>

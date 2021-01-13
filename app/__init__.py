@@ -17,5 +17,4 @@ Breadcrumbs(app=app)
 
 
 
-
 from app import routes, models
