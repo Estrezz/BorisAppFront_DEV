@@ -242,6 +242,8 @@ def almacena_envio(company, user, order, productos, solicitud):
   ################################################
   data = {
   "orden": order.id,
+  "orden_nro": order.order_number,
+  "orden_fecha": str(order.timestamp),
   "orden_medio_de_pago": order.metodo_de_pago,
   "orden_tarjeta_de_pago": order.tarjeta_de_pago,
   "correo":{
