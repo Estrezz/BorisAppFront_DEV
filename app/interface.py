@@ -293,6 +293,15 @@ def almacena_envio(company, user, order, productos, solicitud):
 
   productos_tmp = []
   for i in productos:
+
+    if i.accion == 'devolver':
+      if i.promo_descuento != 0:
+        precio_final = i.promo_precio_final
+      else:
+        precio_final = i.price
+    else:
+        precio_final = 0.0
+    
     productos_tmp.append (   
     {
       "id": i.prod_id,
@@ -300,7 +309,7 @@ def almacena_envio(company, user, order, productos, solicitud):
       "accion": i.accion,
       "accion_cantidad": i.accion_cantidad,
       "accion_cambiar_por": i.accion_cambiar_por,
-      "monto_a_devolver": i.promo_precio_final,
+      "monto_a_devolver": precio_final,
       "motivo": i.motivo
     }
     )
@@ -357,7 +366,7 @@ def cargar_pedido(unaEmpresa, pedido ):
       promo_nombre = promo_tmp[0],
       articulos = unaOrden
       )
-  db.session.add(unProducto)
+    db.session.add(unProducto)
   db.session.commit()
 
   
