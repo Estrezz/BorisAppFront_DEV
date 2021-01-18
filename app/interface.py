@@ -238,7 +238,7 @@ def crea_envio(company, user, order, productos):
 
 
 def almacena_envio(company, user, order, productos, solicitud):
-  url='app/logs/pedido-'+str(order.id)+'.json'
+  url='../Boris_common/logs/pedido'+str(order.id)+'.json'
   ################################################
   data = {
   "orden": order.id,
@@ -306,6 +306,7 @@ def almacena_envio(company, user, order, productos, solicitud):
     {
       "id": i.prod_id,
       "name": i.name,
+      "variant":i.variant,
       "accion": i.accion,
       "accion_cantidad": i.accion_cantidad,
       "accion_cambiar_por": i.accion_cambiar_por,
