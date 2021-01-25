@@ -238,7 +238,12 @@ def crea_envio(company, user, order, productos):
 
 
 def almacena_envio(company, user, order, productos, solicitud):
-  url='../Boris_common/logs/pedido'+str(order.id)+'.json'
+  url="http://ec2-34-199-104-15.compute-1.amazonaws.com/pedidos"
+
+  headers = {
+    'Content-Type': 'application/json'
+  }
+
   ################################################
   data = {
   "orden": order.id,
@@ -317,8 +322,12 @@ def almacena_envio(company, user, order, productos, solicitud):
 
   data['producto'] = productos_tmp
   
-  with open(url, "w") as outfile:
-    json.dump(data, outfile)
+  solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
+  if solicitud.status_code != 200:
+    flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
+    flash('data {}'.format(json.dumps(data)))
+
+  
 
 
 
