@@ -34,7 +34,8 @@ def buscar_pedido(storeid, form):
 
 
 def buscar_pedido_conNro(storeid, orderid):
-  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/orders/"+orderid    
+  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/orders/"+orderid
+  
   payload={}
   headers = {
     'User-Agent': 'Boris (erezzonico@borisreturns.com)',
@@ -42,6 +43,7 @@ def buscar_pedido_conNro(storeid, orderid):
     'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
    }
   order = requests.request("GET", url, headers=headers, data=payload).json()
+  
   return order
 
 
@@ -97,6 +99,7 @@ def buscar_empresa(empresa):
     #### guarda settings de la empresa
     settings = guardar_settings(empresa_tmp.param_config)
     session['paga_correo'] = settings['shipping']
+    session['test'] = settings['test']
 
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
@@ -122,6 +125,7 @@ def buscar_empresa(empresa):
   else: 
     settings = guardar_settings('app/static/conf/boris.json')
     session['paga_correo'] = settings['shipping']
+    session['test'] = settings['test']
     unaEmpresa = Company(
       platform = 'TiendaNube',
       store_id = '1447373',
@@ -154,16 +158,12 @@ def guardar_settings(url):
     return data
 
 
-
 def crea_envio(company, user, order, productos):
-
   url = "https://api-dev.moova.io/b2b/shippings"
-
   headers = {
     'Authorization': company.correo_apikey,
     'Content-Type': 'application/json',
    }
-
   params = {'appId': company.correo_id}
 
   if 'paga_correo' in session:  
@@ -238,7 +238,11 @@ def crea_envio(company, user, order, productos):
 
 
 def almacena_envio(company, user, order, productos, solicitud):
-  url="http://ec2-34-199-104-15.compute-1.amazonaws.com/pedidos"
+  if 'test' in session:  
+    if session['test'] == 'True':
+      url='../Boris_common/logs/pedido'+str(order.id)+'.json'
+    else: 
+      url="http://ec2-34-199-104-15.compute-1.amazonaws.com/pedidos"
 
   headers = {
     'Content-Type': 'application/json'
@@ -321,12 +325,17 @@ def almacena_envio(company, user, order, productos, solicitud):
 
   data['producto'] = productos_tmp
   
-  solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
-  if solicitud.status_code != 200:
-    flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
-    flash('data {}'.format(json.dumps(data)))
-  else: 
-    flash('Se envio el pedido correctamente')
+  if 'test' in session:  
+    if session['test'] == 'True':
+      with open(url, "w") as outfile:
+        json.dump(data, outfile)
+    else:     
+      solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
+      if solicitud.status_code != 200:
+        flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
+        flash('data {}'.format(json.dumps(data)))
+      else: 
+        flash('Se envio el pedido correctamente')
 
   
 
@@ -354,7 +363,8 @@ def cargar_pedido(unaEmpresa, pedido ):
     id = pedido['id'],
     order_number = pedido['number'],
     order_original_id = pedido['id'],
-    metodo_de_pago = pedido['payment_details']['method'],
+    #metodo_de_pago = pedido['payment_details']['method'],
+    metodo_de_pago = pedido['gateway'],
     tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
     buyer = unCliente
     )       
@@ -381,3 +391,9 @@ def cargar_pedido(unaEmpresa, pedido ):
   db.session.commit()
 
   
+
+def busca_tracking(orden):
+  url = "http://ec2-34-199-104-15.compute-1.amazonaws.com/orden/tracking"
+  params = {'orden_id': orden}
+  historia = requests.request("GET", url, params=params).json()
+  return historia

@@ -3,7 +3,7 @@ from app import app, db
 from app.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Customer, Order, Producto, Company
-from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, describir_variante
+from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking
 from flask import request
 import requests
 import ast
@@ -149,7 +149,12 @@ def envio_mail():
     return render_template('envio.html', title='Envio de Mail')
 
 
-  
+@app.route('/tracking/<order>',methods=['GET', 'POST'])
+def tracking(order):
+    historia = busca_tracking(order)
+    return render_template('tracking.html', title='Tracking', historia=historia)
+
+    
 
 
 

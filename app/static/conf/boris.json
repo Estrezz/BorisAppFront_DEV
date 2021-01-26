@@ -1,4 +1,5 @@
 {
     "currency": "ARS",
-    "shipping": "customer"
+    "shipping": "customer",
+    "test": "True"
   }

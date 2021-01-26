@@ -17,6 +17,11 @@ git
     {% endif %}
 
     <h5 style="text-align:center"> Podes hacer el seguimiento de tu pedido acá:
-        https://dev.moova.io/external/{{envio.id}}</h5>
+        Moova: https://dev.moova.io/external/{{envio.id}}
+        <br>
+        {{order.order_number}} - {{order.order_original_id}}
+        <br>
+        BORIS: http://ec2-34-199-104-15.compute-1.amazonaws.com/orden/tracking?orden_id={{order.order_original_id}}
+        <br>
 
 {% endblock%}

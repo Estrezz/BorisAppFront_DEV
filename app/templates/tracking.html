@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+
+{% block app_content %}
+    <h2 style="text-align:center"> Tracking del pedido</h2>
+    <div class="p-4">
+        <table class="table table-bordered track_tbl">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Status</th>
+                    <th>Date/Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for i in historia %}
+                <tr class="active">
+                    <td class="track_dot">
+                        <span class="track_line"></span>
+                    </td>
+                    <td>{{i.Estado}}</td>
+                    <td>{{i.Fecha}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+{% endblock%}
