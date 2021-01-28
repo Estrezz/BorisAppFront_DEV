@@ -103,7 +103,7 @@ def buscar_empresa(empresa):
     session['paga_correo'] = settings['shipping']
     session['test'] = settings['test']
     session['periodo'] = settings['politica']['periodo']
-    
+
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
       store_id = empresa_tmp.store_id,
@@ -368,7 +368,6 @@ def cargar_pedido(unaEmpresa, pedido ):
     id = pedido['id'],
     order_number = pedido['number'],
     order_original_id = pedido['id'],
-    #metodo_de_pago = pedido['payment_details']['method'],
     metodo_de_pago = pedido['gateway'],
     tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
     buyer = unCliente

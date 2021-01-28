@@ -3,7 +3,7 @@
     "shipping": "customer",
     "test": "False",
     "politica": {
-      "periodo":5,
+      "periodo":60,
       "rubros":{},
       "promos":{}
     }

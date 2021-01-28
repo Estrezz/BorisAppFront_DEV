@@ -262,7 +262,10 @@ def almacena_envio(company, user, order, productos, solicitud):
   "orden_tarjeta_de_pago": order.tarjeta_de_pago,
   "correo":{
     "correo_id": solicitud['id'],
-    "correo_status": solicitud['status']
+    "correo_status": solicitud['status'],
+    "correo_precio": solicitud['price'],
+    "correo_precio_formateado": solicitud['priceFormatted'],
+    "correo_moneda":solicitud['currency'],
   },
   "cliente": {
     "id": user.id,
