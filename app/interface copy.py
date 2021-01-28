@@ -1,7 +1,6 @@
 import requests
 import json
 import datetime
-from datetime import datetime
 from app import db
 from app.models import Customer, Order, Producto, Company, Store
 from flask import session, flash
@@ -104,7 +103,7 @@ def buscar_empresa(empresa):
     session['paga_correo'] = settings['shipping']
     session['test'] = settings['test']
     session['periodo'] = settings['politica']['periodo']
-
+    
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
       store_id = empresa_tmp.store_id,
@@ -369,7 +368,7 @@ def cargar_pedido(unaEmpresa, pedido ):
     id = pedido['id'],
     order_number = pedido['number'],
     order_original_id = pedido['id'],
-    order_fecha_compra = datetime.strptime((pedido['completed_at']['date']), '%Y-%m-%d %H:%M:%S.%f'),
+    #metodo_de_pago = pedido['payment_details']['method'],
     metodo_de_pago = pedido['gateway'],
     tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
     buyer = unCliente
@@ -377,9 +376,6 @@ def cargar_pedido(unaEmpresa, pedido ):
 
   for x in range(len(pedido['products'])): 
     promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
-
-    
-
     unProducto = Producto(
       id =  pedido['products'][x]['id'],
       prod_id = pedido['products'][x]['product_id'],
@@ -390,15 +386,12 @@ def cargar_pedido(unaEmpresa, pedido ):
       image = pedido['products'][x]['image']['src'],
       accion = "ninguna",
       motivo =  "",
-      valido = validar_politica(unaOrden.order_fecha_compra)[0],
-      valido_motivo = validar_politica(unaOrden.order_fecha_compra)[1],
       accion_cantidad = pedido['products'][x]['quantity'],
       promo_precio_final = promo_tmp[2],
       promo_descuento = promo_tmp[1],
       promo_nombre = promo_tmp[0],
       articulos = unaOrden
       )
-
     db.session.add(unProducto)
   db.session.commit()
 
@@ -413,25 +406,6 @@ def busca_tracking(orden):
 
 def loguear_error(modulo, mensaje, codigo, texto):
   outfile = open('app/logs/err_boris.txt', "a")
-  outfile.write(str(datetime.utcnow())+','+ modulo +','+ mensaje +','+ str(codigo) +','+str(texto)+ '\n')
+  outfile.write(str(datetime.datetime.utcnow())+','+ modulo +','+ mensaje +','+ str(codigo) +','+str(texto)+ '\n')
   outfile.close()
-
-
-def validar_politica(orden_fecha):
-  
-  hoy = datetime.utcnow()
-  if 'periodo' in session:  
-    periodo = session['periodo']
-  else:
-    periodo = 30
-
-  if abs((hoy - orden_fecha).days) > periodo:
-
-    #periodo_valido = False
-    return [False,'El período para realizar cambios expiró']
-  else: 
-    #periodo_valido = True
-    return [True,'OK']
-  
-
-  
+   

@@ -5,7 +5,7 @@
 <div class='container'>
   <div>
     <h2>Hola, {{ user.name }}!</h2>
-    <h3> Este es tu pedido #{{ order.order_number}}</h3>
+    <h3> Esta es tu orden #{{ order.order_number}}</h3>
     <p> Selecciona los articulos que queres cambiar o devolver y luego presiona Confirmar</p>
              
       {% for producto in productos %}
@@ -37,7 +37,12 @@
                 {% endif %}
                 </div>
                 <br>
-                <button class="btn btn-default" type="submit">Devolver / Cambiar</button>
+                
+                {% if producto['valido'] == true %}
+                  <button class="btn btn-default" type="submit">Devolver / Cambiar</button>
+                {% else %}
+                  {{ producto['valido_motivo'] }}
+                {% endif %}
               </div>
               
             </div>

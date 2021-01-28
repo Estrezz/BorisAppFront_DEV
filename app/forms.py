@@ -3,8 +3,8 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Integ
 from wtforms.validators import DataRequired
 
 class LoginForm(FlaskForm):
-    ordernum = IntegerField('Orden', validators=[DataRequired()])
-    ordermail = StringField('Email', validators=[DataRequired()])
+    ordernum = IntegerField('Número de Orden', validators=[DataRequired()])
+    ordermail = StringField('Email con el que se realizó la compra', validators=[DataRequired()])
     submit = SubmitField('Buscar')
 
 class DireccionForm(FlaskForm):

@@ -1,3 +1,5 @@
 boris.env
 
 app/logs/*
+bors.env
+/aoo/static/conf/boris.json

@@ -80,6 +80,7 @@
                 <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
                 <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
 
+                {% if alternativas|length > 0 %}
                 <table class="table">
                     <tr>
                         <th></th>
@@ -88,6 +89,7 @@
                         {% endfor %}
                     </tr>
                     
+                  
                     {% for x in alternativas %}     
                         <tr>
                             <td>
@@ -102,6 +104,13 @@
                 </table>      
                 <br>
             <button class="btn btn-default" type="submit">Seleccionar</button>
+            {% else %}
+                        <tr><strong> 
+                            <h4 style="text-align: center;"> No hay Stock para ese artículo <br>
+                            Comunicate con nosotros para verificar o selecciona la opción devolver</h4> 
+                        </strong></tr> <br>
+
+            {% endif %}
         </div>
     </form>
     {% endif %}
