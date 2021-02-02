@@ -327,6 +327,7 @@ def almacena_envio(company, user, order, productos, solicitud):
       "accion": i.accion,
       "accion_cantidad": i.accion_cantidad,
       "accion_cambiar_por": i.accion_cambiar_por,
+      "accion_cambiar_por_desc": i.accion_cambiar_por_desc,
       "monto_a_devolver": precio_final,
       "motivo": i.motivo
     }
