@@ -5,7 +5,8 @@
 
 
 <div class='container'>
-    <h3>Confirmá tu solicitud </h3>
+    <h3>Confirmá tu orden </h3>
+    <h4>Por favor, revisa que los datos de contacto sean correctos </h4>
     {% for producto in productos %}
        <!--
       <form id="producto{{ producto['id'] }}" action="{{ url_for('pedidos_unitarios') }}" method="POST"> 
@@ -64,7 +65,7 @@
       <br>
       <br>
       <a href="{{ url_for('confirma_solicitud') }}" >
-          <button class="btn btn-primary" style="margin:auto;display:block">Confirmar Solicitud</button>
+          <button class="btn btn-primary" style="margin:auto;display:block">Confirmar orden</button>
       </a>
 </div>
 

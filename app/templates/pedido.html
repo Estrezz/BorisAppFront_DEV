@@ -23,12 +23,12 @@
                 <br> <strong> {{ producto['name'] }} </strong>
                 <br>
                   {% if producto['accion'] != 'ninguna' %}
-                        {{ producto['accion']}} - 
-                   {% endif %}
-                  {{ producto['accion_cantidad'] }} Unid.
-               
+                      <strong style="color:blue;"> {{ producto['accion']}} - {{ producto['accion_cantidad'] }} Unid. </strong>
+                  {% else %}
+                      {{ producto['accion_cantidad'] }} Unid.
+                  {% endif %}
                   {% if producto['accion'] == 'cambiar' %}
-                    por  {{ producto['accion_cambiar_por_desc']}}
+                    <strong style="color:blue;"> por  {{ producto['accion_cambiar_por_desc']}} </strong>
                   {% endif %}
                 <br> {{ producto['motivo']}} <br>
                 <div> Precio : $ {{ producto['price']}}

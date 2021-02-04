@@ -238,7 +238,9 @@ def crea_envio(company, user, order, productos):
     flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
     loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, json.dumps(solicitud) )
   else:
-    almacena_envio(company, user, order, productos, solicitud.json())
+    mandaBoris = almacena_envio(company, user, order, productos, solicitud.json())
+    if mandaBoris == 'Error':
+      flash('ya existe un cambio para esa orden')
   return solicitud.json()
 
 
@@ -344,8 +346,10 @@ def almacena_envio(company, user, order, productos, solicitud):
       if solicitud.status_code != 200:
         flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
         loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
+        return 'Failed'
       else: 
         flash('Se envio el pedido correctamente')
+        return 'Success'
 
   
 
