@@ -272,6 +272,7 @@ def almacena_envio(company, user, order, productos, solicitud):
   "cliente": {
     "id": user.id,
     "name": user.name,
+    "identification": user.identification,
     "email":user.email,
     "phone":user.phone,
     "address": {
@@ -360,6 +361,7 @@ def cargar_pedido(unaEmpresa, pedido ):
   unCliente = Customer(
     id = pedido['customer']['id'],
     name =pedido['customer']['name'],
+    identification = pedido['customer']['identification'],
     email = pedido['customer']['email'],
     phone = pedido['customer']['phone'],
     address = pedido['shipping_address']['address'],
