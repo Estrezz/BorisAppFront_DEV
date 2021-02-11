@@ -28,3 +28,7 @@
     min-height: 25px;
     height: 10%;
 }
+
+.foto {
+    max-width: 50%;
+  }

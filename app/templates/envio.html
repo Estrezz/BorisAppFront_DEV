@@ -2,26 +2,36 @@
 git 
 
 {% block app_content %}
-    <h2 style="text-align:center"> Tu orden ha sido confirmada</h2>
+<div class='container-fluid'>
 
-    <h3 style="text-align:center"> EL Id de tu orden es {{envio.id}}</h3>
-    <h3 style="text-align:center"> tu numero  secreto es {{envio['secretCode']}} </h3>
-
+        <h2 style="text-align:center"> Tu orden ha sido confirmada</h2>
+        <img  style='height: auto; width: 50%; object-fit: contain' class="center-block " src="/static/images/moto.png"  >
 
     <!-- READY o DRAFT dependiendo de customer / company--> 
-    <p style="text-align:center">El estado de tu orden es {{envio.status}}</p>
+    
     {% if envio.status == 'DRAFT' %}
-        <p style="text-align:center">En breve recibiras un mail con las intrucciones para realizar el pago del el envío</p>
+        <h2 style="text-align:center">
+            En breve recibiras por mail un link para que puedas abonar el envío<br>
+            El costo del mismo es <strong>{{envio.priceFormatted}}</strong>
+        </h2>
+        
     {% else %}
-        <p style="text-align:center"> Un mensajero pasara a retirarlo</p>
+        <p style="text-align:center"> Un mensajero de MOOVA pasara a retirarlo en breve<br>
+         tu numero  secreto es {{envio['secretCode']}} </p>  
     {% endif %}
 
-    <h5 style="text-align:center"> Podes hacer el seguimiento de tu orden acá:
-        Moova: https://dev.moova.io/external/{{envio.id}}
+   <br>
+    <h5 style="text-align:center"> Podes hacer el seguimiento de tu orden acá: <br>
+        <!-- Moova: https://dev.moova.io/external/{{envio.id}}
         <br>
         {{order.order_number}} - {{order.order_original_id}}
-        <br>
-        BORIS: http://ec2-54-208-172-198.compute-1.amazonaws.com/tracking/{{order.order_number}}
-        <br>
-
+        <br> -->
+        <a href="http://ec2-54-208-172-198.compute-1.amazonaws.com/tracking/{{order.order_number}}">
+        http://ec2-54-208-172-198.compute-1.amazonaws.com/tracking/{{order.order_number}}
+        </a>
+        <br><br><br>
+        <p style="text-align:center"> EL Id de tu orden es <br>
+            {{envio.id}}<br>
+            El estado de tu orden es {{envio.status}}</p>
+    </div>
 {% endblock%}
