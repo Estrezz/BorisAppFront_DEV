@@ -238,14 +238,14 @@ def crea_envio(company, user, order, productos):
     flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
     loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, json.dumps(solicitud) )
   else:
-    mandaBoris = almacena_envio(company, user, order, productos, solicitud.json())
+    mandaBoris = almacena_envio(company, user, order, productos, solicitud.json(),'Moova')
     if mandaBoris == 'Error':
       flash('ya existe un cambio para esa orden')
   return solicitud.json()
 
 
 
-def almacena_envio(company, user, order, productos, solicitud):
+def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   if 'test' in session:  
     if session['test'] == 'True':
       url='../Boris_common/logs/pedido'+str(order.id)+'.json'
@@ -263,6 +263,7 @@ def almacena_envio(company, user, order, productos, solicitud):
   "orden_medio_de_pago": order.metodo_de_pago,
   "orden_tarjeta_de_pago": order.tarjeta_de_pago,
   "correo":{
+    "correo_metodo_envio": metodo_envio,
     "correo_id": solicitud['id'],
     "correo_status": solicitud['status'],
     "correo_precio": solicitud['price'],
