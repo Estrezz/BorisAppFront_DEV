@@ -262,6 +262,11 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   "orden_fecha": str(order.timestamp),
   "orden_medio_de_pago": order.metodo_de_pago,
   "orden_tarjeta_de_pago": order.tarjeta_de_pago,
+  "orden_gastos_cupon": order.gastos_cupon,
+  "orden_gastos_gateway": order.gastos_gateway,
+  "orden_gastos_shipping_owner": order.gastos_shipping_owner,
+  "orden_gastos_shipping_customer": order.gastos_shipping_customer,
+  "orden_gastos_promocion": order.gastos_promocion,
   "correo":{
     "correo_metodo_envio": metodo_envio,
     "correo_id": solicitud['id'],
@@ -383,13 +388,16 @@ def cargar_pedido(unaEmpresa, pedido ):
     order_fecha_compra = datetime.strptime((pedido['completed_at']['date']), '%Y-%m-%d %H:%M:%S.%f'),
     metodo_de_pago = pedido['gateway'],
     tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
+    gastos_cupon = pedido['discount_coupon'],
+    gastos_gateway = pedido['discount_gateway'],
+    gastos_shipping_owner = pedido['shipping_cost_owner'],
+    gastos_shipping_customer = pedido['shipping_cost_customer'],
+    gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
     buyer = unCliente
     )       
 
   for x in range(len(pedido['products'])): 
     promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
-
-    
 
     unProducto = Producto(
       id =  pedido['products'][x]['id'],

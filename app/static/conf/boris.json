@@ -1,7 +1,7 @@
 {
     "currency": "ARS",
     "shipping": "customer",
-    "test": "False",
+    "test": "True",
     "politica": {
       "periodo":30,
       "rubros":{},

@@ -77,6 +77,11 @@ class Order(db.Model):
     order_fecha_compra = db.Column(db.DateTime)
     metodo_de_pago = db.Column(db.String(10))
     tarjeta_de_pago = db.Column(db.String(10))
+    gastos_cupon = db.Column(db.Float)
+    gastos_gateway = db.Column(db.Float)
+    gastos_shipping_owner = db.Column(db.Float)
+    gastos_shipping_customer = db.Column(db.Float)
+    gastos_promocion = db.Column(db.Float)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     products = db.relationship('Producto', backref='articulos', lazy='dynamic')
 
