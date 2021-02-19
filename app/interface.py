@@ -163,21 +163,15 @@ def guardar_settings(url):
     return data
 
 
-def crea_envio(company, user, order, productos):
-  url = "https://api-dev.moova.io/b2b/shippings"
-  headers = {
-    'Authorization': company.correo_apikey,
-    'Content-Type': 'application/json',
-   }
-  params = {'appId': company.correo_id}
-
+def crea_envio(company, user, order, productos, metodo_envio):
+ 
   if 'paga_correo' in session:  
     if session['paga_correo'] == 'customer':
       paga_correo = 'manual'
     else: 
       paga_correo ='semi-automatic'
   else:
-    paga_correo ='semi-automatic'
+    paga_correo ='manual'
 
   solicitud_tmp = {
   "currency": "ARS",
@@ -233,15 +227,36 @@ def crea_envio(company, user, order, productos):
     )
 
   solicitud_tmp['conf']['items'] = items_envio
-  solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
-  if solicitud.status_code != 201:
-    flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
-    loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, json.dumps(solicitud) )
+
+  if metodo_envio == 'Moova':
+    url = "https://api-dev.moova.io/b2b/shippings"
+    headers = {
+      'Authorization': company.correo_apikey,
+      'Content-Type': 'application/json',
+    }
+    params = {'appId': company.correo_id}
+    solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
+    if solicitud.status_code != 201:
+      flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
+      loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, json.dumps(solicitud) )
+      return 'Failed'
+    else:
+      solicitud_envio = solicitud.json()
   else:
-    mandaBoris = almacena_envio(company, user, order, productos, solicitud.json(),'Moova')
-    if mandaBoris == 'Error':
-      flash('ya existe un cambio para esa orden')
-  return solicitud.json()
+    solicitud_envio = {
+      "id":'Manual',
+      "status":'DRAFT',
+      "price":'0.0',
+      "priceFormatted":'0.0',
+      "currency":'ARS'
+    }
+  
+  mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
+  if mandaBoris == 'Error':
+    flash('ya existe un cambio para esa orden')
+  
+  #return solicitud.json()
+  return solicitud_envio
 
 
 
@@ -338,6 +353,10 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       "accion_cambiar_por": i.accion_cambiar_por,
       "accion_cambiar_por_desc": i.accion_cambiar_por_desc,
       "monto_a_devolver": precio_final,
+      "precio": i.price,
+      "promo_descuento": i.promo_descuento,
+      "promo_nombre": i.promo_nombre,
+      "promo_precio_final": i.promo_precio_final,
       "motivo": i.motivo
     }
     )

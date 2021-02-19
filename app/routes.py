@@ -133,11 +133,12 @@ def direccion():
 
 @app.route('/confirma_solicitud', methods=['GET', 'POST'])
 def confirma_solicitud():
+    metodo_envio = request.args.get('metodo_envio')
     company = Company.query.first()
     user = Customer.query.first()
     order = Order.query.first()
     productos = Producto.query.filter((Producto.accion != 'ninguna'))
-    envio = crea_envio(company, user, order, productos)
+    envio = crea_envio(company, user, order, productos, metodo_envio)
     return render_template('envio.html', company=company, user=user, order=order, productos=productos, envio=envio)
 
 
