@@ -68,14 +68,18 @@
         <div class="col-sm-12 text-center">
           
           <a href="{{ url_for('confirma_solicitud', metodo_envio='Moova') }}" >
-              <button class="btn btn-primary">
+              <button class="btn btn-primary" style="width: 40%">
+                <img style='height: auto; width: 50%' src="/static/images/moto.png" alt="Moova"/>
+                <br/>
                 Quiero que retiren <br>
                 mi orden a domicilio
               </button>
           </a>
-          &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <a href="{{ url_for('confirma_solicitud', metodo_envio='Manual') }}" >
-            <button class="btn btn-primary" >
+            <button class="btn btn-primary" style="width: 40%" >
+              <img style='height: auto; width: 50%' src="/static/images/box.png" alt="Manual"/>
+              <br>
               Enviaré la orden <br>
               por mi cuenta</button>
           </a>
