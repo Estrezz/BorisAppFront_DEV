@@ -44,58 +44,48 @@
 <br>
 
 <div class='container'>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-        <b>Datos de Contacto</b>
-        </h4>
-    </div>
-    <div class="panel-body">
-        <div class="items">
-          <strong>{{  user.name }}</strong> <br>
-          {{  user.email }} <br>
-          {{  user.phone }} <br>
-          {{  user.address }} {{  user.number }} {{  user.floor }} <br>
-          {{  user.locality }}  {{  user.zipcode }} <br>
-          {{  user.city }} {{  user.province }} <br>
-          {{  user.country }} <br>
-          <br>
-          <a href="{{ url_for('direccion') }}">
-                <button class="btn btn-default">Corregir datos</button>
-          </a>
-      </div> 
-    </div>
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+      <strong>Datos de Contacto</strong>
+      <br><br>
+      <strong>{{  user.name }}</strong> <br>
+      {{  user.email }} <br>
+      {{  user.phone }} <br>
+      {{  user.address }} {{  user.number }} {{  user.floor }} <br>
+      {{  user.locality }}  {{  user.zipcode }} <br>
+      {{  user.city }} {{  user.province }} <br>
+      {{  user.country }} <br>
+      <br>
+      <a href="{{ url_for('direccion') }}">
+            <button class="btn btn-default">Corregir datos</button>
+      </a>
+    </div>  
+
   </div>
-</div>
-<div class=container>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-        <b>Seleciona cómo enviaras la orden</b>
-        </h4>
-    </div>
-    <div class="panel-body">
-        <div class="items">
-          <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
-            <a href="{{ url_for('confirma_solicitud', metodo_envio='Moova') }}" >
-                <button class="btn btn-primary">
-                  Pasar a retirar <br>
-                  por mi domicilio
-                </button>
-            </a>
-          </div>
-          <div class="col-xs-6 col-sm- col-md-2 col-lg-2">
+      <br>
+      <div class=container>
+        <h5  style="text-align:center">Seleciona cómo enviaras la orden </h5>
+        <br>
+      <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+          
+          <a href="{{ url_for('confirma_solicitud', metodo_envio='Moova') }}" >
+              <button class="btn btn-primary">
+                Pasar a retirar <br>
+                por mi domicilio
+              </button>
+          </a>
+        </div>
+          <div class="col-xs-6 col-sm- col-md-2 col-lg-2"></div>
           <a href="{{ url_for('confirma_solicitud', metodo_envio='Manual') }}" >
             <button class="btn btn-primary" >
               Enviaré por <br>
               mi cuenta</button>
           </a>
-          </div>
-          
         </div>
-      </div>
+        </div>
     </div>
+  </div>
 </div>
-
 
 {% endblock %}
