@@ -74,54 +74,46 @@
 <br>
 <div class='container'>
     {% if title == 'Cambio' %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                  <b>Selecciona la opción deseada</b>
-              </h4>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
-                        <form id="Alternativas" action="{{ url_for('pedidos') }}" method="POST"> 
-                            <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
-                            <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
+    <form id="Alternativas" action="{{ url_for('pedidos') }}" method="POST"> 
+        <div class="row">
+            <div class="col-xs-8 col-sm-8 col-md-4 col-lg-4">
+                <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
+                <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
 
-                            {% if alternativas|length > 0 %}
-                            <table class="table">
-                                <tr>
-                                    <th></th>
-                                    {% for x in atributos %}
-                                        <th scope="col"> {{ x['es'] }} </th>
-                                    {% endfor %}
-                                </tr>
-                            {% for x in alternativas %}     
-                                <tr>
-                                    <td>
-                                    <!--   <input type="radio" id="variante" name="variante" value="{{ x['id'] }}" >  -->
-                                        <input type="radio" id="variante" name="variante" value="{{ x }}" > 
-                                    </td>
-                                    {% for i in x['values'] %}
-                                        <td> {{ i['es'] }} </td> 
-                                    {% endfor %}
-                                </tr>
-                            {% endfor %} 
-                            </table>      
-                             <br>
-                            <button class="btn btn-default" type="submit">Seleccionar</button>
-                            {% else %}
-                                <tr><strong> 
-                                    <h4 style="text-align: center;"> No hay Stock para ese artículo <br>
-                                    Comunicate con nosotros para verificar o selecciona la opción devolver</h4> 
-                                </strong></tr> <br>
+                {% if alternativas|length > 0 %}
+                <table class="table">
+                    <tr>
+                        <th></th>
+                        {% for x in atributos %}
+                            <th scope="col"> {{ x['es'] }} </th>
+                        {% endfor %}
+                    </tr>
+                    
+                  
+                    {% for x in alternativas %}     
+                        <tr>
+                            <td>
+                             <!--   <input type="radio" id="variante" name="variante" value="{{ x['id'] }}" >  -->
+                                <input type="radio" id="variante" name="variante" value="{{ x }}" > 
+                            </td>
+                            {% for i in x['values'] %}
+                                <td> {{ i['es'] }} </td> 
+                            {% endfor %}
+                        </tr>
+                    {% endfor %} 
+                </table>      
+                <br>
+            <button class="btn btn-default" type="submit">Seleccionar</button>
+            {% else %}
+                        <tr><strong> 
+                            <h4 style="text-align: center;"> No hay Stock para ese artículo <br>
+                            Comunicate con nosotros para verificar o selecciona la opción devolver</h4> 
+                        </strong></tr> <br>
 
-                            {% endif %}
-                        </form>
-                    </div>
-                </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
+    </form>
+    {% endif %}
 </div>
    
 {% endblock %}
