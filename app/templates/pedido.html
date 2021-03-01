@@ -11,7 +11,7 @@
       {% for producto in productos %}
       
       
-      <form id="producto{{ producto['id'] }}" action="{{ url_for('pedidos_unitarios') }}" method="POST"> 
+      <form id="producto{{ producto['id'] }}" action="{{ url_for('main.pedidos_unitarios') }}" method="POST"> 
 
             <div class="row">
               <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
@@ -54,9 +54,9 @@
       {% endfor %}
       
       <form id="confirma_cambios" 
-        action="{{ url_for('confirma_cambios') }}" method="POST"> 
+        action="{{ url_for('main.confirma_cambios') }}" method="POST"> 
         <p align="center">
-            <a href="{{ url_for('confirma_cambios') }}" >
+            <a href="{{ url_for('main.confirma_cambios') }}" >
             <button class="btn btn-primary" style="margin:auto;display:block">Confirmar</button>
         </a>
         </p>

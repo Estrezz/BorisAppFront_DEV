@@ -8,7 +8,6 @@ from flask import session, flash
 
 #import os
 
-from app import app
 
 
 def buscar_nro_pedido(lista, valor):
@@ -238,7 +237,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
     solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
     if solicitud.status_code != 201:
       flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
-      loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, json.dumps(solicitud) )
+      loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, solicitud.json() )
       return 'Failed'
     else:
       solicitud_envio = solicitud.json()

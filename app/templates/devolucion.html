@@ -2,7 +2,7 @@
 
 {% block app_content %}
 <div class='container'>
-    <form id="item" action="{{ url_for('pedidos') }}" method="POST"> 
+    <form id="item" action="{{ url_for('main.pedidos') }}" method="POST"> 
 
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
@@ -83,7 +83,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
-                        <form id="Alternativas" action="{{ url_for('pedidos') }}" method="POST"> 
+                        <form id="Alternativas" action="{{ url_for('main.pedidos') }}" method="POST"> 
                             <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
                             <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
 

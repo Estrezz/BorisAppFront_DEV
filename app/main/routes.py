@@ -1,31 +1,32 @@
 from flask import render_template, flash, redirect, url_for
-from app import app, db
-from app.forms import LoginForm, DireccionForm
+from app import db
+from app.main.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Customer, Order, Producto, Company
-from app.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking
+from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking
+from app.main import bp
 from flask import request
 import requests
 import ast
 
 
-@app.route('/', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET', 'POST'])
 
-@app.route('/home', methods=['GET', 'POST'])
+@bp.route('/home', methods=['GET', 'POST'])
 def home():
     if request.args.get('store_id') == None:
-        return redirect(url_for('buscar', empresa = 'Ninguna'))    
+        return redirect(url_for('main.buscar', empresa = 'Ninguna'))    
     else:
         if request.args.get('order_id') == None:
-            return redirect(url_for('buscar', empresa = request.args.get('store_id')))
+            return redirect(url_for('main.buscar', empresa = request.args.get('store_id')))
         else: 
             unaEmpresa = buscar_empresa(request.args.get('store_id'))
             pedido = buscar_pedido_conNro(unaEmpresa.store_id, request.args.get('order_id'))
             cargar_pedido(unaEmpresa, pedido)
-            return redirect(url_for('pedidos'))
+            return redirect(url_for('main.pedidos'))
 
 
-@app.route('/buscar', methods=['GET', 'POST'])
+@bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
     ## Borrar todos los datos de la base de datos ##
     Company.query.delete()
@@ -46,12 +47,12 @@ def buscar():
             return render_template('buscar.html', title='Inicia tu gestión', form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
         else:
             cargar_pedido(unaEmpresa, pedido)
-            return redirect(url_for('pedidos'))
+            return redirect(url_for('main.pedidos'))
 
     return render_template('buscar.html', title='Inicia tu Gestión', form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
 
 
-@app.route('/pedidos', methods=['GET', 'POST'])
+@bp.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
     company = Company.query.first()
     user = Customer.query.first()
@@ -89,7 +90,7 @@ def pedidos():
     return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
 
 
-@app.route('/pedidos_unitarios', methods=['GET', 'POST'])
+@bp.route('/pedidos_unitarios', methods=['GET', 'POST'])
 def pedidos_unitarios():   
     if request.method == "POST": 
         prod_id = request.form.get("Prod_Id")
@@ -100,7 +101,7 @@ def pedidos_unitarios():
 
 
 
-@app.route('/Confirmar',methods=['GET', 'POST'])
+@bp.route('/Confirmar',methods=['GET', 'POST'])
 def confirma_cambios():
     user = Customer.query.first()
     order = Order.query.first()
@@ -108,7 +109,7 @@ def confirma_cambios():
     return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
 
 
-@app.route('/direccion', methods=['GET', 'POST'])
+@bp.route('/direccion', methods=['GET', 'POST'])
 def direccion():
     user = Customer.query.first()
     form = DireccionForm()
@@ -127,11 +128,11 @@ def direccion():
     if form.validate_on_submit():
         form.populate_obj(obj=user)
         db.session.commit() 
-        return redirect(url_for('confirma_cambios'))
+        return redirect(url_for('main.confirma_cambios'))
     return render_template('direccion.html', form=form, user=user)
 
 
-@app.route('/confirma_solicitud', methods=['GET', 'POST'])
+@bp.route('/confirma_solicitud', methods=['GET', 'POST'])
 def confirma_solicitud():
     metodo_envio = request.args.get('metodo_envio')
     company = Company.query.first()
@@ -143,13 +144,13 @@ def confirma_solicitud():
 
 
 
-@app.route('/envio_mail')
+@bp.route('/envio_mail')
 def envio_mail():
     send_email('prueba', 'erezzonico@borisreturns.com', 'erezzoni@outlook.com', 'esta es una prueba', '<h1>html_body</h1>')
     return render_template('envio.html', title='Envio de Mail')
 
 
-@app.route('/tracking/<order>',methods=['GET', 'POST'])
+@bp.route('/tracking/<order>',methods=['GET', 'POST'])
 def tracking(order):
     historia = busca_tracking(order)
     return render_template('tracking.html', title='Tracking', historia=historia)
