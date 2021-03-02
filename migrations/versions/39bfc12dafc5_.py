@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f312379b7140
+Revision ID: 39bfc12dafc5
 Revises: 
-Create Date: 2021-01-13 10:52:49.399748
+Create Date: 2021-03-02 16:16:35.422787
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f312379b7140'
+revision = '39bfc12dafc5'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -80,6 +80,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('company_id', sa.Integer(), nullable=True),
     sa.Column('name', sa.String(length=64), nullable=True),
+    sa.Column('identification', sa.String(length=64), nullable=True),
     sa.Column('email', sa.String(length=120), nullable=True),
     sa.Column('phone', sa.String(length=15), nullable=True),
     sa.Column('address', sa.String(length=64), nullable=True),
@@ -94,14 +95,21 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_customer_email'), 'customer', ['email'], unique=True)
+    op.create_index(op.f('ix_customer_identification'), 'customer', ['identification'], unique=False)
     op.create_index(op.f('ix_customer_name'), 'customer', ['name'], unique=False)
     op.create_table('order',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('order_number', sa.Integer(), nullable=True),
     sa.Column('order_original_id', sa.Integer(), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
+    sa.Column('order_fecha_compra', sa.DateTime(), nullable=True),
     sa.Column('metodo_de_pago', sa.String(length=10), nullable=True),
     sa.Column('tarjeta_de_pago', sa.String(length=10), nullable=True),
+    sa.Column('gastos_cupon', sa.Float(), nullable=True),
+    sa.Column('gastos_gateway', sa.Float(), nullable=True),
+    sa.Column('gastos_shipping_owner', sa.Float(), nullable=True),
+    sa.Column('gastos_shipping_customer', sa.Float(), nullable=True),
+    sa.Column('gastos_promocion', sa.Float(), nullable=True),
     sa.Column('customer_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['customer_id'], ['customer.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -120,6 +128,8 @@ def upgrade():
     sa.Column('accion_cambiar_por_desc', sa.String(length=100), nullable=True),
     sa.Column('accion_cantidad', sa.Integer(), nullable=True),
     sa.Column('motivo', sa.String(length=50), nullable=True),
+    sa.Column('valido', sa.Boolean(), nullable=True),
+    sa.Column('valido_motivo', sa.String(length=50), nullable=True),
     sa.Column('image', sa.String(length=100), nullable=True),
     sa.Column('promo_descuento', sa.Float(), nullable=True),
     sa.Column('promo_nombre', sa.String(length=10), nullable=True),
@@ -139,6 +149,7 @@ def downgrade():
     op.drop_index(op.f('ix_order_timestamp'), table_name='order')
     op.drop_table('order')
     op.drop_index(op.f('ix_customer_name'), table_name='customer')
+    op.drop_index(op.f('ix_customer_identification'), table_name='customer')
     op.drop_index(op.f('ix_customer_email'), table_name='customer')
     op.drop_table('customer')
     op.drop_index(op.f('ix_store_store_id'), table_name='store')
