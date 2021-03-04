@@ -5,7 +5,7 @@ from app.email import send_email
 from app.models import Customer, Order, Producto, Company
 from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking
 from app.main import bp
-from flask import request, session
+from flask import request
 import requests
 import ast
 
@@ -14,29 +14,26 @@ import ast
 
 @bp.route('/home', methods=['GET', 'POST'])
 def home():
-
     if request.args.get('store_id') == None:
-        empresa ='Ninguna'
-    else: 
-        empresa = request.args.get('store_id')
-
-    if request.args.get('order_id') == None:
-        return redirect(url_for('main.buscar', empresa = empresa))
-    else: 
-        unaEmpresa = buscar_empresa(empresa)
-        pedido = buscar_pedido_conNro(unaEmpresa.store_id, request.args.get('order_id'))
-        cargar_pedido(unaEmpresa, pedido)
-        return redirect(url_for('main.pedidos'))
+        return redirect(url_for('main.buscar', empresa = 'Ninguna'))    
+    else:
+        if request.args.get('order_id') == None:
+            return redirect(url_for('main.buscar', empresa = request.args.get('store_id')))
+        else: 
+            unaEmpresa = buscar_empresa(request.args.get('store_id'))
+            pedido = buscar_pedido_conNro(unaEmpresa.store_id, request.args.get('order_id'))
+            cargar_pedido(unaEmpresa, pedido)
+            return redirect(url_for('main.pedidos'))
 
 
 @bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
     ## Borrar todos los datos de la base de datos ##
-    # Company.query.delete()
-    # Customer.query.delete()
-    # Order.query.delete()
-    # Producto.query.delete()
-    # db.session.commit()
+    Company.query.delete()
+    Customer.query.delete()
+    Order.query.delete()
+    Producto.query.delete()
+    db.session.commit()
     #### fin borrado #################################
 
     unaEmpresa = buscar_empresa(request.args['empresa'])
@@ -57,16 +54,10 @@ def buscar():
 
 @bp.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
-    flash('empresa {} pedido {}'.format(session['store'], session['orden']))
-    #company = Company.query.first()
-    #user = Customer.query.first()
-    #order = Order.query.first()
-    #productos = Producto.query.all()
-    # cambios para sesion
-    company = Company.query.filter_by(store_id=session['store']).first()
-    user = Customer.query.get(session['cliente'])
-    order = Order.query.get(session['orden'])
-    productos = Producto.query.filter_by(order_id=session['orden']).all()
+    company = Company.query.first()
+    user = Customer.query.first()
+    order = Order.query.first()
+    productos = Producto.query.all()
 
     if request.method == "POST" and request.form.get("form_item") == "elegir_item" : 
         prod_id = request.form.get("Prod_Id")
@@ -81,10 +72,10 @@ def pedidos():
         db.session.commit()
 
         if accion == 'cambiar' and item.accion_reaccion == False:   
-            user = Customer.query.get(session['cliente'])
-            order = Order.query.get(session['orden'])
+            user = Customer.query.first()
+            order = Order.query.first()
             item = Producto.query.get(prod_id)
-            alternativas = buscar_alternativas(session['store'], item.prod_id, motivo, item.variant)
+            alternativas = buscar_alternativas(company.store_id, item.prod_id, motivo, item.variant)
             return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
@@ -103,8 +94,8 @@ def pedidos():
 def pedidos_unitarios():   
     if request.method == "POST": 
         prod_id = request.form.get("Prod_Id")
-        user = Customer.query.get(session['cliente'])
-        order = Order.query.get(session['orden'])
+        user = Customer.query.first()
+        order = Order.query.first()
         item = Producto.query.get(prod_id)
     return render_template('devolucion.html', title='Accion', user=user, order = order, item = item)
 
@@ -112,17 +103,15 @@ def pedidos_unitarios():
 
 @bp.route('/Confirmar',methods=['GET', 'POST'])
 def confirma_cambios():
-    user = Customer.query.get(session['cliente'])
-    order = Order.query.get(session['orden'])
-    ### revisar
-    productos = db.session.query(Producto).filter((Producto.order_id==session['orden'])).filter((Producto.accion != 'ninguna'))
-    #productos = Producto.query.filter_by(order_id=session['orden']).all()
+    user = Customer.query.first()
+    order = Order.query.first()
+    productos = Producto.query.filter((Producto.accion != 'ninguna'))
     return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
 
 
 @bp.route('/direccion', methods=['GET', 'POST'])
 def direccion():
-    user = Customer.query.get(session['cliente'])
+    user = Customer.query.first()
     form = DireccionForm()
     if request.method == 'GET':
         form.name.data = user.name
@@ -146,10 +135,10 @@ def direccion():
 @bp.route('/confirma_solicitud', methods=['GET', 'POST'])
 def confirma_solicitud():
     metodo_envio = request.args.get('metodo_envio')
-    company = Company.query.filter_by(store_id=session['store']).first()
-    user = Customer.query.get(session['cliente'])
-    order = Order.query.get(session['orden'])
-    productos = db.session.query(Producto).filter((Producto.order_id==session['orden'])).filter((Producto.accion != 'ninguna'))
+    company = Company.query.first()
+    user = Customer.query.first()
+    order = Order.query.first()
+    productos = Producto.query.filter((Producto.accion != 'ninguna'))
     envio = crea_envio(company, user, order, productos, metodo_envio)
     return render_template('envio.html', company=company, user=user, order=order, productos=productos, envio=envio)
 

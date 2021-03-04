@@ -97,7 +97,9 @@ def describir_variante(values):
 
 def buscar_empresa(empresa):
   if empresa != 'Ninguna':
+    flash('empresa {} {}'.format(type(empresa), empresa))
     empresa_tmp = Store.query.filter(Store.store_id == empresa).first()
+    flash('empresa_tmp {} '.format(empresa_tmp))
     #### guarda settings de la empresa
     settings = guardar_settings(empresa_tmp.param_config)
     session['paga_correo'] = settings['shipping']
@@ -382,7 +384,6 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
 
 def cargar_pedido(unaEmpresa, pedido ):
 
-  session['store'] = unaEmpresa.store_id
   unCliente = Customer(
     id = pedido['customer']['id'],
     name =pedido['customer']['name'],
@@ -399,8 +400,7 @@ def cargar_pedido(unaEmpresa, pedido ):
     country = pedido['shipping_address']['country'],
     pertenece = unaEmpresa
     )
-  session['cliente'] = unCliente.id
-
+                        
   unaOrden = Order(
     id = pedido['id'],
     order_number = pedido['number'],
@@ -414,8 +414,7 @@ def cargar_pedido(unaEmpresa, pedido ):
     gastos_shipping_customer = pedido['shipping_cost_customer'],
     gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
     buyer = unCliente
-    )
-  session['orden'] = unaOrden.id       
+    )       
 
   for x in range(len(pedido['products'])): 
     promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
