@@ -32,11 +32,12 @@ def home():
 @bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
     ## Borrar todos los datos de la base de datos ##
-    Producto.query.filter_by(order_id=session['orden']).delete()
-    Order.query.filter_by(id=session['orden']).delete()
-    Customer.query.filter_by(id=session['cliente']).delete()
-    Company.query.filter_by(store_id=session['store']).delete()
-    db.session.commit()
+    if 'orden' in session:
+        Producto.query.filter_by(order_id=session['orden']).delete()
+        Order.query.filter_by(id=session['orden']).delete()
+        Customer.query.filter_by(id=session['cliente']).delete()
+        Company.query.filter_by(store_id=session['store']).delete()
+        db.session.commit()
 
     # Company.query.delete()
     # Customer.query.delete()
