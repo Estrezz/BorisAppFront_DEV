@@ -32,6 +32,7 @@ def home():
 @bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
     ## Borrar todos los datos de la base de datos ##
+
     # Company.query.delete()
     # Customer.query.delete()
     # Order.query.delete()
@@ -149,9 +150,18 @@ def confirma_solicitud():
     company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     order = Order.query.get(session['orden'])
-    productos = db.session.query(Producto).filter((Producto.order_id==session['orden'])).filter((Producto.accion != 'ninguna'))
+    productos = Producto.query.filter_by(order_id=session['orden']).all()
+    
     envio = crea_envio(company, user, order, productos, metodo_envio)
-    return render_template('envio.html', company=company, user=user, order=order, productos=productos, envio=envio)
+    #### borra el pedido de la base
+    #db.session.delete(company)
+    Company.query.filter_by(store_id=session['store']).delete()
+    Customer.query.filter_by(id=session['cliente']).delete()
+    Order.query.filter_by(id=session['orden']).delete()
+    Producto.query.filter_by(order_id=session['orden']).delete()
+    db.session.commit()
+
+    return render_template('envio.html', company=company, user=user, order=order, envio=envio)
 
 
 
