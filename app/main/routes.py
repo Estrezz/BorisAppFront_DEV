@@ -32,6 +32,11 @@ def home():
 @bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
     ## Borrar todos los datos de la base de datos ##
+    Producto.query.filter_by(order_id=session['orden']).delete()
+    Order.query.filter_by(id=session['orden']).delete()
+    Customer.query.filter_by(id=session['cliente']).delete()
+    Company.query.filter_by(store_id=session['store']).delete()
+    db.session.commit()
 
     # Company.query.delete()
     # Customer.query.delete()
@@ -58,11 +63,7 @@ def buscar():
 
 @bp.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
-    flash('empresa {} pedido {}'.format(session['store'], session['orden']))
-    #company = Company.query.first()
-    #user = Customer.query.first()
-    #order = Order.query.first()
-    #productos = Producto.query.all()
+
     # cambios para sesion
     company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
@@ -154,11 +155,10 @@ def confirma_solicitud():
     
     envio = crea_envio(company, user, order, productos, metodo_envio)
     #### borra el pedido de la base
-    #db.session.delete(company)
-    Company.query.filter_by(store_id=session['store']).delete()
-    Customer.query.filter_by(id=session['cliente']).delete()
-    Order.query.filter_by(id=session['orden']).delete()
     Producto.query.filter_by(order_id=session['orden']).delete()
+    Order.query.filter_by(id=session['orden']).delete()
+    Customer.query.filter_by(id=session['cliente']).delete()
+    Company.query.filter_by(store_id=session['store']).delete()
     db.session.commit()
 
     return render_template('envio.html', company=company, user=user, order=order, envio=envio)
