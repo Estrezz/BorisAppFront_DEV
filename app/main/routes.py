@@ -38,6 +38,10 @@ def buscar():
         Customer.query.filter_by(id=session['cliente']).delete()
         #Company.query.filter_by(store_id=session['store']).delete()
         db.session.commit()
+        session.pop('orden', None)
+        session.pop('cliente', None)
+        session.pop('store', None)
+
 
     # Company.query.delete()
     # Customer.query.delete()
