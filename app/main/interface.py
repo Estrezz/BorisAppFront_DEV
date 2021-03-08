@@ -4,7 +4,8 @@ import datetime
 from datetime import datetime
 from app import db
 from app.models import Customer, Order, Producto, Company, Store
-from flask import session, flash
+from flask import session, flash, current_app
+from app.email import send_email
 
 #import os
 
@@ -253,6 +254,8 @@ def crea_envio(company, user, order, productos, metodo_envio):
   mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
   if mandaBoris == 'Error':
     flash('ya existe un cambio para esa orden')
+  else: 
+    send_email('Tu pedido ha sido creado', sender=current_app.config['ADMINS'][0], recipients=[user.email], text_body='Prueba', html_body='', attachments=None, sync=False)
   
   #return solicitud.json()
   return solicitud_envio
@@ -383,6 +386,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
 def cargar_pedido(unaEmpresa, pedido ):
 
   session['store'] = unaEmpresa.store_id
+  session['plataforma'] = unaEmpresa.platform
   unCliente = Customer(
     id = pedido['customer']['id'],
     name =pedido['customer']['name'],

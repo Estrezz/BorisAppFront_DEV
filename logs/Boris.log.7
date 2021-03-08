@@ -1,124 +1,119 @@
-2021-03-02 10:55:50,595 ERROR: Request finalizing failed with an error while handling an error [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1976]
+2021-03-04 10:00:22,544 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 559, in connect
-    sock = self._connect()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 585, in _connect
-    socket.SOCK_STREAM):
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\socket.py", line 745, in getaddrinfo
-    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
-socket.gaierror: [Errno 11001] getaddrinfo failed
-
-During handling of the above exception, another exception occurred:
-
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 43, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 102, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+AttributeError: 'NoneType' object has no attribute 'param_config'
+2021-03-04 10:01:58,680 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-04 10:02:12,417 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2446, in wsgi_app
-    ctx.push()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\ctx.py", line 390, in push
-    self.session = session_interface.open_session(self.app, self.request)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask_session\sessions.py", line 132, in open_session
-    val = self.redis.get(self.key_prefix + sid)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\client.py", line 1606, in get
-    return self.execute_command('GET', name)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\client.py", line 898, in execute_command
-    conn = self.connection or pool.get_connection(command_name, **options)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 1192, in get_connection
-    connection.connect()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 563, in connect
-    raise ConnectionError(self._error_message(e))
-redis.exceptions.ConnectionError: Error 11001 connecting to uskgkahbixg9tiwnp2qdsi9bqgao58v:16912. getaddrinfo failed.
-
-During handling of the above exception, another exception occurred:
-
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 44, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 102, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+AttributeError: 'NoneType' object has no attribute 'param_config'
+2021-03-04 10:05:01,871 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-04 10:07:28,201 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1970, in finalize_request
-    response = self.process_response(response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2269, in process_response
-    self.session_interface.save_session(self, ctx.session, response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask_session\sessions.py", line 145, in save_session
-    if session.modified:
-AttributeError: 'NoneType' object has no attribute 'modified'
-2021-03-02 10:58:22,512 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 44, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 103, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+AttributeError: 'NoneType' object has no attribute 'param_config'
+2021-03-04 10:07:49,119 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 559, in connect
-    sock = self._connect()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 585, in _connect
-    socket.SOCK_STREAM):
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\socket.py", line 745, in getaddrinfo
-    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
-socket.gaierror: [Errno 11001] getaddrinfo failed
-
-During handling of the above exception, another exception occurred:
-
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 44, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 103, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+AttributeError: 'NoneType' object has no attribute 'param_config'
+2021-03-04 10:08:22,048 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-04 10:08:25,071 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2446, in wsgi_app
-    ctx.push()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\ctx.py", line 390, in push
-    self.session = session_interface.open_session(self.app, self.request)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask_session\sessions.py", line 132, in open_session
-    val = self.redis.get(self.key_prefix + sid)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\client.py", line 1606, in get
-    return self.execute_command('GET', name)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\client.py", line 898, in execute_command
-    conn = self.connection or pool.get_connection(command_name, **options)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 1192, in get_connection
-    connection.connect()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 563, in connect
-    raise ConnectionError(self._error_message(e))
-redis.exceptions.ConnectionError: Error 11001 connecting to uskgkahbixg9tiwnp2qdsi9bqgao58v:16912. getaddrinfo failed.
-2021-03-02 10:58:22,532 ERROR: Request finalizing failed with an error while handling an error [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1976]
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 44, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 104, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+AttributeError: 'NoneType' object has no attribute 'param_config'
+2021-03-04 10:12:12,863 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-04 10:12:18,081 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 559, in connect
-    sock = self._connect()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 585, in _connect
-    socket.SOCK_STREAM):
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\socket.py", line 745, in getaddrinfo
-    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
-socket.gaierror: [Errno 11001] getaddrinfo failed
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2446, in wsgi_app
-    ctx.push()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\ctx.py", line 390, in push
-    self.session = session_interface.open_session(self.app, self.request)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask_session\sessions.py", line 132, in open_session
-    val = self.redis.get(self.key_prefix + sid)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\client.py", line 1606, in get
-    return self.execute_command('GET', name)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\client.py", line 898, in execute_command
-    conn = self.connection or pool.get_connection(command_name, **options)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 1192, in get_connection
-    connection.connect()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\redis\connection.py", line 563, in connect
-    raise ConnectionError(self._error_message(e))
-redis.exceptions.ConnectionError: Error 11001 connecting to uskgkahbixg9tiwnp2qdsi9bqgao58v:16912. getaddrinfo failed.
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1970, in finalize_request
-    response = self.process_response(response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2269, in process_response
-    self.session_interface.save_session(self, ctx.session, response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask_session\sessions.py", line 145, in save_session
-    if session.modified:
-AttributeError: 'NoneType' object has no attribute 'modified'
-2021-03-02 11:03:13,775 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 12:27:52,505 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 14:35:38,387 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 14:39:59,261 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 14:42:15,434 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 15:28:28,391 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 15:41:40,741 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 15:41:57,620 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 16:04:31,543 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 16:10:05,885 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 16:10:21,419 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 16:16:28,811 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 16:16:35,359 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 16:16:43,204 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 20:00:27,814 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 20:00:34,876 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-02 20:00:43,790 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-04 09:59:45,575 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 44, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 104, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+AttributeError: 'NoneType' object has no attribute 'param_config'
+2021-03-04 10:15:15,157 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
