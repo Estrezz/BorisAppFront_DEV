@@ -1,4 +1,4 @@
-2021-03-04 15:57:08,953 ERROR: Exception on /buscar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-03-04 16:16:09,549 ERROR: Exception on /buscar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1277, in _execute_context
     cursor, statement, parameters, context
@@ -69,14 +69,12 @@ Traceback (most recent call last):
     cursor.execute(statement, parameters)
 sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: customer.id
 [SQL: INSERT INTO customer (id, company_id, name, identification, email, phone, address, number, floor, zipcode, locality, city, province, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
-[parameters: (55949525, 3, 'Ciro Prueba', '204304477', 'ciro@hotmail.com', '', 'Virrey loreto ', '2912', '1A', '1426', 'Colegiales', 'Capital Federal', 'Capital Federal', 'AR')]
+[parameters: (55949525, 2, 'Ciro Prueba', '204304477', 'ciro@hotmail.com', '', 'Virrey loreto ', '2912', '1A', '1426', 'Colegiales', 'Capital Federal', 'Capital Federal', 'AR')]
 (Background on this error at: http://sqlalche.me/e/13/gkpj)
-2021-03-04 15:59:01,635 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-04 16:00:24,026 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-04 16:01:40,152 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-04 16:01:40,152 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-04 16:08:54,202 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-04 16:09:25,930 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-03-04 16:17:43,188 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-04 16:17:44,993 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-04 16:17:50,436 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-04 16:18:09,949 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -90,9 +88,11 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 158, in confirma_solicitud
-    session.delete(company)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\werkzeug\local.py", line 347, in __getattr__
-    return getattr(self._get_current_object(), name)
-AttributeError: 'SecureCookieSession' object has no attribute 'delete'
-2021-03-04 16:10:19,941 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 159, in confirma_solicitud
+    Customer.query.get(session['cliente']).delete()
+AttributeError: 'Customer' object has no attribute 'delete'
+2021-03-04 16:19:44,506 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-05 13:39:34,649 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-08 10:12:08,120 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-08 10:13:36,045 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-08 10:45:18,577 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
