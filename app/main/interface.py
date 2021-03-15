@@ -362,7 +362,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   data = {
   "orden": order.id,
   "orden_nro": order.order_number,
-  "orden_fecha": str(order.timestamp),
+  "orden_fecha": str(order.timestamp.strftime("%Y-%m-%d %H:%M:%S.%f")),
   "orden_medio_de_pago": order.metodo_de_pago,
   "orden_tarjeta_de_pago": order.tarjeta_de_pago,
   "orden_gastos_cupon": order.gastos_cupon,
