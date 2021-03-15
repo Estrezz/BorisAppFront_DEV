@@ -269,6 +269,84 @@ def crea_envio(company, user, order, productos, metodo_envio):
   return solicitud_envio
 
 
+#### Cotizar el precio del envío
+def cotiza_envio(company, user, order, productos, correo):
+  if 'paga_correo' in session:  
+    if session['paga_correo'] == 'company':
+      return 'Retiro Gratuito'
+ 
+  solicitud_tmp = {
+  "from": {
+    "street": user.address,
+    "number": user.number,
+    "floor": user.floor,
+    "city": user.city,
+    "state": user.province,
+    "postalCode": user.zipcode,
+    "country": user.country,
+    "contact": {
+      "firstName": user.name,
+      "email": user.email
+    }
+  },
+  "to": {
+    "street": company.shipping_address,
+    "number": company.shipping_number,
+    "floor": company.shipping_floor,
+    "city": company.shipping_city,
+    "state": company.shipping_province,
+    "postalCode": company.shipping_zipcode,
+    "country": company.shipping_country,
+    "contact": {
+      "firstName": company.contact_name,
+      "email": company.contact_email,
+      "phone": company.contact_phone
+    },
+    "message": ""
+  },
+  "conf": {
+    "assurance": False,
+    "items": [
+    ]
+  },
+  "shipping_type_id": 1
+}
+
+  items_envio = []
+  for i in productos:
+    items_envio.append (   
+    {
+        "item": {
+          "description": i.name,
+          "price": i.price,
+          "quantity": i.accion_cantidad
+        }
+      }
+    )
+
+  solicitud_tmp['conf']['items'] = items_envio
+
+  if correo == 'Moova':
+    url = "https://api-dev.moova.io//b2b/v2/budgets"
+    headers = {
+      'Authorization': company.correo_apikey,
+      'Content-Type': 'application/json',
+    }
+    params = {'appId': company.correo_id}
+    solicitud_tmp = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
+    if solicitud_tmp.status_code != 200:
+      #flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud_tmp.status_code))
+      #flash('Hubo un problema con la generación del evío. Error {} '.format(solicitud_tmp.json()))
+      return 'Failed'
+    else:
+      solicitud = solicitud_tmp.json()
+      #flash('El precio del envio es {}'.format(solicitud_tmp.price_formatted))
+      precio = solicitud['price_formatted']
+  # else:
+    ### Cotizar otros correos
+  return precio
+
+
 
 def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   if 'test' in session:  

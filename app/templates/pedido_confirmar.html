@@ -74,14 +74,17 @@
     </div>
     <div class="panel-body">
         <div class="items">
+        {% if precio_envio != 'Failed'%}
           <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
             <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Moova') }}" >
                 <button class="btn btn-primary">
                   Pasar a retirar <br>
-                  por mi domicilio
+                  por mi domicilio <br>
+                  Costo: {{precio_envio}}
                 </button>
             </a>
           </div>
+        {% endif %}
           <div class="col-xs-6 col-sm- col-md-2 col-lg-2">
           <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Manual') }}" >
             <button class="btn btn-primary" >

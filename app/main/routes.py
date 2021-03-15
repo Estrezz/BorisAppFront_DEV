@@ -3,7 +3,7 @@ from app import db
 from app.main.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking
+from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking
 from app.main import bp
 from flask import request, session
 import requests
@@ -66,6 +66,7 @@ def buscar():
     return render_template('buscar.html', title='Inicia tu Gestión', form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
 
 
+
 @bp.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
 
@@ -121,10 +122,12 @@ def pedidos_unitarios():
 def confirma_cambios():
     user = Customer.query.get(session['cliente'])
     order = Order.query.get(session['orden'])
-    ### revisar
     productos = db.session.query(Producto).filter((Producto.order_id==session['orden'])).filter((Producto.accion != 'ninguna'))
-    #productos = Producto.query.filter_by(order_id=session['orden']).all()
-    return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos)
+    ###### Cambios
+    company = Company.query.filter_by(store_id=session['store']).first()
+    precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
+    return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos, precio_envio=precio_envio)
+
 
 
 @bp.route('/direccion', methods=['GET', 'POST'])
@@ -150,6 +153,7 @@ def direccion():
     return render_template('direccion.html', form=form, user=user)
 
 
+
 @bp.route('/confirma_solicitud', methods=['GET', 'POST'])
 def confirma_solicitud():
     metodo_envio = request.args.get('metodo_envio')
@@ -163,17 +167,9 @@ def confirma_solicitud():
     Producto.query.filter_by(order_id=session['orden']).delete()
     Order.query.filter_by(id=session['orden']).delete()
     Customer.query.filter_by(id=session['cliente']).delete()
-    #Company.query.filter_by(store_id=session['store']).delete()
     db.session.commit()
 
     return render_template('envio.html', company=company, user=user, order=order, envio=envio)
-
-
-
-@bp.route('/envio_mail')
-def envio_mail():
-    send_email('prueba', 'erezzonico@borisreturns.com', 'erezzoni@outlook.com', 'esta es una prueba', '<h1>html_body</h1>')
-    return render_template('envio.html', title='Envio de Mail')
 
 
 @bp.route('/tracking/<order>',methods=['GET', 'POST'])
