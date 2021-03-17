@@ -255,7 +255,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
   if mandaBoris == 'Error':
     flash('ya existe un cambio para esa orden')
   else: 
-    send_email('Tu Orden ha sido confirmadaflask run', 
+    send_email('Tu Orden ha sido confirmada', 
                 sender=current_app.config['ADMINS'][0], 
                 recipients=[user.email], 
                 text_body=render_template('email/1447373/pedido_listo.txt',

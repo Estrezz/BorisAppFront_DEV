@@ -160,7 +160,10 @@ def confirma_solicitud():
     company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     order = Order.query.get(session['orden'])
-    productos = Producto.query.filter_by(order_id=session['orden']).all()
+    #productos = Producto.query.filter_by(order_id=session['orden']).all()
+    #productos = Producto.query.filter((Producto.accion != 'ninguna'))
+
+    productos = db.session.query(Producto).filter((Producto.order_id == session['orden'])).filter((Producto.accion != 'ninguna'))
     
     envio = crea_envio(company, user, order, productos, metodo_envio)
     #### borra el pedido de la base
