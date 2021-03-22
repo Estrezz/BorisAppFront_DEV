@@ -36,7 +36,7 @@ def buscar():
         Producto.query.filter_by(order_id=session['orden']).delete()
         Order.query.filter_by(id=session['orden']).delete()
         Customer.query.filter_by(id=session['cliente']).delete()
-        #Company.query.filter_by(store_id=session['store']).delete()
+        Company.query.filter_by(store_id=session['store']).delete()
         db.session.commit()
         session.pop('orden', None)
         session.pop('cliente', None)
@@ -126,7 +126,7 @@ def confirma_cambios():
     ###### Cambios
     company = Company.query.filter_by(store_id=session['store']).first()
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
-    return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos, precio_envio=precio_envio)
+    return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado)
 
 
 
@@ -160,9 +160,6 @@ def confirma_solicitud():
     company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     order = Order.query.get(session['orden'])
-    #productos = Producto.query.filter_by(order_id=session['orden']).all()
-    #productos = Producto.query.filter((Producto.accion != 'ninguna'))
-
     productos = db.session.query(Producto).filter((Producto.order_id == session['orden'])).filter((Producto.accion != 'ninguna'))
     
     envio = crea_envio(company, user, order, productos, metodo_envio)

@@ -3,23 +3,27 @@ Hola {{ user.name }}!
 {% if envio.id == 'Manual' %}
     <h2 style="text-align:center">  Tu orden ha sido confirmada</h2>
     En breve recibiras por mail las instrucciones para hacernos llegar tu Orden<br>
+
 {% else %}
     <h2 style="text-align:center"> Tu orden ha sido confirmada</h2>
  
      {% if envio.status == 'DRAFT' %}
-            <h2 style="text-align:center">
+        <h2 style="text-align:center">
+            {% if shipping == 'customer' %}
                 En breve recibiras por mail un link para que puedas abonar el envío<br>
                 El costo del mismo es <strong>{{envio.priceFormatted}}</strong>
-            </h2>
-            
-        {% else %}
-            <p style="text-align:center"> Un mensajero de MOOVA pasara a retirarlo en breve<br>
-            tu numero  secreto es {{envio['secretCode']}} 
-            <br>
-            EL Id de tu orden es <br>
-                {{envio.id}}<br>
-            </p>
-        {% endif %}
+            {% else %}
+                Tu orden ha sido confirmada
+                En breve recibiras por mail las instrucciones para hacernos llegar tu Orden<br>
+            {% endif %}
+         </h2>
+    {% else %}
+        <p style="text-align:center"> Un mensajero de MOOVA pasara a retirarlo en breve<br>
+        tu numero  secreto es {{envio['secretCode']}} <br>
+        EL Id de tu orden es <br>
+            {{envio.id}}<br>
+        </p>
+    {% endif %}
 {% endif %}
 
 <h5 style="text-align:center"> Podes hacer el seguimiento de tu orden acá: <br>

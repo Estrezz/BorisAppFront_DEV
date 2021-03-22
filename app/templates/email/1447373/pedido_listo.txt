@@ -5,15 +5,20 @@ Hola {{ user.name }}!
     En breve recibiras por mail las instrucciones para hacernos llegar tu Orden
 {% else %}
     Tu orden ha sido confirmada
-     {% if envio.status == 'DRAFT' %}
-                En breve recibiras por mail un link para que puedas abonar el envío
-                El costo del mismo es <strong>{{envio.priceFormatted}}
+    {% if envio.status == 'DRAFT' %}
+        {% if shipping == 'customer' %}
+            En breve recibiras por mail un link para que puedas abonar el envío
+            El costo del mismo es <strong>{{envio.priceFormatted}}
         {% else %}
-            Un mensajero de MOOVA pasara a retirarlo en breve
-            tu numero  secreto es {{envio['secretCode']}} 
-            EL Id de tu orden es:
-                {{envio.id}}
+            Tu orden ha sido confirmada
+            En breve recibiras por mail las instrucciones para hacernos llegar tu Orden
         {% endif %}
+    {% else %}
+        Un mensajero de MOOVA pasara a retirarlo en breve
+        tu numero  secreto es {{envio['secretCode']}} 
+        EL Id de tu orden es:
+            {{envio.id}}
+    {% endif %}
 {% endif %}
 
 Podes hacer el seguimiento de tu orden acá:
