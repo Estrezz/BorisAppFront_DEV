@@ -36,6 +36,8 @@ def buscar():
         Producto.query.filter_by(order_id=session['orden']).delete()
         Order.query.filter_by(id=session['orden']).delete()
         Customer.query.filter_by(id=session['cliente']).delete()
+        #cust_tmp = Customer.query.filter_by(id=session['cliente']).delete()
+        #db.session.delete(cust_tmp)
         Company.query.filter_by(store_id=session['store']).delete()
         db.session.commit()
         session.pop('orden', None)

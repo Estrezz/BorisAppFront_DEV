@@ -185,7 +185,9 @@ def crea_envio(company, user, order, productos, metodo_envio):
   if mandaBoris == 'Error':
     flash('ya existe un cambio para esa orden')
   else: 
-    send_email('Tu Orden ha sido confirmada', 
+    ## agregado try / except
+    try:
+      send_email('Tu Orden ha sido confirmada', 
                 sender=current_app.config['ADMINS'][0], 
                 recipients=[user.email], 
                 text_body=render_template('email/1447373/pedido_listo.txt',
@@ -194,6 +196,9 @@ def crea_envio(company, user, order, productos, metodo_envio):
                                          user=user, envio=solicitud_envio, order=order, shipping=session['shipping']), 
                 attachments=None, 
                 sync=False)
+    except smtplib.SMTPException as e:
+      a = e
+      flash('Mensaje {}'.format('a.args'))
   return solicitud_envio
 
 
