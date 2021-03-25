@@ -78,8 +78,13 @@ def buscar_alternativas(storeid, prod_id, motivo, item_variant):
   variantes = []
 
   for x in product['variants']:
-    if x['stock'] > 1 and x['id'] != item_variant :
+    # validar stock infinito (NoneType) y permitir cambiar por lo mismo
+    # if x['stock'] > 1 and x['id'] != item_variant :
+    if isinstance(x['stock'], type(None)) == True:
       variantes.append(x)
+    else: 
+      if x['stock'] > 1 :
+        variantes.append(x)
 
   devolver = [variantes, product['attributes']]
   return devolver
@@ -197,8 +202,8 @@ def crea_envio(company, user, order, productos, metodo_envio):
                 attachments=None, 
                 sync=False)
     except smtplib.SMTPException as e:
-      a = e
-      flash('Mensaje {}'.format('a.args'))
+      error_mail = e
+      flash('Mensaje {}'.format('a.error_mail'))
   return solicitud_envio
 
 
@@ -332,6 +337,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
         return 'Failed'
       else: 
         flash('Se envio el pedido correctamente')
+        loguear_error('almacena_envio', 'EL pedido paso correctamente','OK', json.dumps(data) )
         return 'Success'
 
   
