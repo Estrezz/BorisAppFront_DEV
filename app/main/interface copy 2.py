@@ -6,7 +6,6 @@ from app import db
 from app.models import Customer, Order, Producto, Company, Store
 from flask import session, flash, current_app, render_template
 from app.main.moova import crea_envio_moova, cotiza_envio_moova
-from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube
 from app.email import send_email
 
 
@@ -20,8 +19,14 @@ def buscar_nro_pedido(lista, valor):
 
 def buscar_pedido(empresa, form):
   if empresa.platform == 'tiendanube':
-    order_tmp = buscar_pedido_tiendanube(empresa, form)
-    
+    buscar_pedido_tiendanube(empresa, form)
+    url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/orders?q="+form.ordermail.data    
+    payload={}
+    headers = {
+        'Content-Type': 'application/json',
+        'Authentication': empresa.platform_token_type+' '+empresa.platform_access_token
+    }
+    order_tmp = requests.request("GET", url, headers=headers, data=payload).json()
 
   if type(order_tmp) == dict:
     return 'None'
@@ -30,10 +35,16 @@ def buscar_pedido(empresa, form):
     return order
 
 
-def buscar_pedido_conNro(empresa, orderid):
-  if empresa.platform == 'tiendanube':
-    order = buscar_pedido_conNro_tiendanube(empresa, orderid)
+def buscar_pedido_conNro(storeid, orderid):
+  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/orders/"+orderid
   
+  payload={}
+  headers = {
+    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
+    'Content-Type': 'application/json',
+    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
+   }
+  order = requests.request("GET", url, headers=headers, data=payload).json()
   
   return order
 
@@ -55,10 +66,16 @@ def buscar_promo(promociones, Id_Producto ):
 # Busca alternativas para cambiar un articulo según el motivo de cambio
 # devuelve lista con productos alternativos y le oden de los atributos (para tener como encabezados)
 #####################################################################################################
-def buscar_alternativas(company, storeid, prod_id, motivo, item_variant):
-  if company.platform == 'tiendanube':
-    product = buscar_alternativas_tiendanube(company, storeid, prod_id, motivo, item_variant)
+def buscar_alternativas(storeid, prod_id, motivo, item_variant):
+  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)
   
+  payload={}
+  headers = {
+    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
+    'Content-Type': 'application/json',
+    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
+   }
+  product = requests.request("GET", url, headers=headers, data=payload).json()
   variantes = []
 
   for x in product['variants']:

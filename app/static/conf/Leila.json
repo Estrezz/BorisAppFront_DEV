@@ -1,0 +1,11 @@
+{
+    "currency": "ARS",
+    "shipping": "company",
+    "test": "False",
+    "correo_test": "True",
+    "politica": {
+      "periodo":60,
+      "rubros":{},
+      "promos":{}
+    }
+  }

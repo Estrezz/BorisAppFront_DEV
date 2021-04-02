@@ -1,4 +1,11 @@
-2021-03-08 10:47:37,971 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-03-22 10:03:27,772 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2050, in delete
+    state = attributes.instance_state(instance)
+AttributeError: 'int' object has no attribute '_sa_instance_state'
+
+The above exception was the direct cause of the following exception:
+
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,12 +19,19 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 161, in confirma_solicitud
-    envio = crea_envio(company, user, order, productos, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 258, in crea_envio
-    send_email('Tu pedido ha sido creado', sender=app.config['ADMINS'][0], recipients=[user.email], text_body='Prueba', html_body='', attachments=None, sync=False)
-NameError: name 'app' is not defined
-2021-03-08 10:51:49,658 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 39, in buscar
+    db.session.delete(cust_tmp)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\scoping.py", line 163, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2054, in delete
+    replace_context=err,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
+    raise exception
+sqlalchemy.orm.exc.UnmappedInstanceError: Class 'builtins.int' is not mapped
+2021-03-22 10:05:00,075 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-23 16:06:47,456 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-25 10:06:43,003 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-25 10:22:47,472 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -31,12 +45,16 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 161, in confirma_solicitud
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 167, in confirma_solicitud
     envio = crea_envio(company, user, order, productos, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 258, in crea_envio
-    send_email('Tu pedido ha sido creado', sender=app.config['ADMINS'][0], recipients=[user.email], text_body='Prueba', html_body='', attachments=None, sync=False)
-NameError: name 'app' is not defined
-2021-03-08 10:51:49,868 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 184, in crea_envio
+    mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 227, in almacena_envio
+    "orden": order.id,
+AttributeError: 'NoneType' object has no attribute 'id'
+2021-03-25 13:48:50,518 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-25 15:42:41,438 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-25 15:43:26,794 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -50,13 +68,15 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 161, in confirma_solicitud
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 167, in confirma_solicitud
     envio = crea_envio(company, user, order, productos, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 258, in crea_envio
-    send_email('Tu pedido ha sido creado', sender=app.config['ADMINS'][0], recipients=[user.email], text_body='Prueba', html_body='', attachments=None, sync=False)
-NameError: name 'app' is not defined
-2021-03-08 12:04:00,576 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-08 14:57:48,929 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 172, in crea_envio
+    solicitud_envio = crea_envio_moova(company, user, order, productos)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\moova.py", line 21, in crea_envio_moova
+    "street": user.address,
+AttributeError: 'NoneType' object has no attribute 'address'
+2021-03-25 16:06:50,103 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-25 16:07:34,741 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -70,13 +90,15 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 161, in confirma_solicitud
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 167, in confirma_solicitud
     envio = crea_envio(company, user, order, productos, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 258, in crea_envio
-    send_email('Tu pedido ha sido creado', sender=app.config['ADMINS'][0], recipients=[user.email], text_body='Prueba', html_body='', attachments=None, sync=False)
-NameError: name 'app' is not defined
-2021-03-08 15:03:45,058 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-08 15:03:55,047 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 184, in crea_envio
+    mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 335, in almacena_envio
+    loguear_error('almacena_envio', 'EL pedido paso correctamente', json.dumps(data) )
+TypeError: loguear_error() missing 1 required positional argument: 'texto'
+2021-03-25 16:08:05,982 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-03-25 16:17:07,320 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -90,10 +112,8 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 161, in confirma_solicitud
-    envio = crea_envio(company, user, order, productos, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 258, in crea_envio
-    send_email('Tu pedido ha sido creado', sender=current_app.config['ADMINS'][0], recipients=[user.email], text_body='Prueba', html_body='', attachments=None, sync=False)
-NameError: name 'current_app' is not defined
-2021-03-08 15:05:29,519 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-03-08 15:34:00,530 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 97, in pedidos
+    alternativas = buscar_alternativas(session['store'], item.prod_id, motivo, item.variant)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 81, in buscar_alternativas
+    if x['stock'] > 1 and x['id'] != item_variant :
+TypeError: '>' not supported between instances of 'NoneType' and 'int'

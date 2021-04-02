@@ -24,8 +24,7 @@ def home():
         return redirect(url_for('main.buscar', empresa = empresa))
     else: 
         unaEmpresa = buscar_empresa(empresa)
-        ## cambios
-        pedido = buscar_pedido_conNro(unaEmpresa, request.args.get('order_id'))
+        pedido = buscar_pedido_conNro(unaEmpresa.store_id, request.args.get('order_id'))
         cargar_pedido(unaEmpresa, pedido)
         return redirect(url_for('main.pedidos'))
 
@@ -57,8 +56,7 @@ def buscar():
 
     form = LoginForm()
     if form.validate_on_submit():
-        ## cambios
-        pedido = buscar_pedido(unaEmpresa, form)
+        pedido = buscar_pedido(unaEmpresa.store_id, form)
 
         if pedido == 'None':
             flash('No se encontro un pedido para esa combinación Pedido-Email')
@@ -96,7 +94,7 @@ def pedidos():
             user = Customer.query.get(session['cliente'])
             order = Order.query.get(session['orden'])
             item = Producto.query.get(prod_id)
-            alternativas = buscar_alternativas(company, session['store'], item.prod_id, motivo, item.variant)
+            alternativas = buscar_alternativas(session['store'], item.prod_id, motivo, item.variant)
             return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
