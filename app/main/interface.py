@@ -197,15 +197,25 @@ def crea_envio(company, user, order, productos, metodo_envio):
       send_email('Tu Orden ha sido confirmada', 
                 sender=current_app.config['ADMINS'][0], 
                 recipients=[user.email], 
-                text_body=render_template('email/1447373/pedido_listo.txt',
+                text_body=render_template('email/'+company.store_id+'/pedido_listo.txt',
                                          user=user, envio=solicitud_envio, order=order, shipping=session['shipping']),
-                html_body=render_template('email/1447373/pedido_listo.html',
+                html_body=render_template('email/'+company.store_id+'/pedido_listo.html',
                                          user=user, envio=solicitud_envio, order=order, shipping=session['shipping']), 
                 attachments=None, 
                 sync=False)
     except smtplib.SMTPException as e:
       error_mail = e
       flash('Mensaje {}'.format('a.error_mail'))
+
+    send_email('Se ha generado una orden en Boris', 
+                sender=current_app.config['ADMINS'][0], 
+                recipients=[company.communication_email], 
+                text_body=render_template('email/nuevo_pedido.txt',
+                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping']),
+                html_body=render_template('email/nuevo_pedido.html',
+                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping']), 
+                attachments=None, 
+                sync=False)
   return solicitud_envio
 
 
