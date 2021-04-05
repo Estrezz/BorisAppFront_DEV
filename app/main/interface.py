@@ -68,10 +68,11 @@ def buscar_alternativas(company, storeid, prod_id, motivo, item_variant):
     if isinstance(x['stock'], type(None)) == True:
       if x['id'] == item_variant:
         x['values']= [{"es": "Mismo Articulo"}]
-        flash('variantes{}'.format(x))
       variantes.append(x)
     else: 
       if x['stock'] > 1 :
+        if x['id'] == item_variant:
+          x['values']= [{"es": "Mismo Articulo"}]
         variantes.append(x)
   
   ## cambio para ver si no existen variantes del producto
