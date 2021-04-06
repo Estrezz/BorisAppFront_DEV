@@ -201,7 +201,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
   else: 
     ## agregado try / except
     try:
-      send_email('Tu Orden ha sido confirmada', 
+      send_email('Tu orden ha sido creada', 
                 sender=current_app.config['ADMINS'][0], 
                 recipients=[user.email], 
                 text_body=render_template('email/'+company.store_id+'/pedido_listo.txt',
