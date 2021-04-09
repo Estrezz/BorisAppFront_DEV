@@ -24,7 +24,8 @@ def home():
         return redirect(url_for('main.buscar', empresa = empresa))
     else: 
         unaEmpresa = buscar_empresa(empresa)
-        pedido = buscar_pedido_conNro(unaEmpresa.store_id, request.args.get('order_id'))
+        ## cambios
+        pedido = buscar_pedido_conNro(unaEmpresa, request.args.get('order_id'))
         cargar_pedido(unaEmpresa, pedido)
         return redirect(url_for('main.pedidos'))
 
@@ -56,16 +57,17 @@ def buscar():
 
     form = LoginForm()
     if form.validate_on_submit():
-        pedido = buscar_pedido(unaEmpresa.store_id, form)
+        ## cambios
+        pedido = buscar_pedido(unaEmpresa, form)
 
         if pedido == 'None':
             flash('No se encontro un pedido para esa combinación Pedido-Email')
-            return render_template('buscar.html', title='Inicia tu gestión', form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
+            return render_template('buscar.html', title='Inicia tu gestión', NombreStore=unaEmpresa.company_name, form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
         else:
             cargar_pedido(unaEmpresa, pedido)
             return redirect(url_for('main.pedidos'))
 
-    return render_template('buscar.html', title='Inicia tu Gestión', form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
+    return render_template('buscar.html', title='Inicia tu Gestión', NombreStore=unaEmpresa.company_name, form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
 
 
 
@@ -94,8 +96,8 @@ def pedidos():
             user = Customer.query.get(session['cliente'])
             order = Order.query.get(session['orden'])
             item = Producto.query.get(prod_id)
-            alternativas = buscar_alternativas(session['store'], item.prod_id, motivo, item.variant)
-            return render_template('devolucion.html', title='Cambio', user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1])
+            alternativas = buscar_alternativas(company, session['store'], item.prod_id, motivo, item.variant)
+            return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
         prod_id = request.form.get("Prod_Id")
@@ -106,17 +108,18 @@ def pedidos():
         item.accion_cambiar_por_desc = describir_variante(variante['values'])
         db.session.commit() 
 
-    return render_template('pedido.html', title='Pedido', user=user, order = order, productos = productos)
+    return render_template('pedido.html', title='Pedido', NombreStore=company.company_name, user=user, order = order, productos = productos)
 
 
 @bp.route('/pedidos_unitarios', methods=['GET', 'POST'])
 def pedidos_unitarios():   
     if request.method == "POST": 
+        company = Company.query.filter_by(store_id=session['store']).first()
         prod_id = request.form.get("Prod_Id")
         user = Customer.query.get(session['cliente'])
         order = Order.query.get(session['orden'])
         item = Producto.query.get(prod_id)
-    return render_template('devolucion.html', title='Accion', user=user, order = order, item = item)
+    return render_template('devolucion.html', title='Accion', NombreStore=company.company_name, user=user, order = order, item = item)
 
 
 
@@ -128,7 +131,7 @@ def confirma_cambios():
     ###### Cambios
     company = Company.query.filter_by(store_id=session['store']).first()
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
-    return render_template('pedido_confirmar.html', title='Confirmar', user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado)
+    return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado)
 
 
 
@@ -171,7 +174,7 @@ def confirma_solicitud():
     Customer.query.filter_by(id=session['cliente']).delete()
     db.session.commit()
 
-    return render_template('envio.html', company=company, user=user, order=order, envio=envio)
+    return render_template('envio.html', NombreStore=company.company_name, company=company, user=user, order=order, envio=envio)
 
 
 @bp.route('/tracking/<order>',methods=['GET', 'POST'])

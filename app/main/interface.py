@@ -147,8 +147,8 @@ def buscar_empresa(empresa):
       company_main_language = 'es',
       company_main_currency = 'ARS',
       communication_email = 'soporte@borisreturns.com',
-      company_name = 'Boris sin Tienda',
-      admin_email = 'admin@borisreturns.com',
+      company_name = 'Tu Tienda',
+      admin_email = 'info@borisreturns.com',
       logo = '/static/images/Boris_Naranja.png',
       correo_usado = 'Moova',
       correo_apikey = 'b23920003684e781d87e7e5b615335ad254bdebc',
@@ -156,8 +156,8 @@ def buscar_empresa(empresa):
       correo_test = True,
       correo_apikey_test = 'b23920003684e781d87e7e5b615335ad254bdebc',
       correo_id_test = 'b22bc380-439f-11eb-8002-a5572ae156e7',
-      contact_name = 'Pepito Perez',
-      contact_email = 'pepito@borisreturns.com',
+      contact_name = 'Almacen Tienda',
+      contact_email = 'info@borisreturns.com',
       contact_phone = '+5491151064817',
       shipping_address = 'Virrey Loreto',
       shipping_number = '2259',
@@ -166,7 +166,7 @@ def buscar_empresa(empresa):
       shipping_city = 'CABA',
       shipping_province = 'CABA',
       shipping_country = 'AR',
-      shipping_info = 'Entregar a pepito'
+      shipping_info = 'Entregar en recepción'
     )
   return unaEmpresa
 
@@ -365,22 +365,27 @@ def cargar_pedido(unaEmpresa, pedido ):
 
   session['store'] = unaEmpresa.store_id
   session['plataforma'] = unaEmpresa.platform
-  unCliente = Customer(
-    id = pedido['customer']['id'],
-    name =pedido['customer']['name'],
-    identification = pedido['customer']['identification'],
-    email = pedido['customer']['email'],
-    phone = pedido['customer']['phone'],
-    address = pedido['shipping_address']['address'],
-    number = pedido['shipping_address']['number'],
-    floor = pedido['shipping_address']['floor'],
-    zipcode = pedido['shipping_address']['zipcode'],
-    locality = pedido['shipping_address']['locality'],
-    city = pedido['shipping_address']['city'],
-    province = pedido['shipping_address']['province'],
-    country = pedido['shipping_address']['country'],
-    pertenece = unaEmpresa
-    )
+
+  ### cambio ####
+  if Customer.query.get(pedido['customer']['id']):
+    unCliente = Customer.query.get(pedido['customer']['id'])
+  else: 
+    unCliente = Customer(
+      id = pedido['customer']['id'],
+      name =pedido['customer']['name'],
+      identification = pedido['customer']['identification'],
+      email = pedido['customer']['email'],
+      phone = pedido['customer']['phone'],
+      address = pedido['shipping_address']['address'],
+      number = pedido['shipping_address']['number'],
+      floor = pedido['shipping_address']['floor'],
+      zipcode = pedido['shipping_address']['zipcode'],
+      locality = pedido['shipping_address']['locality'],
+      city = pedido['shipping_address']['city'],
+      province = pedido['shipping_address']['province'],
+      country = pedido['shipping_address']['country'],
+      pertenece = unaEmpresa
+      )
   session['cliente'] = unCliente.id
 
   unaOrden = Order(

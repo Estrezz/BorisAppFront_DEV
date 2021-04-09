@@ -5,10 +5,9 @@ from datetime import datetime
 from app import db
 from app.models import Customer, Order, Producto, Company, Store
 from flask import session, flash, current_app, render_template
+from app.main.moova import crea_envio_moova, cotiza_envio_moova
+from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube
 from app.email import send_email
-
-#import os
-
 
 
 def buscar_nro_pedido(lista, valor):
@@ -19,15 +18,10 @@ def buscar_nro_pedido(lista, valor):
      return 'None'
 
 
-def buscar_pedido(storeid, form):
-  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/orders?q="+form.ordermail.data    
-  payload={}
-  headers = {
-    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-    'Content-Type': 'application/json',
-    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-   }
-  order_tmp = requests.request("GET", url, headers=headers, data=payload).json()
+def buscar_pedido(empresa, form):
+  if empresa.platform == 'tiendanube':
+    order_tmp = buscar_pedido_tiendanube(empresa, form)
+    
 
   if type(order_tmp) == dict:
     return 'None'
@@ -36,16 +30,10 @@ def buscar_pedido(storeid, form):
     return order
 
 
-def buscar_pedido_conNro(storeid, orderid):
-  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/orders/"+orderid
+def buscar_pedido_conNro(empresa, orderid):
+  if empresa.platform == 'tiendanube':
+    order = buscar_pedido_conNro_tiendanube(empresa, orderid)
   
-  payload={}
-  headers = {
-    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-    'Content-Type': 'application/json',
-    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-   }
-  order = requests.request("GET", url, headers=headers, data=payload).json()
   
   return order
 
@@ -67,26 +55,32 @@ def buscar_promo(promociones, Id_Producto ):
 # Busca alternativas para cambiar un articulo según el motivo de cambio
 # devuelve lista con productos alternativos y le oden de los atributos (para tener como encabezados)
 #####################################################################################################
-def buscar_alternativas(storeid, prod_id, motivo, item_variant):
-  url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)
+def buscar_alternativas(company, storeid, prod_id, motivo, item_variant):
+  if company.platform == 'tiendanube':
+    product = buscar_alternativas_tiendanube(company, storeid, prod_id, motivo, item_variant)
   
-  payload={}
-  headers = {
-    'User-Agent': 'Boris (erezzonico@borisreturns.com)',
-    'Content-Type': 'application/json',
-    'Authentication': 'bearer cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16'
-   }
-  product = requests.request("GET", url, headers=headers, data=payload).json()
   variantes = []
+  
 
   for x in product['variants']:
-    if x['stock'] > 1 and x['id'] != item_variant :
+    # validar stock infinito (NoneType) y permitir cambiar por lo mismo
+    # if x['stock'] > 1 and x['id'] != item_variant :
+    if isinstance(x['stock'], type(None)) == True:
+      if x['id'] == item_variant:
+        x['values']= [{"es": "Mismo Articulo"}]
       variantes.append(x)
+    else: 
+      if x['stock'] > 1 :
+        if x['id'] == item_variant:
+          x['values']= [{"es": "Mismo Articulo"}]
+        variantes.append(x)
+  
+  ## cambio para ver si no existen variantes del producto
 
   devolver = [variantes, product['attributes']]
   return devolver
 
-
+############################## describir_variante ##################################################
 ## Arma string con las descripcion de las variantes
 def describir_variante(values):
   desc = ''
@@ -96,24 +90,35 @@ def describir_variante(values):
     desc = desc + i['es'] 
   return desc
 
+############################## buscar_empresa ##################################################
 def buscar_empresa(empresa):
   if empresa != 'Ninguna':
     empresa_tmp = Store.query.filter(Store.store_id == empresa).first()
     #### guarda settings de la empresa
     settings = guardar_settings(empresa_tmp.param_config)
-    session['paga_correo'] = settings['shipping']
+    session['shipping'] = settings['shipping']
     session['test'] = settings['test']
     session['periodo'] = settings['politica']['periodo']
+    session['correo_test'] = settings['correo_test']
 
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
       store_id = empresa_tmp.store_id,
+      platform_token_type = empresa_tmp.platform_token_type,
+      platform_access_token = empresa_tmp.platform_access_token,
       company_name = empresa_tmp.store_name,
+      company_country = empresa_tmp.store_country,
+      company_main_language = empresa_tmp.store_main_language,
+      company_main_currency = empresa_tmp.store_main_currency,
       admin_email = empresa_tmp.admin_email,
+      communication_email = empresa_tmp.communication_email,
       logo = empresa_tmp.param_logo,
       correo_usado = empresa_tmp.correo_usado,
       correo_apikey = empresa_tmp.correo_apikey,
       correo_id = empresa_tmp.correo_id,
+      correo_test = empresa_tmp.correo_test,
+      correo_apikey_test = empresa_tmp.correo_apikey_test,
+      correo_id_test = empresa_tmp.correo_id_test,
       contact_name = empresa_tmp.contact_name,
       contact_email = empresa_tmp.contact_email,
       contact_phone = empresa_tmp.contact_phone,
@@ -132,17 +137,27 @@ def buscar_empresa(empresa):
     session['test'] = settings['test']
     session['periodo'] = settings['politica']['periodo']
     session['correo_test'] = settings['correo_test']
+
     unaEmpresa = Company(
-      platform = 'TiendaNube',
+      platform = 'tiendanube',
+      platform_access_token = 'cb9d4e17f8f0c7d3c0b0df4e30bcb2b036399e16',
+      platform_token_type = 'bearer',
       store_id = '1447373',
-      company_name = 'Boris sin Tienda',
-      admin_email = 'admin@borisreturns.com',
+      company_country = 'AR',
+      company_main_language = 'es',
+      company_main_currency = 'ARS',
+      communication_email = 'soporte@borisreturns.com',
+      company_name = 'Tu Tienda',
+      admin_email = 'info@borisreturns.com',
       logo = '/static/images/Boris_Naranja.png',
       correo_usado = 'Moova',
       correo_apikey = 'b23920003684e781d87e7e5b615335ad254bdebc',
       correo_id = 'b22bc380-439f-11eb-8002-a5572ae156e7',
-      contact_name = 'Pepito Perez',
-      contact_email = 'pepito@borisreturns.com',
+      correo_test = True,
+      correo_apikey_test = 'b23920003684e781d87e7e5b615335ad254bdebc',
+      correo_id_test = 'b22bc380-439f-11eb-8002-a5572ae156e7',
+      contact_name = 'Almacen Tienda',
+      contact_email = 'info@borisreturns.com',
       contact_phone = '+5491151064817',
       shipping_address = 'Virrey Loreto',
       shipping_number = '2259',
@@ -151,99 +166,26 @@ def buscar_empresa(empresa):
       shipping_city = 'CABA',
       shipping_province = 'CABA',
       shipping_country = 'AR',
-      shipping_info = 'Entregar a pepito'
+      shipping_info = 'Entregar en recepción'
     )
   return unaEmpresa
 
 
-######## Carga el archivo de settings desde el campo param_config ########
-############ de la base de empresas ######################################
+################################# guardar_settings ##########################################
+##################### Carga el archivo de settings desde el campo param_config ##############
+############################## de la base de empresas #######################################
 def guardar_settings(url):
   with open(url) as json_file:
     data = json.load(json_file)
     return data
 
 
-def crea_envio(company, user, order, productos, metodo_envio):
- 
-  if 'shipping' in session:  
-    if session['shipping'] == 'customer':
-      paga_correo = 'manual'
-    else: 
-      paga_correo ='semi-automatic'
-  else:
-    paga_correo ='manual'
-
-  solicitud_tmp = {
-  "currency": "ARS",
-  "type": "regular",
-  "flow": paga_correo,
-  "from": {
-    "street": user.address,
-    "number": user.number,
-    "floor": user.floor,
-    "city": user.city,
-    "state": user.province,
-    "postalCode": user.zipcode,
-    "country": user.country,
-    "contact": {
-      "firstName": user.name,
-      "email": user.email
-    }
-  },
-  "to": {
-    "street": company.shipping_address,
-    "number": company.shipping_number,
-    "floor": company.shipping_floor,
-    "city": company.shipping_city,
-    "state": company.shipping_province,
-    "postalCode": company.shipping_zipcode,
-    "country": company.shipping_country,
-    "contact": {
-      "firstName": company.contact_name,
-      "email": company.contact_email,
-      "phone": company.contact_phone
-    },
-    "message": ""
-  },
-  "internalCode": order.id,
-  "extra": {},
-  "conf": {
-    "assurance": False,
-    "items": [
-    ]
-  }
-}
-
-  items_envio = []
-  for i in productos:
-    items_envio.append (   
-    {
-        "item": {
-          "description": i.name,
-          "price": i.price,
-          "quantity": i.accion_cantidad
-        }
-      }
-    )
-
-  solicitud_tmp['conf']['items'] = items_envio
-
+############################## crea_envio ##################################################
+def crea_envio(company, user, order, productos, metodo_envio): 
   if metodo_envio == 'Moova':
-    url = "https://api-dev.moova.io/b2b/shippings"
-    headers = {
-      'Authorization': company.correo_apikey,
-      'Content-Type': 'application/json',
-    }
-    params = {'appId': company.correo_id}
-    solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
-    if solicitud.status_code != 201:
-      flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
-      loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, solicitud.json() )
+    solicitud_envio = crea_envio_moova(company, user, order, productos)
+    if solicitud_envio == 'Failed':
       return 'Failed'
-    else:
-      solicitud_envio = solicitud.json()
-      flash('solicitud {}'.format(solicitud_envio))
   else:
     solicitud_envio = {
       "id":'Manual',
@@ -252,25 +194,39 @@ def crea_envio(company, user, order, productos, metodo_envio):
       "priceFormatted":'0.0',
       "currency":'ARS'
     }
-  
+
   mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
   if mandaBoris == 'Error':
     flash('ya existe un cambio para esa orden')
   else: 
-    send_email('Tu Orden ha sido confirmada', 
+    ## agregado try / except
+    try:
+      send_email('Tu orden ha sido creada', 
                 sender=current_app.config['ADMINS'][0], 
                 recipients=[user.email], 
-                text_body=render_template('email/1447373/pedido_listo.txt',
-                                         user=user, envio=solicitud_envio, order=order),
-                html_body=render_template('email/1447373/pedido_listo.html',
-                                         user=user, envio=solicitud_envio, order=order), 
+                text_body=render_template('email/'+company.store_id+'/pedido_listo.txt',
+                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping']),
+                html_body=render_template('email/'+company.store_id+'/pedido_listo.html',
+                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping']), 
                 attachments=None, 
                 sync=False)
-  
-  #return solicitud.json()
+    except smtplib.SMTPException as e:
+      error_mail = e
+      flash('Mensaje {}'.format('a.error_mail'))
+
+    send_email('Se ha generado una orden en Boris', 
+                sender=current_app.config['ADMINS'][0], 
+                recipients=[company.communication_email], 
+                text_body=render_template('email/nuevo_pedido.txt',
+                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping']),
+                html_body=render_template('email/nuevo_pedido.html',
+                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping']), 
+                attachments=None, 
+                sync=False)
   return solicitud_envio
 
 
+############################## cotiza_envio ##################################################
 #### Cotizar el precio del envío
 def cotiza_envio(company, user, order, productos, correo):
   if 'shipping' in session:  
@@ -283,90 +239,8 @@ def cotiza_envio(company, user, order, productos, correo):
   return precio
 
 
-#### Cotiza Costo del envio con la empresa MOOVA
-def cotiza_envio_moova(company, user, order, productos):
-  solicitud_tmp = {
-  "from": {
-    "street": user.address,
-    "number": user.number,
-    "floor": user.floor,
-    "city": user.city,
-    "state": user.province,
-    "postalCode": user.zipcode,
-    "country": user.country,
-    "contact": {
-      "firstName": user.name,
-      "email": user.email
-    }
-  },
-  "to": {
-    "street": company.shipping_address,
-    "number": company.shipping_number,
-    "floor": company.shipping_floor,
-    "city": company.shipping_city,
-    "state": company.shipping_province,
-    "postalCode": company.shipping_zipcode,
-    "country": company.shipping_country,
-    "contact": {
-      "firstName": company.contact_name,
-      "email": company.contact_email,
-      "phone": company.contact_phone
-    },
-    "message": ""
-  },
-  "conf": {
-    "assurance": False,
-    "items": [
-    ]
-  },
-  "shipping_type_id": 1
-}
 
-  items_envio = []
-  for i in productos:
-    items_envio.append (   
-    {
-        "item": {
-          "description": i.name,
-          "price": i.price,
-          "quantity": i.accion_cantidad
-        }
-      }
-    )
-
-  solicitud_tmp['conf']['items'] = items_envio
-
-  ### Usa ambiente de desarrollo de MOOVA
-  if session['correo_test'] == 'True':
-    url = "https://api-dev.moova.io//b2b/v2/budgets"
-    headers = {
-      'Authorization': company.correo_apikey,
-      'Content-Type': 'application/json',
-    }
-    params = {'appId': company.correo_id}
-
-  ### Usa ambiente de PRODUCCION de MOOVA
-  if session['correo_test'] == 'False':
-    url = "https://api-prod.moova.io/b2b/v2/budgets"
-    headers = {
-      'Authorization': company.correo_apikey,
-      'Content-Type': 'application/json',
-    }
-    params = {'appId': company.correo_id}
-
-  solicitud_tmp = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
-  if solicitud_tmp.status_code != 200:
-    #flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud_tmp.status_code))
-    #flash('Hubo un problema con la generación del evío. Error {} '.format(solicitud_tmp.json()))
-    return 'Failed'
-  else:
-    solicitud = solicitud_tmp.json()
-    #flash('El precio del envio es {}'.format(solicitud_tmp.price_formatted))
-    precio = solicitud['price_formatted']
-    return precio
-
-
-
+############################## almacena_envio ##################################################
 def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   if 'test' in session:  
     if session['test'] == 'True':
@@ -482,12 +356,11 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
         return 'Failed'
       else: 
         flash('Se envio el pedido correctamente')
+        loguear_error('almacena_envio', 'EL pedido paso correctamente','OK', json.dumps(data) )
         return 'Success'
 
   
-
-
-
+############################## carga_pedido ##################################################
 def cargar_pedido(unaEmpresa, pedido ):
 
   session['store'] = unaEmpresa.store_id
@@ -551,8 +424,9 @@ def cargar_pedido(unaEmpresa, pedido ):
     db.session.add(unProducto)
   db.session.commit()
 
-  
 
+
+############################## buscar_tracking ##################################################
 def busca_tracking(orden):
   url = "http://ec2-34-199-104-15.compute-1.amazonaws.com/orden/tracking"
   params = {'orden_id': orden}
@@ -560,12 +434,16 @@ def busca_tracking(orden):
   return historia
 
 
+############################## loguea_error ##################################################
 def loguear_error(modulo, mensaje, codigo, texto):
-  outfile = open('app/logs/err_boris.txt', "a")
+  url = "app/logs/"+str(session['store'])+"_log.txt"
+  #outfile = open('app/logs/err_boris.txt', "a")
+  outfile = open(url, "a+")
   outfile.write(str(datetime.utcnow())+','+ modulo +','+ mensaje +','+ str(codigo) +','+str(texto)+ '\n')
   outfile.close()
 
 
+############################## valida_politica ##################################################
 def validar_politica(orden_fecha):
   
   hoy = datetime.utcnow()
