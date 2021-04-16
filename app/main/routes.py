@@ -3,7 +3,7 @@ from app import db
 from app.main.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking
+from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura
 from app.main import bp
 from flask import request, session
 import requests
@@ -128,10 +128,10 @@ def confirma_cambios():
     user = Customer.query.get(session['cliente'])
     order = Order.query.get(session['orden'])
     productos = db.session.query(Producto).filter((Producto.order_id==session['orden'])).filter((Producto.accion != 'ninguna'))
-    ###### Cambios
     company = Company.query.filter_by(store_id=session['store']).first()
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
-    return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado)
+    area_valida = validar_cobertura(user.province, user.zipcode)
+    return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida)
 
 
 

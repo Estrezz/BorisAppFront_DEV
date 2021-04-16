@@ -100,6 +100,7 @@ def buscar_empresa(empresa):
     session['test'] = settings['test']
     session['periodo'] = settings['politica']['periodo']
     session['correo_test'] = settings['correo_test']
+    session['provincia_codigos_postales'] = settings['provincia_codigos_postales']
 
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
@@ -137,6 +138,7 @@ def buscar_empresa(empresa):
     session['test'] = settings['test']
     session['periodo'] = settings['politica']['periodo']
     session['correo_test'] = settings['correo_test']
+    session['provincia_codigos_postales'] = settings['provincia_codigos_postales']
 
     unaEmpresa = Company(
       platform = 'tiendanube',
@@ -466,4 +468,16 @@ def validar_politica(orden_fecha):
     return [True,'OK']
   
 
+def validar_cobertura(provincia,zipcode):
+  if provincia in session['provincia_codigos_postales']:
+    if session['provincia_codigos_postales'][provincia] == "All":
+      return True
+    else: 
+      for x in range(len(session['provincia_codigos_postales'][provincia])):
+        if zipcode == session['provincia_codigos_postales'][provincia][x] or zipcode == str(session['provincia_codigos_postales'][provincia][x]):
+          return True
+      return False
+  else:
+    return False
+  
   
