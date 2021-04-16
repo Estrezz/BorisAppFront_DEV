@@ -1,115 +1,116 @@
-2021-04-16 12:01:07,305 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-04-16 12:48:39,072 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 12:48:41,576 ERROR: Exception on /Confirmar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1953, in full_dispatch_request
-    return self.finalize_request(rv)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1970, in finalize_request
-    response = self.process_response(response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2269, in process_response
-    self.session_interface.save_session(self, ctx.session, response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\sessions.py", line 378, in save_session
-    val = self.get_signing_serializer(app).dumps(dict(session))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 166, in dumps
-    payload = want_bytes(self.dump_payload(obj))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\url_safe.py", line 42, in dump_payload
-    json = super(URLSafeSerializerMixin, self).dump_payload(obj)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 133, in dump_payload
-    return want_bytes(self.serializer.dumps(obj, **self.serializer_kwargs))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\tag.py", line 305, in dumps
-    return dumps(self.tag(value), separators=(",", ":"))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 211, in dumps
-    rv = _json.dumps(obj, **kwargs)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\__init__.py", line 238, in dumps
-    **kw).encode(obj)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 199, in encode
-    chunks = self.iterencode(o, _one_shot=True)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 257, in iterencode
-    return _iterencode(o, 0)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 100, in default
-    return _json.JSONEncoder.default(self, o)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 180, in default
-    o.__class__.__name__)
-TypeError: Object of type 'set' is not JSON serializable
-2021-04-16 12:01:12,237 ERROR: Request finalizing failed with an error while handling an error [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1976]
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 134, in confirma_cambios
+    area_valida = validar_cobertura(user.province, user.zipcode)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 482, in validar_cobertura
+    if zipcode in session['provincia_codigos_postales'][provincia].values:
+AttributeError: 'list' object has no attribute 'values'
+2021-04-16 12:48:51,780 ERROR: Exception on /Confirmar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1953, in full_dispatch_request
-    return self.finalize_request(rv)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1970, in finalize_request
-    response = self.process_response(response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2269, in process_response
-    self.session_interface.save_session(self, ctx.session, response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\sessions.py", line 378, in save_session
-    val = self.get_signing_serializer(app).dumps(dict(session))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 166, in dumps
-    payload = want_bytes(self.dump_payload(obj))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\url_safe.py", line 42, in dump_payload
-    json = super(URLSafeSerializerMixin, self).dump_payload(obj)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 133, in dump_payload
-    return want_bytes(self.serializer.dumps(obj, **self.serializer_kwargs))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\tag.py", line 305, in dumps
-    return dumps(self.tag(value), separators=(",", ":"))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 211, in dumps
-    rv = _json.dumps(obj, **kwargs)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\__init__.py", line 238, in dumps
-    **kw).encode(obj)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 199, in encode
-    chunks = self.iterencode(o, _one_shot=True)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 257, in iterencode
-    return _iterencode(o, 0)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 100, in default
-    return _json.JSONEncoder.default(self, o)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 180, in default
-    o.__class__.__name__)
-TypeError: Object of type 'set' is not JSON serializable
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 134, in confirma_cambios
+    area_valida = validar_cobertura(user.province, user.zipcode)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 482, in validar_cobertura
+    if zipcode in session['provincia_codigos_postales'][provincia].values:
+AttributeError: 'list' object has no attribute 'values'
+2021-04-16 12:50:22,375 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 12:59:20,083 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 12:59:33,710 ERROR: Exception on /Confirmar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 134, in confirma_cambios
+    area_valida = validar_cobertura(user.province, user.zipcode)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 484, in validar_cobertura
+    flash('i'.formatsession['provincia_codigos_postales'][provincia][a])
+AttributeError: 'str' object has no attribute 'formatsession'
+2021-04-16 12:59:59,035 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 13:03:15,805 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 13:05:49,366 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 13:10:21,554 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 13:12:08,285 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 13:12:47,179 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 13:15:03,374 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 13:15:22,028 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 16:13:09,088 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 16:13:29,944 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 215, in crea_envio
+    sync=False)
+TypeError: send_email() got an unexpected keyword argument 'bcc'
 
 During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1970, in finalize_request
-    response = self.process_response(response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2269, in process_response
-    self.session_interface.save_session(self, ctx.session, response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\sessions.py", line 378, in save_session
-    val = self.get_signing_serializer(app).dumps(dict(session))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 166, in dumps
-    payload = want_bytes(self.dump_payload(obj))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\url_safe.py", line 42, in dump_payload
-    json = super(URLSafeSerializerMixin, self).dump_payload(obj)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 133, in dump_payload
-    return want_bytes(self.serializer.dumps(obj, **self.serializer_kwargs))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\tag.py", line 305, in dumps
-    return dumps(self.tag(value), separators=(",", ":"))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 211, in dumps
-    rv = _json.dumps(obj, **kwargs)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\__init__.py", line 238, in dumps
-    **kw).encode(obj)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 199, in encode
-    chunks = self.iterencode(o, _one_shot=True)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 257, in iterencode
-    return _iterencode(o, 0)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 100, in default
-    return _json.JSONEncoder.default(self, o)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 180, in default
-    o.__class__.__name__)
-TypeError: Object of type 'set' is not JSON serializable
-2021-04-16 12:06:35,423 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:08:38,103 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:10:22,885 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:10:50,412 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:11:07,300 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:13:40,983 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:24:14,564 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:27:00,147 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:29:37,218 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:32:48,045 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:33:34,485 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:35:59,784 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:36:31,936 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:36:53,606 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:38:59,116 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:40:02,731 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:41:10,800 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:43:13,328 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 170, in confirma_solicitud
+    envio = crea_envio(company, user, order, productos, metodo_envio)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 216, in crea_envio
+    except smtplib.SMTPException as e:
+NameError: name 'smtplib' is not defined
+2021-04-16 16:15:20,963 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-16 16:15:31,251 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 170, in confirma_solicitud
+    envio = crea_envio(company, user, order, productos, metodo_envio)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 228, in crea_envio
+    sync=False)
+TypeError: send_email() missing 1 required positional argument: 'bcc'
+2021-04-16 16:16:44,737 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]

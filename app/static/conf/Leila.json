@@ -3,8 +3,10 @@
     "shipping": "company",
     "test": "False",
     "correo_test": "True",
-    "provincias_valida": ["Capital Federal", "Buenos Aires"],
-    "codigos_postales_validos": [1636, 1637, 1638, 1602, 1605, 1606],
+    "provincia_codigos_postales": {
+      "Capital Federal":"All",
+      "Buenos Aires": [1636, 1637, 1638, 1602, 1605, 1606]
+    },
     "politica": {
       "periodo":60,
       "rubros":{},

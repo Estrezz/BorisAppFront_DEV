@@ -1,11 +1,11 @@
 Hola {{ user.name }}!
 
 {% if envio.id == 'Manual' %}
-    <h2 style="text-align:center">  Tu orden ha sido confirmada</h2>
-    En breve recibiras por mail las instrucciones para hacernos llegar tu Orden<br>
+    <h2 style="text-align:center">  Tu orden ha sido iniciada</h2>
+    En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
 
 {% else %}
-    <h2 style="text-align:center"> Tu orden ha sido confirmada</h2>
+    <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
  
      {% if envio.status == 'DRAFT' %}
         <h2 style="text-align:center">
@@ -13,8 +13,8 @@ Hola {{ user.name }}!
                 En breve recibiras por mail un link para que puedas abonar el envío<br>
                 El costo del mismo es <strong>{{envio.priceFormatted}}</strong>
             {% else %}
-                Tu orden ha sido confirmada
-                En breve recibiras por mail las instrucciones para hacernos llegar tu Orden<br>
+                Tu orden ha sido iniciada
+                En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
             {% endif %}
          </h2>
     {% else %}
