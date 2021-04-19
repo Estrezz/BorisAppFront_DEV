@@ -98,7 +98,6 @@ def buscar_empresa(empresa):
     settings = guardar_settings(empresa_tmp.param_config)
     session['shipping'] = settings['shipping']
     session['test'] = settings['test']
-    session['periodo'] = settings['politica']['periodo']
     session['correo_test'] = settings['correo_test']
     session['provincia_codigos_postales'] = settings['provincia_codigos_postales']
     session['ventana_cambio'] = settings['politica']['ventana_cambio']
@@ -138,7 +137,6 @@ def buscar_empresa(empresa):
     settings = guardar_settings('app/static/conf/boris.json')
     session['shipping'] = settings['shipping']
     session['test'] = settings['test']
-    session['periodo'] = settings['politica']['periodo']
     session['correo_test'] = settings['correo_test']
     session['provincia_codigos_postales'] = settings['provincia_codigos_postales']
     session['ventana_cambio'] = settings['politica']['ventana_cambio']
@@ -483,13 +481,13 @@ def validar_politica(orden_fecha):
     resultado_politica = ["Ambos",'']
   else: 
     if cambio == "OK" and devolucion == "NOK":
-      resultado_politica =  ["Solo Cambio",'El período para realizar devoluciones expiró']
+      resultado_politica =  ["Solo Cambio",' El período para realizar devoluciones expiró ']
     else: 
       if cambio == "NOK" and devolucion == "OK":
-        resultado_politica =  ["Solo Devolucion",'El período para realizar cambios expiró']
+        resultado_politica =  ["Solo Devolucion",' El período para realizar cambios expiró ']
       else: 
         if cambio == "NOK" and devolucion == "NOK":
-          resultado_politica =  ["Ninguno",'El período para realizar cambios/devoluciones expiró']
+          resultado_politica =  ["Ninguno",' El período para realizar cambios/devoluciones expiró ']
 
   #flash('resultado {}'.format(resultado_politica)) 
   return resultado_politica

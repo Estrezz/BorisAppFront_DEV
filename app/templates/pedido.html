@@ -53,9 +53,9 @@
 
                 {% if accion_posible != 'Ninguna' %}
                   <button class="btn btn-default" type="submit">{{accion_posible}}</button>
-                  <br> <strong style="color:red;"> {{ producto['politica_valida_motivo'] }} </strong>
+                  <br> <br> <strong style="background-color:powderblue;"> &nbsp;{{ producto['politica_valida_motivo'] }}&nbsp; </strong>
                 {% else %}
-                  <strong style="color:red;"> {{ producto['politica_valida_motivo'] }} </strong>
+                  <strong style="background-color:powderblue;">&nbsp; {{ producto['politica_valida_motivo'] }} </strong>
                 {% endif %}
               </div>
               
