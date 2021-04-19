@@ -101,6 +101,8 @@ def buscar_empresa(empresa):
     session['periodo'] = settings['politica']['periodo']
     session['correo_test'] = settings['correo_test']
     session['provincia_codigos_postales'] = settings['provincia_codigos_postales']
+    session['ventana_cambio'] = settings['politica']['ventana_cambio']
+    session['ventana_devolucion'] = settings['politica']['ventana_devolucion']
 
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
@@ -139,6 +141,8 @@ def buscar_empresa(empresa):
     session['periodo'] = settings['politica']['periodo']
     session['correo_test'] = settings['correo_test']
     session['provincia_codigos_postales'] = settings['provincia_codigos_postales']
+    session['ventana_cambio'] = settings['politica']['ventana_cambio']
+    session['ventana_devolucion'] = settings['politica']['ventana_devolucion']
 
     unaEmpresa = Company(
       platform = 'tiendanube',
@@ -423,8 +427,8 @@ def cargar_pedido(unaEmpresa, pedido ):
       image = pedido['products'][x]['image']['src'],
       accion = "ninguna",
       motivo =  "",
-      valido = validar_politica(unaOrden.order_fecha_compra)[0],
-      valido_motivo = validar_politica(unaOrden.order_fecha_compra)[1],
+      politica_valida = validar_politica(unaOrden.order_fecha_compra)[0],
+      politica_valida_motivo = validar_politica(unaOrden.order_fecha_compra)[1],
       accion_cantidad = pedido['products'][x]['quantity'],
       promo_precio_final = promo_tmp[2],
       promo_descuento = promo_tmp[1],
@@ -458,18 +462,37 @@ def loguear_error(modulo, mensaje, codigo, texto):
 def validar_politica(orden_fecha):
   
   hoy = datetime.utcnow()
-  if 'periodo' in session:  
-    periodo = session['periodo']
-  else:
-    periodo = 30
-
-  if abs((hoy - orden_fecha).days) > periodo:
-
-    #periodo_valido = False
-    return [False,'El período para realizar cambios expiró']
+  #### valida ventana de cambios ####
+  periodo_cambio = session['ventana_cambio']
+  if abs((hoy - orden_fecha).days) > periodo_cambio:
+    cambio = "NOK"
   else: 
-    #periodo_valido = True
-    return [True,'OK']
+    cambio = "OK"
+  
+  #flash('Cambio {} - periodo {} - {}'.format(cambio, periodo_cambio, abs((hoy - orden_fecha).days) ))
+  #### valida ventana de devolcuiones ####
+  periodo_devolucion = session['ventana_devolucion']
+  if abs((hoy - orden_fecha).days) > periodo_devolucion:
+    devolucion = "NOK"
+  else: 
+    devolucion = "OK"
+  
+  #flash('Devolucion {} - periodo {} - {}'.format(devolucion, periodo_devolucion, abs((hoy - orden_fecha).days) ))
+  ### devuelve valor
+  if cambio == "OK" and devolucion == "OK":
+    resultado_politica = ["Ambos",'']
+  else: 
+    if cambio == "OK" and devolucion == "NOK":
+      resultado_politica =  ["Solo Cambio",'El período para realizar devoluciones expiró']
+    else: 
+      if cambio == "NOK" and devolucion == "OK":
+        resultado_politica =  ["Solo Devolucion",'El período para realizar cambios expiró']
+      else: 
+        if cambio == "NOK" and devolucion == "NOK":
+          resultado_politica =  ["Ninguno",'El período para realizar cambios/devoluciones expiró']
+
+  #flash('resultado {}'.format(resultado_politica)) 
+  return resultado_politica
   
 
 def validar_cobertura(provincia,zipcode):

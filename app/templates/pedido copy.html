@@ -38,24 +38,10 @@
                 </div>
                 <br>
                 
-                {% if producto['politica_valida'] == 'Ambos' %} 
-                  {% set accion_posible = 'Devolver / Cambiar' %}
-                {% endif %}
-                {% if producto['politica_valida'] == 'Solo Cambio' %} 
-                  {% set accion_posible = 'Cambiar' %}
-                {% endif %}
-                {% if producto['politica_valida'] == 'Solo Devolucion' %} 
-                  {% set accion_posible = 'Devolver' %}
-                {% endif %}
-                {% if producto['politica_valida'] == 'Ninguno' %}
-                  {% set accion_posible = 'Ninguna' %}
-                {% endif %}
-
-                {% if accion_posible != 'Ninguna' %}
-                  <button class="btn btn-default" type="submit">{{accion_posible}}</button>
-                  <br> <strong style="color:red;"> {{ producto['politica_valida_motivo'] }} </strong>
+                {% if producto['valido'] == true %}
+                  <button class="btn btn-default" type="submit">Devolver / Cambiar</button>
                 {% else %}
-                  <strong style="color:red;"> {{ producto['politica_valida_motivo'] }} </strong>
+                  {{ producto['valido_motivo'] }}
                 {% endif %}
               </div>
               
