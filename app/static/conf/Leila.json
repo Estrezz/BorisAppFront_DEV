@@ -8,7 +8,8 @@
       "Buenos Aires": [1636, 1637, 1638, 1602, 1605, 1606]
     },
     "politica": {
-      "periodo":60,
+      "ventana_cambio":60,
+      "ventana_devolucion":1,
       "rubros":{},
       "promos":{}
     }
