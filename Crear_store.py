@@ -11,10 +11,11 @@ with app.app_context():
 
   store1 = Store(
     platform = 'tiendanube',
-    platform_access_token = '8c19ed8aa0af9ca6ad34a5a63ecf199fe21f1ab9',
+    platform_access_token = 'c9446f515b3f5d22c26017e9cb1befcd576462fa',
     platform_token_type = 'bearer',
     store_id = '1631829',
     store_name = 'demo debocaenboca',
+    store_url = 'https://demodebocaenboca.mitiendanube.com',
     store_country = 'AR',
     store_main_language = 'es',
     store_main_currency = 'ARS',
@@ -47,6 +48,7 @@ with app.app_context():
     platform_token_type = 'bearer',
     store_id = '1447373',
     store_name = 'Demo Boris',
+    store_url= 'https://demoboris.mitiendanube.com',
     store_country = 'AR',
     store_main_language = 'es',
     store_main_currency = 'ARS',
