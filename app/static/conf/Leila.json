@@ -13,4 +13,10 @@
       "rubros":{},
       "promos":{}
     }
+    "textos": {
+      "elegir_opcion_cambio": "Selecciona la opcion que queres o elegi generar un cupon si queres cambiarlo por otra cosa",
+      "elegir_accion": "Selecciona la acción a realizar",
+      "envio_manual": "Seleccionaste envío manual"
+      
+    }
   }
