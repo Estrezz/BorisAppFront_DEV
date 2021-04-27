@@ -10,7 +10,7 @@ class LoginForm(FlaskForm):
 class DireccionForm(FlaskForm):
     name = StringField('Nombre y Apellido', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
-    phone = StringField('Telefono', validators=[DataRequired()]) 
+    phone = StringField('Telefono') 
     address = StringField('Calle', validators=[DataRequired()]) 
     number = StringField('Numero', validators=[DataRequired()])
     floor = StringField('Piso')

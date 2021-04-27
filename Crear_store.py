@@ -11,7 +11,7 @@ with app.app_context():
 
   store1 = Store(
     platform = 'tiendanube',
-    platform_access_token = 'c9446f515b3f5d22c26017e9cb1befcd576462fa',
+    platform_access_token = 'c4c8afc07063098d7afa72bef6fdaf67ba7e22a3',
     platform_token_type = 'bearer',
     store_id = '1631829',
     store_name = 'demo debocaenboca',

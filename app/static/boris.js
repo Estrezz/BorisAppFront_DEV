@@ -12,7 +12,7 @@
         //myButton.setAttribute('href',`https://ec2-54-208-172-198.compute-1.amazonaws.com?store_id=${storeId}&order_id=${orderId}`);
         myButton.setAttribute('href',`https://front.borisreturns.com?store_id=${storeId}`);
         myButton.setAttribute('target', '_blank');
-        myButton.textContent = 'Devolver un producto';
+        myButton.textContent = 'Cambiar / Devolver un producto';
         referenceNode.append(myButton);
     }
 })();

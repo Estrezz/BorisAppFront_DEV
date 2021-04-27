@@ -1,115 +1,80 @@
-2021-04-16 12:01:07,305 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-04-19 10:43:31,491 ERROR: Exception on /buscar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1204, in _execute_context
+    context = constructor(dialect, self, conn, *args)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\default.py", line 839, in _init_compiled
+    param.append(processors[key](compiled_params[key]))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1841, in process
+    value = _strict_as_bool(value)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1816, in _strict_as_bool
+    raise TypeError("Not a boolean value: %r" % value)
+TypeError: Not a boolean value: 'Ambos'
+
+The above exception was the direct cause of the following exception:
+
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1953, in full_dispatch_request
-    return self.finalize_request(rv)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1970, in finalize_request
-    response = self.process_response(response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2269, in process_response
-    self.session_interface.save_session(self, ctx.session, response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\sessions.py", line 378, in save_session
-    val = self.get_signing_serializer(app).dumps(dict(session))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 166, in dumps
-    payload = want_bytes(self.dump_payload(obj))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\url_safe.py", line 42, in dump_payload
-    json = super(URLSafeSerializerMixin, self).dump_payload(obj)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 133, in dump_payload
-    return want_bytes(self.serializer.dumps(obj, **self.serializer_kwargs))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\tag.py", line 305, in dumps
-    return dumps(self.tag(value), separators=(",", ":"))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 211, in dumps
-    rv = _json.dumps(obj, **kwargs)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\__init__.py", line 238, in dumps
-    **kw).encode(obj)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 199, in encode
-    chunks = self.iterencode(o, _one_shot=True)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 257, in iterencode
-    return _iterencode(o, 0)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 100, in default
-    return _json.JSONEncoder.default(self, o)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 180, in default
-    o.__class__.__name__)
-TypeError: Object of type 'set' is not JSON serializable
-2021-04-16 12:01:12,237 ERROR: Request finalizing failed with an error while handling an error [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1976]
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1953, in full_dispatch_request
-    return self.finalize_request(rv)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1970, in finalize_request
-    response = self.process_response(response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2269, in process_response
-    self.session_interface.save_session(self, ctx.session, response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\sessions.py", line 378, in save_session
-    val = self.get_signing_serializer(app).dumps(dict(session))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 166, in dumps
-    payload = want_bytes(self.dump_payload(obj))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\url_safe.py", line 42, in dump_payload
-    json = super(URLSafeSerializerMixin, self).dump_payload(obj)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 133, in dump_payload
-    return want_bytes(self.serializer.dumps(obj, **self.serializer_kwargs))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\tag.py", line 305, in dumps
-    return dumps(self.tag(value), separators=(",", ":"))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 211, in dumps
-    rv = _json.dumps(obj, **kwargs)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\__init__.py", line 238, in dumps
-    **kw).encode(obj)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 199, in encode
-    chunks = self.iterencode(o, _one_shot=True)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 257, in iterencode
-    return _iterencode(o, 0)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 100, in default
-    return _json.JSONEncoder.default(self, o)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 180, in default
-    o.__class__.__name__)
-TypeError: Object of type 'set' is not JSON serializable
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1970, in finalize_request
-    response = self.process_response(response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2269, in process_response
-    self.session_interface.save_session(self, ctx.session, response)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\sessions.py", line 378, in save_session
-    val = self.get_signing_serializer(app).dumps(dict(session))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 166, in dumps
-    payload = want_bytes(self.dump_payload(obj))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\url_safe.py", line 42, in dump_payload
-    json = super(URLSafeSerializerMixin, self).dump_payload(obj)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\itsdangerous\serializer.py", line 133, in dump_payload
-    return want_bytes(self.serializer.dumps(obj, **self.serializer_kwargs))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\tag.py", line 305, in dumps
-    return dumps(self.tag(value), separators=(",", ":"))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 211, in dumps
-    rv = _json.dumps(obj, **kwargs)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\__init__.py", line 238, in dumps
-    **kw).encode(obj)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 199, in encode
-    chunks = self.iterencode(o, _one_shot=True)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 257, in iterencode
-    return _iterencode(o, 0)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\json\__init__.py", line 100, in default
-    return _json.JSONEncoder.default(self, o)
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\json\encoder.py", line 180, in default
-    o.__class__.__name__)
-TypeError: Object of type 'set' is not JSON serializable
-2021-04-16 12:06:35,423 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:08:38,103 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:10:22,885 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:10:50,412 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:11:07,300 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:13:40,983 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:24:14,564 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:27:00,147 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:29:37,218 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:32:48,045 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:33:34,485 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:35:59,784 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:36:31,936 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:36:53,606 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:38:59,116 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:40:02,731 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:41:10,800 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-16 12:43:13,328 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 67, in buscar
+    cargar_pedido(unaEmpresa, pedido)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 440, in cargar_pedido
+    db.session.commit()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\scoping.py", line 163, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 1042, in commit
+    self.transaction.commit()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 504, in commit
+    self._prepare_impl()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 483, in _prepare_impl
+    self.session.flush()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2536, in flush
+    self._flush(objects)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2678, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    with_traceback=exc_tb,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
+    raise exception
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2638, in _flush
+    flush_context.execute()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\unitofwork.py", line 422, in execute
+    rec.execute(self)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\unitofwork.py", line 589, in execute
+    uow,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\persistence.py", line 245, in save_obj
+    insert,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\persistence.py", line 1083, in _emit_insert_statements
+    c = cached_connections[connection].execute(statement, multiparams)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1011, in execute
+    return meth(self, multiparams, params)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\elements.py", line 298, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1130, in _execute_clauseelement
+    distilled_params,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1207, in _execute_context
+    e, util.text_type(statement), parameters, None, None
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1511, in _handle_dbapi_exception
+    sqlalchemy_exception, with_traceback=exc_info[2], from_=e
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
+    raise exception
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1204, in _execute_context
+    context = constructor(dialect, self, conn, *args)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\default.py", line 839, in _init_compiled
+    param.append(processors[key](compiled_params[key]))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1841, in process
+    value = _strict_as_bool(value)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1816, in _strict_as_bool
+    raise TypeError("Not a boolean value: %r" % value)
+sqlalchemy.exc.StatementError: (builtins.TypeError) Not a boolean value: 'Ambos'
+[SQL: INSERT INTO producto (id, prod_id, name, price, quantity, variant, accion, accion_reaccion, accion_cambiar_por, accion_cambiar_por_desc, accion_cantidad, motivo, valido, valido_motivo, politica_valida, politica_valida_motivo, image, promo_descuento, promo_nombre, promo_precio_final, order_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: [{'price': '1500.00', 'id': 475436002, 'image': 'https://d2r9epyceweg5n.cloudfront.net/stores/001/447/373/products/p10um34010r_70_011-7f9fcf22447f6e40 ... (906 characters truncated) ... ', 'promo_descuento': 0, 'accion_cambiar_por_desc': None, 'accion_reaccion': None, 'valido': None, 'valido_motivo': None, 'accion_cambiar_por': None}]]

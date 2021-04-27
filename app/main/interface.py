@@ -102,6 +102,7 @@ def buscar_empresa(empresa):
     session['provincia_codigos_postales'] = settings['provincia_codigos_postales']
     session['ventana_cambio'] = settings['politica']['ventana_cambio']
     session['ventana_devolucion'] = settings['politica']['ventana_devolucion']
+    session['textos'] = settings['textos']
 
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
@@ -142,6 +143,7 @@ def buscar_empresa(empresa):
     session['provincia_codigos_postales'] = settings['provincia_codigos_postales']
     session['ventana_cambio'] = settings['politica']['ventana_cambio']
     session['ventana_devolucion'] = settings['politica']['ventana_devolucion']
+    session['textos'] = settings['textos']
 
     unaEmpresa = Company(
       platform = 'tiendanube',
@@ -376,7 +378,6 @@ def cargar_pedido(unaEmpresa, pedido ):
   session['store'] = unaEmpresa.store_id
   session['plataforma'] = unaEmpresa.platform
 
-  ### cambio ####
   if Customer.query.get(pedido['customer']['id']):
     unCliente = Customer.query.get(pedido['customer']['id'])
   else: 
@@ -398,20 +399,24 @@ def cargar_pedido(unaEmpresa, pedido ):
       )
   session['cliente'] = unCliente.id
 
-  unaOrden = Order(
-    id = pedido['id'],
-    order_number = pedido['number'],
-    order_original_id = pedido['id'],
-    order_fecha_compra = datetime.strptime((pedido['completed_at']['date']), '%Y-%m-%d %H:%M:%S.%f'),
-    metodo_de_pago = pedido['gateway'],
-    tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
-    gastos_cupon = pedido['discount_coupon'],
-    gastos_gateway = pedido['discount_gateway'],
-    gastos_shipping_owner = pedido['shipping_cost_owner'],
-    gastos_shipping_customer = pedido['shipping_cost_customer'],
-    gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
-    buyer = unCliente
-    )
+  ## cambio
+  if Order.query.get(pedido['id']):
+    unaOrden = Order.query.get(pedido['id'])
+  else: 
+    unaOrden = Order(
+      id = pedido['id'],
+      order_number = pedido['number'],
+      order_original_id = pedido['id'],
+      order_fecha_compra = datetime.strptime((pedido['completed_at']['date']), '%Y-%m-%d %H:%M:%S.%f'),
+      metodo_de_pago = pedido['gateway'],
+      tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
+      gastos_cupon = pedido['discount_coupon'],
+      gastos_gateway = pedido['discount_gateway'],
+      gastos_shipping_owner = pedido['shipping_cost_owner'],
+      gastos_shipping_customer = pedido['shipping_cost_customer'],
+      gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
+      buyer = unCliente
+      )
   session['orden'] = unaOrden.id       
 
   for x in range(len(pedido['products'])): 
@@ -507,4 +512,10 @@ def validar_cobertura(provincia,zipcode):
   else:
     return False
   
+### Selecciona el texto a mostrar segun la empresa
+def traducir_texto(string, fp):
+  file1 = open('app/static/conf/'+fp+'.txt', 'r')
+  for line in file1:
+    if line.startswith(string):
+      return line.split(string,1)[1] 
   

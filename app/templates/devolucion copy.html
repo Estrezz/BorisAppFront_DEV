@@ -17,25 +17,30 @@
 
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="text-align:left">
                 <p style="text-align:left"> Qué deseas hacer? </p>
-                {% if  item['accion'] == 'cambiar' %}
-                    <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar" checked=true>  
-                    <label for="cambiar">Cambiar</label> 
-                    <br>
-                {% else %}
-                    <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar">  
-                    <label for="cambiar">Cambiar</label>
-                    <br>
+                
+                {% if (item.politica_valida == 'Ambos') or (item.politica_valida == 'Solo Cambio') %}
+                    {% if  item['accion'] == 'cambiar' %}
+                        <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar" checked=true>  
+                        <label for="cambiar">Cambiar</label> 
+                        <br>
+                    {% else %}
+                        <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar">  
+                        <label for="cambiar">Cambiar</label>
+                        <br>
+                    {% endif %}
                 {% endif %}
-                {% if  item['accion'] == 'devolver' %}
-                    <input type="radio" id="devolver"
-                    name="accion{{ item['id'] }}" value="devolver" checked=true>
-                    <label for="devolver">Devolver</label>
-                    <br>
-                {% else %}
-                    <input type="radio" id="devolver"
-                    name="accion{{ item['id'] }}" value="devolver">
-                    <label for="devolver">Devolver</label>
-                    <br>
+                {% if (item.politica_valida == 'Ambos') or (item.politica_valida == 'Solo Devolucion') %}
+                    {% if  item['accion'] == 'devolver' %}
+                        <input type="radio" id="devolver"
+                        name="accion{{ item['id'] }}" value="devolver" checked=true>
+                        <label for="devolver">Devolver</label>
+                        <br>
+                    {% else %}
+                        <input type="radio" id="devolver"
+                        name="accion{{ item['id'] }}" value="devolver">
+                        <label for="devolver">Devolver</label>
+                        <br>
+                    {% endif %}
                 {% endif %}
                 {% if  item['accion'] == 'ninguna' %}
                     <input type="radio" id="ninguna"
@@ -112,7 +117,7 @@
                             {% else %}
                                 <tr><strong> 
                                     <h4 style="text-align: center;"> No hay Stock para ese artículo <br>
-                                    Comunicate con nosotros para verificar o selecciona la opción devolver</h4> 
+                                    Por favor comunicate con nostros</h4> 
                                 </strong></tr> <br>
 
                             {% endif %}

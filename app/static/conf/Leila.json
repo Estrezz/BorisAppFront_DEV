@@ -1,7 +1,7 @@
 {
     "currency": "ARS",
     "shipping": "company",
-    "test": "False",
+    "test": "True",
     "correo_test": "True",
     "provincia_codigos_postales": {
       "Capital Federal":"All",
@@ -9,7 +9,7 @@
     },
     "politica": {
       "ventana_cambio":60,
-      "ventana_devolucion":1,
+      "ventana_devolucion":60,
       "rubros":{},
       "promos":{}
     }

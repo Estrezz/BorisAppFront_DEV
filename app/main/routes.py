@@ -74,7 +74,6 @@ def buscar():
 @bp.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
 
-    # cambios para sesion
     company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     order = Order.query.get(session['orden'])
@@ -97,15 +96,31 @@ def pedidos():
             order = Order.query.get(session['orden'])
             item = Producto.query.get(prod_id)
             alternativas = buscar_alternativas(company, session['store'], item.prod_id, motivo, item.variant)
-            return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1])
+            return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
         prod_id = request.form.get("Prod_Id")
+        opcion_cambio = request.form.get("opcion_cambio")
         item = Producto.query.get(prod_id)
+        ## Si se seleccionó el Boton de VARIANTE
+        if opcion_cambio == 'Variante':
+            if request.form.get("variante"):
+                variante = ast.literal_eval(request.form.get("variante"))
+                item.accion_cambiar_por = variante['id']
+                item.accion_cambiar_por_desc = describir_variante(variante['values'])    
+            else:
+                ## Si se seleccionó el Boton de VARIANTE pero no se seleccionó ningún articulo
+                flash('Por favor, indica por que item queres realizar el cambio' )
+                item.accion = 'ninguna'
+                db.session.commit() 
+                return render_template('pedido.html', title='Pedido', NombreStore=company.company_name, user=user, order = order, productos = productos)
+
+        ## Si se seleccionó el Boton de CUPON
+        if opcion_cambio == 'Cupon':
+            item.accion_cambiar_por = '1'
+            item.accion_cambiar_por_desc = 'Cupón'
+            
         item.accion_reaccion = True
-        variante = ast.literal_eval(request.form.get("variante"))
-        item.accion_cambiar_por = variante['id']
-        item.accion_cambiar_por_desc = describir_variante(variante['values'])
         db.session.commit() 
 
     return render_template('pedido.html', title='Pedido', NombreStore=company.company_name, user=user, order = order, productos = productos)
@@ -119,16 +134,22 @@ def pedidos_unitarios():
         user = Customer.query.get(session['cliente'])
         order = Order.query.get(session['orden'])
         item = Producto.query.get(prod_id)
-    return render_template('devolucion.html', title='Accion', NombreStore=company.company_name, user=user, order = order, item = item)
+    return render_template('devolucion.html', title='Accion', NombreStore=company.company_name, user=user, order = order, item = item, textos=session['textos'])
 
 
 
 @bp.route('/Confirmar',methods=['GET', 'POST'])
 def confirma_cambios():
+    company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     order = Order.query.get(session['orden'])
     productos = db.session.query(Producto).filter((Producto.order_id==session['orden'])).filter((Producto.accion != 'ninguna'))
-    company = Company.query.filter_by(store_id=session['store']).first()
+    ### Si no hay ninguna accion a realizar especificada
+    if productos.count() == 0:
+        flash('Por favor, especifica alguna acción a realizar')
+        productos = Producto.query.filter_by(order_id=session['orden']).all()
+        return render_template('pedido.html', title='Pedido', NombreStore=company.company_name, user=user, order = order, productos = productos)
+
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
     area_valida = validar_cobertura(user.province, user.zipcode)
     return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida)
