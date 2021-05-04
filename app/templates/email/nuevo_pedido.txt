@@ -1,4 +1,4 @@
-    Se ha generado uan nueva orden en BORIS
+    Se ha generado una nueva orden en BORIS
     Nro de Orden: {{order.order_number}}
     Cliente: {{ user.name }}
    

@@ -1,33 +1,46 @@
 Hola {{ user.name }}!
 
-{% if envio.id == 'Manual' %}
-    <h2 style="text-align:center">  Tu orden ha sido iniciada</h2>
-    En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
-
-{% else %}
-    <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
- 
+{% if metodo_envio == 'Manual' %}
+        <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
+        <h2 style="text-align:center">
+            Tu orden número {{order.order_number}} ha sido iniciada<br>
+            En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
+        </h2>
+{% endif %}
+{% if metodo_envio == 'Coordinar' %}
+        <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
+        <h2 style="text-align:center">
+            Tu orden número {{order.order_number}} ha sido iniaciada<br>
+            En breve te llamaremos para coordinar la recogida de tus productos<br>
+        </h2>
+{% endif %}
+{% if metodo_envio == 'Moova' %}
+    <h2 style="text-align:center"> Tu orden ha sido iniciada<br>
+        Tu orden número {{order.order_number}} ha sido iniciada </h2>
      {% if envio.status == 'DRAFT' %}
         <h2 style="text-align:center">
             {% if shipping == 'customer' %}
+                <br>
                 En breve recibiras por mail un link para que puedas abonar el envío<br>
                 El costo del mismo es <strong>{{envio.priceFormatted}}</strong>
+                <br>
+                Una vez abonado recibiras las intrucciones para preparar el retiro de tus productos
             {% else %}
-                Tu orden ha sido iniciada
-                En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
+                <br>
+                En breve recibiras por mail las instrucciones para que prepares tu pedido para que pasemos a retirarlo<br>
             {% endif %}
          </h2>
     {% else %}
         <p style="text-align:center"> Un mensajero de MOOVA pasara a retirarlo en breve<br>
-        tu numero  secreto es {{envio['secretCode']}} <br>
-        EL Id de tu orden es <br>
+        Tu numero  secreto es {{envio['secretCode']}} <br>
+        El Id de tu orden es <br>
             {{envio.id}}<br>
         </p>
     {% endif %}
 {% endif %}
 
 <h5 style="text-align:center"> Podes hacer el seguimiento de tu orden acá: <br>
-        <a href="http://ec2-54-208-172-198.compute-1.amazonaws.com/tracking/{{order.order_number}}">
-        http://ec2-54-208-172-198.compute-1.amazonaws.com/tracking/{{order.order_number}}
+        <a href="http://front.borisreturns.com/tracking/{{order.order_number}}">
+        http://front.borisreturns.com/tracking/{{order.order_number}}
         </a>
 

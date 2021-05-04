@@ -152,7 +152,7 @@ def confirma_cambios():
 
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
     area_valida = validar_cobertura(user.province, user.zipcode)
-    return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
+    return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'])
 
 
 
@@ -194,8 +194,8 @@ def confirma_solicitud():
     Order.query.filter_by(id=session['orden']).delete()
     Customer.query.filter_by(id=session['cliente']).delete()
     db.session.commit()
-    
-    return render_template('envio.html', NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio)
+
+    return render_template('envio.html', NombreStore=company.company_name, company=company, user=user, order=order, envio=envio)
 
 
 @bp.route('/tracking/<order>',methods=['GET', 'POST'])

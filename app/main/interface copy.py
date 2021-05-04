@@ -105,6 +105,7 @@ def buscar_empresa(empresa):
     session['textos'] = settings['textos']
     session['envio'] = settings['envio']
 
+
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
       store_id = empresa_tmp.store_id,
@@ -216,9 +217,9 @@ def crea_envio(company, user, order, productos, metodo_envio):
                 sender=company.communication_email,
                 recipients=[user.email], 
                 text_body=render_template('email/'+company.store_id+'/pedido_listo.txt',
-                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio),
+                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping']),
                 html_body=render_template('email/'+company.store_id+'/pedido_listo.html',
-                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio), 
+                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping']), 
                 attachments=None, 
                 sync=False,
                 bcc=[current_app.config['ADMINS'][0]])

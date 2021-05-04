@@ -1,24 +1,36 @@
 {% extends "base.html" %}
-git 
 
 {% block app_content %}
 <div class='container-fluid'>
-    {% if envio.id == 'Manual' %}
-        <h2 style="text-align:center"> Tu orden ha sido confirmada</h2>
-        <img  style='height: auto; width: 50%; object-fit: contain' class="center-block " src="/static/images/box.png"  >
+    {% if metodo_envio == 'Manual' %}
+        <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
+        <img  style='height: auto; width: 20%; object-fit: contain' class="center-block " src="/static/images/checked.png"  >
         <h2 style="text-align:center">
-            En breve recibiras por mail las instrucciones para hacernos llegar tu Orden<br>
+            Tu orden número {{order.order_number}} ha sido iniciada
+            En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
         </h2>
-    {% else %}
-        <h2 style="text-align:center"> Tu orden ha sido confirmada</h2>
-        <img  style='height: auto; width: 50%; object-fit: contain' class="center-block " src="/static/images/moto.png"  >
+    {% endif %}
 
+    {% if metodo_envio == 'Coordinar' %}
+        <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
+        <img  style='height: auto; width: 20%; object-fit: contain' class="center-block " src="/static/images/checked.png"  >
+        <h2 style="text-align:center">
+            Tu orden número {{order.order_number}} ha sido iniacida
+            En breve te llamaremos para coordinar la recogida de tus productos<br>
+        </h2>
+    {% endif %}
+    
+    {% if metodo_envio == 'Moova' %}
+        <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
+        <img  style='height: auto; width: 20%; object-fit: contain' class="center-block " src="/static/images/checked.png"  >
+        <h2 style="text-align:center">Tu orden número {{order.order_number}} ha sido inicida</h2>
         {% if envio.status == 'DRAFT' %}
             <h2 style="text-align:center">
                 En breve recibiras por mail un link para que puedas abonar el envío<br>
                 El costo del mismo es <strong>{{envio.priceFormatted}}</strong>
+                <br>
+                Una vez abonado recibiras las intrucciones para preparar el retiro de tus productos
             </h2>
-            
         {% else %}
             <p style="text-align:center"> Un mensajero de MOOVA pasara a retirarlo en breve<br>
             tu numero  secreto es {{envio['secretCode']}} 
@@ -29,8 +41,6 @@ git
         {% endif %}
     {% endif %}
     <!-- READY o DRAFT dependiendo de customer / company--> 
-    
-    
 
    <br>
     <h5 style="text-align:center"> Podes hacer el seguimiento de tu orden acá: <br>

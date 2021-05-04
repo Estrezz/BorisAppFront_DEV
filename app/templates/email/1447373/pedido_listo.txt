@@ -1,17 +1,24 @@
 Hola {{ user.name }}!
 
-{% if envio.id == 'Manual' %}
+{% if metodo_envio == 'Manual' %}
     Tu Orden ha sido confirmada
     En breve recibiras por mail las instrucciones para hacernos llegar tu Orden
-{% else %}
+{% endif %}
+{% if metodo_envio == 'Coordinar' %}
+        Tu orden ha sido iniciada
+            Tu orden número {{order.order_number}} ha sido iniciada
+            En breve te llamaremos para coordinar la recogida de tus productos
+{% endif %}
+{% if metodo_envio == 'Moova' %}
     Tu orden ha sido confirmada
     {% if envio.status == 'DRAFT' %}
         {% if shipping == 'customer' %}
-            En breve recibiras por mail un link para que puedas abonar el envío
-            El costo del mismo es <strong>{{envio.priceFormatted}}
+             En breve recibiras por mail un link para que puedas abonar el envío
+             El costo del mismo es <strong>{{envio.priceFormatted}}
+
+             Una vez abonado recibiras las intrucciones para preparar el retiro de tus productos
         {% else %}
-            Tu orden ha sido confirmada
-            En breve recibiras por mail las instrucciones para hacernos llegar tu Orden
+            En breve recibiras por mail las instrucciones para que prepares tu pedido para que pasemos a retirarlo
         {% endif %}
     {% else %}
         Un mensajero de MOOVA pasara a retirarlo en breve
@@ -22,6 +29,6 @@ Hola {{ user.name }}!
 {% endif %}
 
 Podes hacer el seguimiento de tu orden acá:
-        http://ec2-54-208-172-198.compute-1.amazonaws.com/tracking/{{order.order_number}}
+        http://front.borisreturns.com/tracking/{{order.order_number}}
         
 

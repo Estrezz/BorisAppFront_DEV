@@ -3,6 +3,7 @@
     "shipping": "company",
     "test": "True",
     "correo_test": "True",
+    "envio": ["manual", "coordinar"],
     "provincia_codigos_postales": {
       "Capital Federal":"All",
       "Buenos Aires": [1636, 1637, 1638, 1602, 1605, 1606]
@@ -12,11 +13,12 @@
       "ventana_devolucion":60,
       "rubros":{},
       "promos":{}
-    }
+    },
     "textos": {
       "elegir_opcion_cambio": "Selecciona la opcion que queres o elegi generar un cupon si queres cambiarlo por otra cosa",
       "elegir_accion": "Selecciona la acción a realizar",
-      "envio_manual": "Seleccionaste envío manual"
-      
+      "envio_manual": "Seleccionaste envío manual",
+      "boton_envio_manual": "Lo hago llegar por mi cuenta",
+      "boton_envio_retiro": "Quiero que lo retiren en mi domicilio"
     }
   }
