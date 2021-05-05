@@ -88,6 +88,7 @@ class Customer(db.Model):
     city = db.Column(db.String(64))
     province = db.Column(db.String(64))
     country = db.Column(db.String(64))
+    instructions = db.Column(db.String(150))
 
     def __repr__(self):
         return '<Cliente {}>'.format(self.name)    

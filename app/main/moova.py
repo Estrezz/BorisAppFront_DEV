@@ -8,7 +8,10 @@ def crea_envio_moova(company, user, order, productos):
         if session['shipping'] == 'customer':
             paga_correo = 'manual'
         else: 
-            paga_correo ='semi-automatic'
+            # paga_correo ='semi-automatic'
+            # Comentado hasta comprobar que funcion al 100%
+            # al activar hay que agregar etiqueta en el mail
+            paga_correo ='manual'
     else:
         paga_correo ='manual'
 
@@ -25,6 +28,7 @@ def crea_envio_moova(company, user, order, productos):
         "state": user.province,
         "postalCode": user.zipcode,
         "country": user.country,
+        "instructions": user.instructions,
         "contact": {
         "firstName": user.name,
         "email": user.email

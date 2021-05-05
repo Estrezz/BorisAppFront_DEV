@@ -87,47 +87,57 @@
             </div>
             <div class="panel-body">
                 {{textos['elegir_opcion_cambio']}} <br> <br>
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <form id="Alternativas" action="{{ url_for('main.pedidos') }}" method="POST"> 
-                            <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
-                            <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
+               
+                <form id="Alternativas" action="{{ url_for('main.pedidos') }}" method="POST"> 
+                    <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
+                    <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
                             
-                            {% if alternativas|length > 0 %}
-                            <table class="table">
-                                <tr>
-                                    <th></th>
-                                    {% for x in atributos %}
-                                        <th scope="col"> {{ x['es'] }} </th>
-                                    {% endfor %}
-                                </tr>
-                            {% for x in alternativas %}     
-                                <tr>
-                                    <td>
-                                        <input type="radio" id="variante" name="variante" value="{{ x }}" > 
-                                    </td>
-                                    {% for i in x['values'] %}
-                                        <td> {{ i['es'] }} </td> 
-                                    {% endfor %}
-                                </tr>
-                            {% endfor %} 
-                            </table>      
-                             <br>
-                             <div class="button-wrapper" style="text-align: center; ">
-                                <button class="btn btn-default" name="opcion_cambio" type="submit" value="Variante">Seleccionar </button>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" name="opcion_cambio" type="submit" value="Cupon">Generar Cupón</button>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                          
+                            <div class="row">
+                                <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
+                                    {% if alternativas|length > 0 %}
+                                        <table class="table">
+                                            <tr>
+                                                <th></th>
+                                                {% for x in atributos %}
+                                                    <th scope="col"> {{ x['es'] }} </th>
+                                                {% endfor %}
+                                            </tr>
+                                        {% for x in alternativas %}     
+                                            <tr>
+                                                <td>
+                                                    <input type="radio" id="variante" name="variante" value="{{ x }}" > 
+                                                </td>
+                                                {% for i in x['values'] %}
+                                                    <td> {{ i['es'] }} </td> 
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %} 
+                                        </table>      
+                                        <br>
+                                        <button class="btn btn-primary" name="opcion_cambio" type="submit" value="Variante">Seleccionar </button>
+                                    {% else %}
+                                        <tr><strong> 
+                                            <h4 style="text-align: center; "> No hay Stock para ese artículo <br>
+                                            Por favor comunicate con nostros</h4> 
+                                        </strong></tr> <br>
+                                    {% endif %}
+                                </div>
                             </div>
-                            {% else %}
-                                <tr><strong> 
-                                    <h4 style="text-align: center; "> No hay Stock para ese artículo <br>
-                                    Por favor comunicate con nostros</h4> 
-                                </strong></tr> <br>
-
-                            {% endif %}
-                        </form>
+                        </div>
                     </div>
-                </div>
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {{textos['elegir_opcion_cambio_cupon']}}<br><br>
+                            <button class="btn btn-primary" name="opcion_cambio" type="submit" value="Cupon">Generar Cupón</button>
+                           
+                        </div>
+                    </div>
+                </form>
+                   
         </div>
         {% endif %}
     </div>

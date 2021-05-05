@@ -45,7 +45,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">
-        <b>Datos de Contacto</b>
+        <b>Datos de Contacto </b>
         </h4>
     </div>
     <div class="panel-body">
@@ -57,6 +57,11 @@
           {{  user.locality }}  {{  user.zipcode }} <br>
           {{  user.city }} {{  user.province }} <br>
           {{  user.country }} <br>
+          <br>
+          <strong>Instrucciones para el retiro:</strong>
+          {% if user.instructions != 'None' %}
+            {{  user.instructions }} <br>
+          {% endif %}
           <br>
           <a href="{{ url_for('main.direccion') }}">
                 <button class="btn btn-default">Corregir datos</button>
