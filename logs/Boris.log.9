@@ -1,17 +1,4 @@
-2021-04-19 10:43:32,622 ERROR: Exception on /buscar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1204, in _execute_context
-    context = constructor(dialect, self, conn, *args)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\default.py", line 839, in _init_compiled
-    param.append(processors[key](compiled_params[key]))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1841, in process
-    value = _strict_as_bool(value)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1816, in _strict_as_bool
-    raise TypeError("Not a boolean value: %r" % value)
-TypeError: Not a boolean value: 'Ambos'
-
-The above exception was the direct cause of the following exception:
-
+2021-04-19 11:50:23,234 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -25,60 +12,53 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 67, in buscar
-    cargar_pedido(unaEmpresa, pedido)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 440, in cargar_pedido
-    db.session.commit()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\scoping.py", line 163, in do
-    return getattr(self.registry(), name)(*args, **kwargs)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 1042, in commit
-    self.transaction.commit()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 504, in commit
-    self._prepare_impl()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 483, in _prepare_impl
-    self.session.flush()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2536, in flush
-    self._flush(objects)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2678, in _flush
-    transaction.rollback(_capture_exception=True)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
-    with_traceback=exc_tb,
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
-    raise exception
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2638, in _flush
-    flush_context.execute()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\unitofwork.py", line 422, in execute
-    rec.execute(self)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\unitofwork.py", line 589, in execute
-    uow,
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\persistence.py", line 245, in save_obj
-    insert,
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\persistence.py", line 1083, in _emit_insert_statements
-    c = cached_connections[connection].execute(statement, multiparams)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1011, in execute
-    return meth(self, multiparams, params)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\elements.py", line 298, in _execute_on_connection
-    return connection._execute_clauseelement(self, multiparams, params)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1130, in _execute_clauseelement
-    distilled_params,
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1207, in _execute_context
-    e, util.text_type(statement), parameters, None, None
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1511, in _handle_dbapi_exception
-    sqlalchemy_exception, with_traceback=exc_info[2], from_=e
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
-    raise exception
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1204, in _execute_context
-    context = constructor(dialect, self, conn, *args)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\default.py", line 839, in _init_compiled
-    param.append(processors[key](compiled_params[key]))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1841, in process
-    value = _strict_as_bool(value)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1816, in _strict_as_bool
-    raise TypeError("Not a boolean value: %r" % value)
-sqlalchemy.exc.StatementError: (builtins.TypeError) Not a boolean value: 'Ambos'
-[SQL: INSERT INTO producto (id, prod_id, name, price, quantity, variant, accion, accion_reaccion, accion_cambiar_por, accion_cambiar_por_desc, accion_cantidad, motivo, valido, valido_motivo, politica_valida, politica_valida_motivo, image, promo_descuento, promo_nombre, promo_precio_final, order_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
-[parameters: [{'price': '1500.00', 'id': 475436002, 'image': 'https://d2r9epyceweg5n.cloudfront.net/stores/001/447/373/products/p10um34010r_70_011-7f9fcf22447f6e40 ... (906 characters truncated) ... ', 'promo_descuento': 0, 'accion_cambiar_por_desc': None, 'accion_reaccion': None, 'valido': None, 'valido_motivo': None, 'accion_cambiar_por': None}]]
-2021-04-19 10:44:48,902 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 10:44:55,053 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 10:45:00,048 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 10:45:03,875 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 56, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 98, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+AttributeError: 'NoneType' object has no attribute 'param_config'
+2021-04-19 11:51:26,035 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 11:51:45,738 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:14:43,487 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:14:45,225 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 56, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 140, in buscar_empresa
+    session['periodo'] = settings['politica']['periodo']
+KeyError: 'periodo'
+2021-04-19 14:15:19,003 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:16:24,455 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:20:55,502 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:21:11,701 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:22:30,180 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:25:48,422 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:27:59,811 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:32:14,662 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:32:38,385 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:34:17,969 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-19 14:34:44,300 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-21 16:29:12,711 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-21 16:29:20,084 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-21 16:30:43,172 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-21 16:33:33,540 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-21 16:34:01,482 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-26 09:51:23,312 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-26 09:55:08,335 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-26 09:55:12,418 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-26 10:07:39,301 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-26 10:09:16,438 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-26 10:09:39,002 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-26 17:06:20,717 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]

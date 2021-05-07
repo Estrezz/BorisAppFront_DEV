@@ -1,4 +1,4 @@
-2021-04-19 11:50:23,234 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-04-27 09:24:57,479 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,15 +12,14 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 56, in buscar
-    unaEmpresa = buscar_empresa(request.args['empresa'])
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 98, in buscar_empresa
-    settings = guardar_settings(empresa_tmp.param_config)
-AttributeError: 'NoneType' object has no attribute 'param_config'
-2021-04-19 11:51:26,035 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 11:51:45,738 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:14:43,487 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:14:45,225 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 106, in pedidos
+    variante = ast.literal_eval(request.form.get("variante"))
+  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\ast.py", line 85, in literal_eval
+    return _convert(node_or_string)
+  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\ast.py", line 84, in _convert
+    raise ValueError('malformed node or string: ' + repr(node))
+ValueError: malformed node or string: None
+2021-04-27 09:25:04,710 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -34,31 +33,72 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 56, in buscar
-    unaEmpresa = buscar_empresa(request.args['empresa'])
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 140, in buscar_empresa
-    session['periodo'] = settings['politica']['periodo']
-KeyError: 'periodo'
-2021-04-19 14:15:19,003 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:16:24,455 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:20:55,502 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:21:11,701 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:22:30,180 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:25:48,422 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:27:59,811 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:32:14,662 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:32:38,385 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:34:17,969 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-19 14:34:44,300 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-21 16:29:12,711 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-21 16:29:20,084 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-21 16:30:43,172 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-21 16:33:33,540 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-21 16:34:01,482 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-26 09:51:23,312 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-26 09:55:08,335 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-26 09:55:12,418 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-26 10:07:39,301 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-26 10:09:16,438 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-26 10:09:39,002 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-26 17:06:20,717 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 106, in pedidos
+    variante = ast.literal_eval(request.form.get("variante"))
+  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\ast.py", line 85, in literal_eval
+    return _convert(node_or_string)
+  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\ast.py", line 84, in _convert
+    raise ValueError('malformed node or string: ' + repr(node))
+ValueError: malformed node or string: None
+2021-04-27 09:25:40,882 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:28:28,158 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:30:07,909 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:32:46,208 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:35:32,493 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:36:02,117 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 105, in pedidos
+    if opcion_cambio == 'Variante':
+UnboundLocalError: local variable 'opcion_cambio' referenced before assignment
+2021-04-27 09:36:53,008 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:38:07,560 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:39:04,360 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 109, in pedidos
+    item.accion_cambiar_por = variante['id']
+UnboundLocalError: local variable 'item' referenced before assignment
+2021-04-27 09:39:53,653 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:48:00,430 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:49:57,913 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 09:50:47,241 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 115, in pedidos
+    item.accion = 'ninguna'
+AttributeError: 'NoneType' object has no attribute 'accion'
+2021-04-27 09:56:22,021 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]

@@ -124,7 +124,7 @@ class Producto(db.Model):
     accion_cambiar_por = db.Column(db.Integer)
     accion_cambiar_por_desc = db.Column(db.String(100))
     accion_cantidad = db.Column(db.Integer)
-    motivo = db.Column(db.String(50))
+    motivo = db.Column(db.String(150))
     politica_valida = db.Column(db.String(50))
     politica_valida_motivo = db.Column(db.String(50))
     image = db.Column(db.String(200))

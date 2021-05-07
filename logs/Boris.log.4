@@ -1,4 +1,4 @@
-2021-04-27 09:56:45,088 ERROR: Exception on /Confirmar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-04-27 12:05:34,269 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,16 +12,55 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 147, in confirma_cambios
-    flash('Cant productos en orde {}'.format(len(productos)))
-TypeError: object of type 'BaseQuery' has no len()
-2021-04-27 09:59:39,376 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:00:20,249 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:02:32,181 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:04:38,444 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:09:43,482 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:35:03,095 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:35:15,319 ERROR: Exception on /pedidos [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 99, in pedidos
+    return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'])
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\loaders.py", line 127, in load
+    code = environment.compile(source, name, filename)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\templates\devolucion.html", line 94, in template
+    {{textos['elegir_opcion_cambio']|decode('utf-8')}}
+jinja2.exceptions.TemplateAssertionError: no filter named 'decode'
+2021-04-27 12:05:52,954 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:08:11,609 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:10:35,778 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:31:52,387 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:34:20,955 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:34:39,406 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:35:09,456 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:35:42,894 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:36:46,294 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:37:22,906 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 12:37:42,603 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 13:29:31,236 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 13:31:10,681 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 13:35:35,085 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 13:37:41,428 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 13:38:12,450 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-04-27 13:39:17,971 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 12:01:13,821 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 12:02:59,183 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 12:03:53,900 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 12:05:26,256 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 12:07:28,435 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 12:11:05,327 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 12:12:00,316 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 14:02:59,357 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 14:04:08,729 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 14:09:48,444 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 14:10:20,176 ERROR: Exception on /Confirmar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -35,56 +74,26 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 83, in pedidos
-    flash('Mensaje {}'.formar(traducir_texto('#Seleccionar','1447373')))
-AttributeError: 'str' object has no attribute 'formar'
-2021-04-27 10:35:50,852 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:35:57,066 ERROR: Exception on /pedidos [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
-    raise value
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 83, in pedidos
-    flash('Mensaje {}'.format(traducir_texto('#Seleccionar','1447373')))
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 515, in traducir_texto
-    file1 = open(fp+'.txt', 'r')
-FileNotFoundError: [Errno 2] No such file or directory: '1447373.txt'
-2021-04-27 10:38:42,250 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:42:27,735 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:48:47,016 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:49:35,678 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
-    raise value
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 100, in pedidos
-    Flash('texto {}'.format(traducir_texto('#elegir_opción',session['store'])))
-NameError: name 'Flash' is not defined
-2021-04-27 10:49:54,938 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:50:48,264 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:51:10,041 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 10:51:37,364 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 11:09:19,199 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 11:10:01,512 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 11:12:19,899 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 11:15:42,660 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 11:16:12,529 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 11:38:42,556 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 155, in confirma_cambios
+    return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\loaders.py", line 127, in load
+    code = environment.compile(source, name, filename)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\templates\pedido_confirmar.html", line 107, in template
+    <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Coordinar') }}" >
+jinja2.exceptions.TemplateSyntaxError: expected token 'end of statement block', got 'main'
+2021-05-04 14:12:00,243 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-05-04 14:19:24,159 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]

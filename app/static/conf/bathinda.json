@@ -3,22 +3,14 @@
     "shipping": "company",
     "test": "True",
     "correo_test": "True",
-    "envio": ["manual", "coordinar"],
+    "envio": ["manual", "retiro", "coordinar"],
     "provincia_codigos_postales": {
       "Capital Federal":"All",
       "Buenos Aires": [1636, 1637, 1638, 1602, 1605, 1606]
     },
-    "motivos":[
-      "No me queda bien",
-      "Es grande",
-      "Es chico",
-      "Mala calidad",
-      "Tiene fallas",
-      "No gusta color"
-    ],
     "politica": {
-      "ventana_cambio":60,
-      "ventana_devolucion":60,
+      "ventana_cambio":30,
+      "ventana_devolucion":10,
       "rubros":{},
       "promos":{}
     },

@@ -62,9 +62,11 @@
                 <input name="motivo{{ item['id'] }}" id=motivo 
                 value = "{{ item['motivo']}}" list="motivos" placeholder="Motivo">
                 <datalist id="motivos">
-                    {% for un_motivo in lista_motivos %}
-                        <option value="{{ un_motivo }}" />
-                    {% endfor %}
+                    <option value="Es grande">
+                    <option value="Es chico">
+                    <option value="Mala calidad">
+                    <option value="Tiene fallas">
+                    <option value="No gusta color">
                 </datalist>
                 <br>
                 <br>

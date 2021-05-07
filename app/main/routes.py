@@ -96,7 +96,7 @@ def pedidos():
             order = Order.query.get(session['orden'])
             item = Producto.query.get(prod_id)
             alternativas = buscar_alternativas(company, session['store'], item.prod_id, motivo, item.variant)
-            return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'])
+            return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'], lista_motivos=session['motivos'])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
         prod_id = request.form.get("Prod_Id")
@@ -134,7 +134,7 @@ def pedidos_unitarios():
         user = Customer.query.get(session['cliente'])
         order = Order.query.get(session['orden'])
         item = Producto.query.get(prod_id)
-    return render_template('devolucion.html', title='Accion', NombreStore=company.company_name, user=user, order = order, item = item, textos=session['textos'])
+    return render_template('devolucion.html', title='Accion', NombreStore=company.company_name, user=user, order = order, item = item, textos=session['textos'],  lista_motivos=session['motivos'])
 
 
 

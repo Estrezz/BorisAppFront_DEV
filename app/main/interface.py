@@ -104,6 +104,7 @@ def buscar_empresa(empresa):
     session['ventana_devolucion'] = settings['politica']['ventana_devolucion']
     session['textos'] = settings['textos']
     session['envio'] = settings['envio']
+    session['motivos'] = settings['motivos']
 
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
@@ -146,6 +147,7 @@ def buscar_empresa(empresa):
     session['ventana_devolucion'] = settings['politica']['ventana_devolucion']
     session['textos'] = settings['textos']
     session['envio'] = settings['envio']
+    session['motivos'] = settings['motivos']
 
     unaEmpresa = Company(
       platform = 'tiendanube',
