@@ -84,7 +84,7 @@ class Customer(db.Model):
     number = db.Column(db.String(10))
     floor = db.Column(db.String(10))
     zipcode = db.Column(db.String(8))
-    locality = db.Column(db.String(64))
+    locality = db.Column(db.String(150))
     city = db.Column(db.String(64))
     province = db.Column(db.String(64))
     country = db.Column(db.String(64))
