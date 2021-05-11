@@ -144,4 +144,5 @@ cython_debug/
 #agregados bORIS
 app/static/conf/
 app/templates/email/
+app/logs
 
