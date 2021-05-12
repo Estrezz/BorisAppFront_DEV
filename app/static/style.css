@@ -33,3 +33,8 @@
 .foto {
     max-width: 50%;
   }
+
+.img_logo {
+    max-width: 100%;
+    height: auto;
+  }
