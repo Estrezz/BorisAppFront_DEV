@@ -9,7 +9,7 @@
         let referenceNode = document.querySelector('.full-width-container');
         let myButton = document.createElement('a');
         myButton.classList.add('btn','btn-primary', 'btn-small', 'full-width-xs', 'm-top', 'pull-right', 'pull-none-xs');
-        myButton.setAttribute('href',`https://front.borisreturns.com?store_id=${storeId}&order_id=${orderId}`);
+        myButton.setAttribute('href',`https://frontprod.borisreturns.com?store_id=${storeId}&order_id=${orderId}`);
         myButton.setAttribute('target', '_blank');
         myButton.textContent = 'Cambiar / Devolver un producto';
         referenceNode.append(myButton);
