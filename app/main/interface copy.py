@@ -261,7 +261,10 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
     if session['test'] == 'True':
       url='../Boris_common/logs/pedido'+str(order.id)+'.json'
     else: 
-      url="http://back.borisreturns.com/pedidos"
+      if current_app.config['SERVER_ROLE'] == 'DEV':
+        url="http://back.borisreturns.com/pedidos"
+      if current_app.config['SERVER_ROLE'] == 'PROD':
+        url="http://backprod.borisreturns.com/pedidos"
 
   headers = {
     'Content-Type': 'application/json'
