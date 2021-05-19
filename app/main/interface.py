@@ -1,6 +1,7 @@
 import requests
 import json
 import datetime
+import smtplib
 from datetime import datetime
 from app import db
 from app.models import Customer, Order, Producto, Company, Store
