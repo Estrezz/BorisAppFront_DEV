@@ -463,7 +463,7 @@ def busca_tracking(orden):
 
 ############################## loguea_error ##################################################
 def loguear_error(modulo, mensaje, codigo, texto):
-  url = "app/logs/"+str(session['store'])+"_log.txt"
+  url = "logs/app"+str(session['store'])+"_log.txt"
   #outfile = open('app/logs/err_boris.txt', "a")
   outfile = open(url, "a+")
   outfile.write(str(datetime.utcnow())+','+ modulo +','+ mensaje +','+ str(codigo) +','+str(texto)+ '\n')
