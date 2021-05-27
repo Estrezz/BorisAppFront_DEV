@@ -126,7 +126,7 @@ class Producto(db.Model):
     accion_cantidad = db.Column(db.Integer)
     motivo = db.Column(db.String(150))
     politica_valida = db.Column(db.String(50))
-    politica_valida_motivo = db.Column(db.String(50))
+    politica_valida_motivo = db.Column(db.String(100))
     image = db.Column(db.String(200))
     promo_descuento = db.Column(db.Float)
     promo_nombre = db.Column(db.String(10))
