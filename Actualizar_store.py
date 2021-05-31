@@ -5,10 +5,10 @@ from app.models import Store
 app=create_app()
 with app.app_context():
 
-  store = Store.query.filter_by(store_id='630942').first()
+  store = Store.query.filter_by(store_id='138327').first()
   
-
-  store.param_logo = '/static/images/bathinda.png'
+  store.store_name = 'Abundancia por designio'
+  #store.param_logo = '/static/images/abundancia.png'
 
   #store = Store(
   #  platform = 'tiendanube',
