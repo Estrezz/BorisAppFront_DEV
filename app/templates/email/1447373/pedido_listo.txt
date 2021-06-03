@@ -1,24 +1,36 @@
 Hola {{ user.name }}!
 
+Hemos recibido tu solicitud
+Tu número de orden es #{{order.order_number}}
+
 {% if metodo_envio == 'Manual' %}
-    Tu Orden ha sido confirmada
-    En breve recibiras por mail las instrucciones para hacernos llegar tu Orden
+   En breve recibiras por mail las instrucciones para que nos hagas llegar tus productos
+   {% for i in productos %}
+        {{i.name}} - {{i.quantity}}
+    {% endfor %}
+
 {% endif %}
+
+
 {% if metodo_envio == 'Coordinar' %}
-        Tu orden ha sido iniciada
-            Tu orden número {{order.order_number}} ha sido iniciada
-            En breve te llamaremos para coordinar la recogida de tus productos
+    En breve te llamaremos para coordinar la recogida de: 
+    {% for i in productos %}
+        {{i.quantity}} - {{i.name}} <br>
+    {% endfor %}
 {% endif %}
+
+
 {% if metodo_envio == 'Moova' %}
-    Tu orden ha sido confirmada
+
     {% if envio.status == 'DRAFT' %}
         {% if shipping == 'customer' %}
-             En breve recibiras por mail un link para que puedas abonar el envío
-             El costo del mismo es <strong>{{envio.priceFormatted}}
-
-             Una vez abonado recibiras las intrucciones para preparar el retiro de tus productos
+              En breve recibiras por mail las instrucciones para que puedas abonar el servicio de retiro
+                    El costo del mismo es{{envio.priceFormatted}}
+        
+                    Una vez abonado recibiras las intrucciones para que puedas preparar tus productos para ser retirados
         {% else %}
-            En breve recibiras por mail las instrucciones para que prepares tu pedido para que pasemos a retirarlo
+            En breve recibiras por mail las instrucciones para que prepares tu pedido.
+            Un mensajero de Moova para a retirarlo
         {% endif %}
     {% else %}
         Un mensajero de MOOVA pasara a retirarlo en breve
@@ -29,6 +41,6 @@ Hola {{ user.name }}!
 {% endif %}
 
 Podes hacer el seguimiento de tu orden acá:
-        http://front.borisreturns.com/tracking/{{order.order_number}}
+        http://frontprod.borisreturns.com/tracking/{{order.order_number}}
         
 

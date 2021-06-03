@@ -1,46 +1,73 @@
-Hola {{ user.name }}!
+<div class='container-fluid'>
+    <img  class="center-block img-responsive" src='http://frontprod.borisreturns.com/{{company.logo}}'> 
+</div>
 
+<h3 style="text-align:left">
+    Hola {{ user.name }}! <br>
+
+    Hemos recibido tu solicitud <br>
+    Tu número de orden es #{{order.order_number}}<br>
+</h3>
+
+<!-- ---------------------------  Envío MANUAL ------------------------------------------ -->
 {% if metodo_envio == 'Manual' %}
-        <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
-        <h2 style="text-align:center">
-            Tu orden número {{order.order_number}} ha sido iniciada<br>
-            En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
-        </h2>
+    <p style="text-align:left">
+        En breve recibiras por mail las instrucciones para que nos hagas llegar tus productos <br>
+    </p>
+    <p style="text-align:center">
+                {% for i in productos %}
+                    {{i.quantity}} - {{i.name}} <br>
+                {% endfor %}
+    </p>
 {% endif %}
+
+<!-- ---------------------------  Envío COORDINAR  ------------------------------------------ -->
 {% if metodo_envio == 'Coordinar' %}
-        <h2 style="text-align:center"> Tu orden ha sido iniciada</h2>
-        <h2 style="text-align:center">
-            Tu orden número {{order.order_number}} ha sido iniaciada<br>
-            En breve te llamaremos para coordinar la recogida de tus productos<br>
-        </h2>
+    <p style="text-align:left">
+        En breve te llamaremos para coordinar la recogida de: <br>
+    </p>
+    <p style="text-align:center">
+                {% for i in productos %}
+                    {{i.quantity}} - {{i.name}} <br>
+                {% endfor %}
+    </p>
 {% endif %}
+
+<!-- ---------------------------  Envío CORREO ------------------------------------------ -->
 {% if metodo_envio == 'Moova' %}
-    <h2 style="text-align:center"> Tu orden ha sido iniciada<br>
-        Tu orden número {{order.order_number}} ha sido iniciada </h2>
+<!-- ---------------------------  Envío CORREO - a cargo del CONSUMIDOR ----------------- -->   
      {% if envio.status == 'DRAFT' %}
-        <h2 style="text-align:center">
+        
             {% if shipping == 'customer' %}
-                <br>
-                En breve recibiras por mail un link para que puedas abonar el envío<br>
-                El costo del mismo es <strong>{{envio.priceFormatted}}</strong>
-                <br>
-                Una vez abonado recibiras las intrucciones para preparar el retiro de tus productos
+                <p style="text-align:left">
+                    En breve recibiras por mail las instrucciones para que puedas abonar el servicio de retiro<br>
+                    El costo del mismo es <strong>{{envio.priceFormatted}}</strong><br>
+        
+                    Una vez abonado recibiras las intrucciones para que puedas preparar tus productos para ser retirados
+                    <br>
+                </p> 
+<!-- ---------------------------  Envío CORREO - a cargo del CONSUMIDOR ----------------- -->                  
             {% else %}
                 <br>
-                En breve recibiras por mail las instrucciones para que prepares tu pedido para que pasemos a retirarlo<br>
+                <p style="text-align:left">
+                    En breve recibiras por mail las instrucciones para que prepares tu pedido. <br>
+                    Un mensajero de Moova para a retirarlo
+                </p>
             {% endif %}
-         </h2>
+         
     {% else %}
-        <p style="text-align:center"> Un mensajero de MOOVA pasara a retirarlo en breve<br>
-        Tu numero  secreto es {{envio['secretCode']}} <br>
-        El Id de tu orden es <br>
-            {{envio.id}}<br>
+        <p style="text-align:center"> 
+            Un mensajero de MOOVA pasara a retirarlo en breve<br>
+            Tu numero  secreto es {{envio['secretCode']}} <br>
+            El Id de tu orden es <br>
+                {{envio.id}}<br>
         </p>
     {% endif %}
 {% endif %}
 
-<h5 style="text-align:center"> Podes hacer el seguimiento de tu orden acá: <br>
-        <a href="http://front.borisreturns.com/tracking/{{order.order_number}}">
-        http://front.borisreturns.com/tracking/{{order.order_number}}
+<br>
+<h5 style="text-align:left"> Podes hacer el seguimiento de tu orden acá: <br>
+        <a href="http://frontprod.borisreturns.com/tracking/{{order.order_number}}">
+        http://frontprod.borisreturns.com/tracking/{{order.order_number}}
         </a>
 

@@ -188,7 +188,7 @@ def buscar_empresa(empresa):
 ##################### Carga el archivo de settings desde el campo param_config ##############
 ############################## de la base de empresas #######################################
 def guardar_settings(url):
-  with open(url) as json_file:
+  with open(url, encoding='utf-8') as json_file:
     data = json.load(json_file)
     return data
 
@@ -219,9 +219,9 @@ def crea_envio(company, user, order, productos, metodo_envio):
                 sender=company.communication_email,
                 recipients=[user.email], 
                 text_body=render_template('email/'+company.store_id+'/pedido_listo.txt',
-                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio),
+                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio),
                 html_body=render_template('email/'+company.store_id+'/pedido_listo.html',
-                                         user=user, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio), 
+                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio), 
                 attachments=None, 
                 sync=False,
                 bcc=[current_app.config['ADMINS'][0]])
