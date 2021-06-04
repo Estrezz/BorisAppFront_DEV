@@ -56,13 +56,15 @@ def buscar_promo(promociones, Id_Producto ):
 # Busca alternativas para cambiar un articulo según el motivo de cambio
 # devuelve lista con productos alternativos y le oden de los atributos (para tener como encabezados)
 #####################################################################################################
-def buscar_alternativas(company, storeid, prod_id, motivo, item_variant):
+def buscar_alternativas(company, storeid, prod_id, item_variant, param):
   if company.platform == 'tiendanube':
-    product = buscar_alternativas_tiendanube(company, storeid, prod_id, motivo, item_variant)
+    product = buscar_alternativas_tiendanube(company, storeid, prod_id)
   
   variantes = []
-  
 
+  if param == "nombre":
+    return product['name']['es']
+  
   for x in product['variants']:
     # validar stock infinito (NoneType) y permitir cambiar por lo mismo
     # if x['stock'] > 1 and x['id'] != item_variant :
@@ -158,11 +160,11 @@ def buscar_empresa(empresa):
       company_country = 'AR',
       company_main_language = 'es',
       company_main_currency = 'ARS',
-      communication_email = 'soporte@borisreturns.com',
+      communication_email = 'info@borisreturns.com',
       company_name = 'Tu Tienda',
       company_url= 'https://demoboris.mitiendanube.com',
       admin_email = 'info@borisreturns.com',
-      logo = '/static/images/Boris_Naranja.png',
+      logo = 'https://frontprod.borisreturns.com/static/images/Boris_Naranja.png',
       correo_usado = 'Moova',
       correo_apikey = 'b23920003684e781d87e7e5b615335ad254bdebc',
       correo_id = 'b22bc380-439f-11eb-8002-a5572ae156e7',
@@ -429,7 +431,7 @@ def cargar_pedido(unaEmpresa, pedido ):
 
   for x in range(len(pedido['products'])): 
     promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
-
+    
     unProducto = Producto(
       id =  pedido['products'][x]['id'],
       prod_id = pedido['products'][x]['product_id'],

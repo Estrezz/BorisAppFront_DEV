@@ -31,7 +31,7 @@ def buscar_pedido_conNro_tiendanube(empresa, orderid):
     return order
 
 
-def buscar_alternativas_tiendanube(empresa, storeid, prod_id, motivo, item_variant):
+def buscar_alternativas_tiendanube(empresa, storeid, prod_id):
     url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)
     payload={}
     headers = {

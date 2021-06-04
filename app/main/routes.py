@@ -95,7 +95,7 @@ def pedidos():
             user = Customer.query.get(session['cliente'])
             order = Order.query.get(session['orden'])
             item = Producto.query.get(prod_id)
-            alternativas = buscar_alternativas(company, session['store'], item.prod_id, motivo, item.variant)
+            alternativas = buscar_alternativas(company, session['store'], item.prod_id, item.variant, 'variantes')
             return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'], lista_motivos=session['motivos'])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
@@ -107,7 +107,9 @@ def pedidos():
             if request.form.get("variante"):
                 variante = ast.literal_eval(request.form.get("variante"))
                 item.accion_cambiar_por = variante['id']
-                item.accion_cambiar_por_desc = describir_variante(variante['values'])    
+                ### Cambio ###
+                producto_name = buscar_alternativas(company, session['store'], item.prod_id, item.variant,'nombre')
+                item.accion_cambiar_por_desc = producto_name + " ("+ describir_variante(variante['values']) +")"
             else:
                 ## Si se seleccionó el Boton de VARIANTE pero no se seleccionó ningún articulo
                 flash('Por favor, indica por que item queres realizar el cambio' )
