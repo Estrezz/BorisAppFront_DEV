@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for
 from app import db
 from app.main.forms import LoginForm, DireccionForm
 from app.email import send_email
-from app.models import Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura
+from app.models import Store, Customer, Order, Producto, Company
+from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, actualizar_store, crear_store
 from app.main import bp
 from flask import request, session
 import requests
@@ -107,7 +107,7 @@ def pedidos():
             if request.form.get("variante"):
                 variante = ast.literal_eval(request.form.get("variante"))
                 item.accion_cambiar_por = variante['id']
-                ### Cambio ###
+                ### Busca el nombre del producto  ###
                 producto_name = buscar_alternativas(company, session['store'], item.prod_id, item.variant,'nombre')
                 item.accion_cambiar_por_desc = producto_name + " ("+ describir_variante(variante['values']) +")"
             else:
@@ -204,6 +204,24 @@ def confirma_solicitud():
 def tracking(order):
     historia = busca_tracking(order)
     return render_template('tracking.html', title='Tracking', historia=historia)
+
+
+
+@bp.route('/empresa/chequear', methods=['POST'])
+def chequear_empresa():
+    if request.method == 'POST':
+        store = request.json
+        
+        actualiza = 'Failed'
+        if Store.query.filter_by(store_id=store['store_id']).first():
+            actualiza = actualizar_store(store)
+        else:
+           actualiza = crear_store(store)
+
+        if actualiza == 'Success':
+            return '', 200
+        else:
+            return 'Error',400
 
     
 

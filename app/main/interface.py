@@ -220,9 +220,9 @@ def crea_envio(company, user, order, productos, metodo_envio):
                 #sender=current_app.config['ADMINS'][0], 
                 sender=company.communication_email,
                 recipients=[user.email], 
-                text_body=render_template('email/'+company.store_id+'/pedido_listo.txt',
+                text_body=render_template('email/pedido_listo.txt',
                                          user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio),
-                html_body=render_template('email/'+company.store_id+'/pedido_listo.html',
+                html_body=render_template('email/pedido_listo.html',
                                          user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio), 
                 attachments=None, 
                 sync=False,
@@ -527,4 +527,117 @@ def traducir_texto(string, fp):
   for line in file1:
     if line.startswith(string):
       return line.split(string,1)[1] 
-  
+
+
+def actualizar_store(store):
+  empresa = Store.query.filter_by(store_id=store['store_id']).first()
+  ## Actualiza datos JSON
+
+  ## carga datos nuevos de la empresa en BBDD
+  empresa.platform = store['platform']
+  empresa.platform_token_type = store['platform_token_type']
+  empresa.platform_access_token = store['platform_access_token']
+  empresa.store_name = store['store_name']
+  empresa.store_url = store['store_url']
+  empresa.store_phone = store['store_phone']
+  empresa.store_address = store['store_address']
+  empresa.admin_email = store['admin_email']
+  empresa.communication_email = store['communication_email']
+  empresa.param_logo = store['param_logo']
+  empresa.param_fondo = store['param_fondo']
+  empresa.store_main_language = store['store_main_language']
+  empresa.store_main_currency = store['store_main_currency']
+  empresa.store_country = store['store_country']
+  empresa.correo_test = store['correo_test']
+  empresa.correo_usado = store['correo_usado']
+  empresa.correo_apikey = store['correo_apikey']
+  empresa.correo_id = store['correo_id']
+  empresa.contact_email = store['contact_email']
+  empresa.contact_name = store['contact_name']
+  empresa.contact_email = store['contact_email']
+  empresa.contact_phone = store['contact_phone'] 
+  empresa.shipping_address = store['shipping_address']
+  empresa.shipping_number = store['shipping_number']
+  empresa.shipping_floor = store['shipping_floor']
+  empresa.shipping_zipcode = store['shipping_zipcode']
+  empresa.shipping_city = store['shipping_city']
+  empresa.shipping_province = store['shipping_province']
+  empresa.shipping_country = store['shipping_country']
+  empresa.shipping_info = store['shipping_info']
+
+  db.session.commit()
+  return 'Success'
+
+
+def crear_store(store):
+
+  ################################ Crea JSON de Configuración ########################################
+  ################################ Datos por defecto de Inicio ###########################################
+  if current_app.config['SERVER_ROLE'] == 'DEV':
+    conf_url='app/static/conf/'+store['store_id']+'.json'
+  if current_app.config['SERVER_ROLE'] == 'PROD':
+    conf_url='app/static/conf/'+store['store_id']+'.json'
+    
+  conf_file = {
+    "currency": store['store_main_currency'],
+    "shipping": "customer",
+    "test": "False",
+    "correo_test": "True",
+    "envio": ["manual", "retiro", "coordinar"],
+    "provincia_codigos_postales": {
+      "Capital Federal":"All",
+      "Buenos Aires": [1636, 1637, 1638, 1602, 1605, 1606]
+    },
+    "motivos":[
+      "No calza bien",
+      "Es grande",
+      "Es chico",
+      "Mala calidad",
+      "No gusta color"
+    ],
+    "politica": {
+      "ventana_cambio":30,
+      "ventana_devolucion":30,
+      "rubros":{},
+      "promos":{}
+    },
+    "textos": {
+      "elegir_opcion_cambio": "Seleccioná la opción que queres o elegi generar un cupín si querés cambiarlo por otra cosa",
+      "elegir_opcion_cambio_cupon": "Seleccioná esta opción para obtener un cupón de crédito en nuestra tienda ",
+      "elegir_accion": "Selecciona la acción a realizar",
+      "envio_manual": "Seleccionaste envío manual",
+      "boton_envio_manual": "Traer la orden a nuestro local",
+      "boton_envio_manual_desc": "Acercanos el/los productos a nuestros locales/depósito",
+      "boton_envio_retiro": "Retirar en tu domicilio",
+      "boton_envio_retiro_desc": "Un servicio de correo pasara a buscar los productos por tu domicilio",
+      "boton_envio_coordinar": "Coordinar método de retiro",
+      "boton_envio_coordinar_desc": "Coordina con nosotros el metodo de envio que te quede mas cómodo"
+    }
+  }
+  with open(conf_url, "w+") as outfile:
+    json.dump(conf_file, outfile)
+
+  ################################ Crea el Store en la BBD ########################################
+  unStore = Store(
+    ## datos solo para la creación
+    store_id = store['store_id'],
+    param_config = conf_url,
+    ## Otros datos
+    platform = store['platform'],
+    platform_token_type = store['platform_token_type'],
+    platform_access_token = store['platform_access_token'],
+    store_name = store['store_name'],
+    store_url = store['store_url'],
+    store_phone = store['store_phone'],
+    store_address = store['store_address'],
+    admin_email = store['admin_email'],
+    contact_email = store['contact_email'],
+    param_logo = store['param_logo'],
+    store_main_language = store['store_main_language'],
+    store_main_currency = store['store_main_currency'],
+    store_country = store['store_country'],
+    correo_test = store['correo_test']
+  )
+  db.session.add(unStore)
+  db.session.commit()
+  return 'Success'

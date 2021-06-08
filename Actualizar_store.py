@@ -7,8 +7,10 @@ with app.app_context():
 
   store = Store.query.filter_by(store_id='138327').first()
   
-  store.store_name = 'Abundancia por designio'
-  #store.param_logo = '/static/images/abundancia.png'
+  db.session.delete(store)
+
+  #store.store_name = 'Abundancia por designio'
+  #store.param_logo = 'https://frontprod.borisreturns.com/static/images/abundancia.png'
 
   #store = Store(
   #  platform = 'tiendanube',

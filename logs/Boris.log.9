@@ -1,4 +1,4 @@
-2021-04-27 12:05:34,269 ERROR: Exception on /pedidos [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-06-01 10:31:03,521 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,55 +12,18 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 99, in pedidos
-    return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'])
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\templating.py", line 138, in render_template
-    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 930, in get_or_select_template
-    return self.get_template(template_name_or_list, parent, globals)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 883, in get_template
-    return self._load_template(name, self.make_globals(globals))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 857, in _load_template
-    template = self.loader.load(self, name, globals)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\loaders.py", line 127, in load
-    code = environment.compile(source, name, filename)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 638, in compile
-    self.handle_exception(source=source_hint)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\templates\devolucion.html", line 94, in template
-    {{textos['elegir_opcion_cambio']|decode('utf-8')}}
-jinja2.exceptions.TemplateAssertionError: no filter named 'decode'
-2021-04-27 12:05:52,954 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:08:11,609 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:10:35,778 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:31:52,387 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:34:20,955 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:34:39,406 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:35:09,456 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:35:42,894 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:36:46,294 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:37:22,906 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 12:37:42,603 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 13:29:31,236 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 13:31:10,681 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 13:35:35,085 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 13:37:41,428 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 13:38:12,450 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-04-27 13:39:17,971 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 12:01:13,821 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 12:02:59,183 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 12:03:53,900 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 12:05:26,256 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 12:07:28,435 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 12:11:05,327 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 12:12:00,316 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 14:02:59,357 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 14:04:08,729 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 14:09:48,444 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 14:10:20,176 ERROR: Exception on /Confirmar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 56, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 142, in buscar_empresa
+    settings = guardar_settings('app/static/conf/boris.json')
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 193, in guardar_settings
+    data = json.load(json_file).decode("utf_8")
+AttributeError: 'dict' object has no attribute 'decode'
+2021-06-01 11:12:12,370 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-01 15:08:59,084 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-01 15:09:19,117 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-01 15:09:57,552 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-01 15:10:31,537 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -74,26 +37,78 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 155, in confirma_cambios
-    return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\templating.py", line 138, in render_template
-    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 930, in get_or_select_template
-    return self.get_template(template_name_or_list, parent, globals)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 883, in get_template
-    return self._load_template(name, self.make_globals(globals))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 857, in _load_template
-    template = self.loader.load(self, name, globals)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\loaders.py", line 127, in load
-    code = environment.compile(source, name, filename)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 638, in compile
-    self.handle_exception(source=source_hint)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\jinja2\_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\templates\pedido_confirmar.html", line 107, in template
-    <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Coordinar') }}" >
-jinja2.exceptions.TemplateSyntaxError: expected token 'end of statement block', got 'main'
-2021-05-04 14:12:00,243 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-05-04 14:19:24,159 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 191, in confirma_solicitud
+    envio = crea_envio(company, user, order, productos, metodo_envio)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 211, in crea_envio
+    mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 375, in almacena_envio
+    loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 468, in loguear_error
+    outfile = open(url, "a+")
+FileNotFoundError: [Errno 2] No such file or directory: 'logs/app/1447373_log.txt'
+2021-06-01 15:11:52,427 ERROR: Exception on /Confirmar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 170, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\socket.py", line 745, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 11001] getaddrinfo failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 706, in urlopen
+    chunked=chunked,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 382, in _make_request
+    self._validate_conn(conn)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 1010, in _validate_conn
+    conn.connect()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 353, in connect
+    conn = self._new_conn()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 182, in _new_conn
+    self, "Failed to establish a new connection: %s" % e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPSConnection object at 0x00000204AFA34CC0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\adapters.py", line 449, in send
+    timeout=timeout
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 756, in urlopen
+    method, url, error=e, _pool=self, _stacktrace=sys.exc_info()[2]
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\util\retry.py", line 573, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api-dev.moova.io', port=443): Max retries exceeded with url: //b2b/v2/budgets?appId=b22bc380-439f-11eb-8002-a5572ae156e7 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000204AFA34CC0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 153, in confirma_cambios
+    precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 254, in cotiza_envio
+    precio = cotiza_envio_moova (company, user, order, productos)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\moova.py", line 173, in cotiza_envio_moova
+    solicitud_tmp = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\sessions.py", line 542, in request
+    resp = self.send(prep, **send_kwargs)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\sessions.py", line 655, in send
+    r = adapter.send(request, **kwargs)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api-dev.moova.io', port=443): Max retries exceeded with url: //b2b/v2/budgets?appId=b22bc380-439f-11eb-8002-a5572ae156e7 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000204AFA34CC0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed',))

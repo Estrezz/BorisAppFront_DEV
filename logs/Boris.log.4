@@ -1,4 +1,4 @@
-2021-06-01 10:31:03,521 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-06-08 10:26:21,319 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,18 +12,13 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 56, in buscar
-    unaEmpresa = buscar_empresa(request.args['empresa'])
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 142, in buscar_empresa
-    settings = guardar_settings('app/static/conf/boris.json')
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 193, in guardar_settings
-    data = json.load(json_file).decode("utf_8")
-AttributeError: 'dict' object has no attribute 'decode'
-2021-06-01 11:12:12,370 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-06-01 15:08:59,084 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-06-01 15:09:19,117 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-06-01 15:09:57,552 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-06-01 15:10:31,537 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 217, in chequear_empresa
+    actualiza = actualizar_empresa(store)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 536, in actualizar_empresa
+    empresa.platform_token_type = store.platform_token_type
+AttributeError: 'dict' object has no attribute 'platform_token_type'
+2021-06-08 10:27:33,999 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 10:27:36,945 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -37,53 +32,12 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 191, in confirma_solicitud
-    envio = crea_envio(company, user, order, productos, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 211, in crea_envio
-    mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 375, in almacena_envio
-    loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 468, in loguear_error
-    outfile = open(url, "a+")
-FileNotFoundError: [Errno 2] No such file or directory: 'logs/app/1447373_log.txt'
-2021-06-01 15:11:52,427 ERROR: Exception on /Confirmar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 170, in _new_conn
-    (self._dns_host, self.port), self.timeout, **extra_kw
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
-    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\socket.py", line 745, in getaddrinfo
-    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
-socket.gaierror: [Errno 11001] getaddrinfo failed
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 706, in urlopen
-    chunked=chunked,
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 382, in _make_request
-    self._validate_conn(conn)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 1010, in _validate_conn
-    conn.connect()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 353, in connect
-    conn = self._new_conn()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 182, in _new_conn
-    self, "Failed to establish a new connection: %s" % e
-urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPSConnection object at 0x00000204AFA34CC0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\adapters.py", line 449, in send
-    timeout=timeout
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 756, in urlopen
-    method, url, error=e, _pool=self, _stacktrace=sys.exc_info()[2]
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\util\retry.py", line 573, in increment
-    raise MaxRetryError(_pool, url, error or ResponseError(cause))
-urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api-dev.moova.io', port=443): Max retries exceeded with url: //b2b/v2/budgets?appId=b22bc380-439f-11eb-8002-a5572ae156e7 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000204AFA34CC0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed',))
-
-During handling of the above exception, another exception occurred:
-
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 217, in chequear_empresa
+    actualiza = actualizar_empresa(store)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 542, in actualizar_empresa
+    empresa.admin_email = empresa['admin_email']
+TypeError: 'Store' object is not subscriptable
+2021-06-08 10:27:39,804 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -97,18 +51,29 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 153, in confirma_cambios
-    precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 254, in cotiza_envio
-    precio = cotiza_envio_moova (company, user, order, productos)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\moova.py", line 173, in cotiza_envio_moova
-    solicitud_tmp = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\api.py", line 61, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\sessions.py", line 542, in request
-    resp = self.send(prep, **send_kwargs)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\sessions.py", line 655, in send
-    r = adapter.send(request, **kwargs)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\adapters.py", line 516, in send
-    raise ConnectionError(e, request=request)
-requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api-dev.moova.io', port=443): Max retries exceeded with url: //b2b/v2/budgets?appId=b22bc380-439f-11eb-8002-a5572ae156e7 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000204AFA34CC0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed',))
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 217, in chequear_empresa
+    actualiza = actualizar_empresa(store)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 542, in actualizar_empresa
+    empresa.admin_email = empresa['admin_email']
+TypeError: 'Store' object is not subscriptable
+2021-06-08 10:28:17,073 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 10:28:19,320 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 217, in chequear_empresa
+    actualiza = actualizar_empresa(store)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 542, in actualizar_empresa
+    empresa.admin_email = empresa['admin_email']
+TypeError: 'Store' object is not subscriptable
+2021-06-08 10:28:52,376 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]

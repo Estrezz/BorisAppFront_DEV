@@ -93,7 +93,7 @@ def crea_envio_moova(company, user, order, productos):
     solicitud = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
     if solicitud.status_code != 201:
         flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud.status_code))
-        loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, solicitud.json() )
+        #loguear_error('crea_envio', 'Hubo un problema con la generación del evío', solicitud.status_code, solicitud.json() )
         return 'Failed'
     else:
         return solicitud.json()

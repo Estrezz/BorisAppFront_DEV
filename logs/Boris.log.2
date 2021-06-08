@@ -1,41 +1,4 @@
-2021-06-01 15:12:30,093 ERROR: Exception on /buscar [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 170, in _new_conn
-    (self._dns_host, self.port), self.timeout, **extra_kw
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
-    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
-  File "c:\users\erezzonico\appdata\local\continuum\anaconda3\lib\socket.py", line 745, in getaddrinfo
-    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
-socket.gaierror: [Errno 11001] getaddrinfo failed
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 706, in urlopen
-    chunked=chunked,
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 382, in _make_request
-    self._validate_conn(conn)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 1010, in _validate_conn
-    conn.connect()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 353, in connect
-    conn = self._new_conn()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connection.py", line 182, in _new_conn
-    self, "Failed to establish a new connection: %s" % e
-urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPSConnection object at 0x00000204AFAB56A0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\adapters.py", line 449, in send
-    timeout=timeout
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\connectionpool.py", line 756, in urlopen
-    method, url, error=e, _pool=self, _stacktrace=sys.exc_info()[2]
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\urllib3\util\retry.py", line 573, in increment
-    raise MaxRetryError(_pool, url, error or ResponseError(cause))
-urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.tiendanube.com', port=443): Max retries exceeded with url: /v1/1447373/orders?q=erezzoni@yandex.com (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000204AFAB56A0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed',))
-
-During handling of the above exception, another exception occurred:
-
+2021-06-08 10:59:34,770 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -49,22 +12,12 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 61, in buscar
-    pedido = buscar_pedido(unaEmpresa, form)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 24, in buscar_pedido
-    order_tmp = buscar_pedido_tiendanube(empresa, form)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\tiendanube.py", line 18, in buscar_pedido_tiendanube
-    order_tmp = requests.request("GET", url, headers=headers, data=payload).json()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\api.py", line 61, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\sessions.py", line 542, in request
-    resp = self.send(prep, **send_kwargs)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\sessions.py", line 655, in send
-    r = adapter.send(request, **kwargs)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\requests\adapters.py", line 516, in send
-    raise ConnectionError(e, request=request)
-requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.tiendanube.com', port=443): Max retries exceeded with url: /v1/1447373/orders?q=erezzoni@yandex.com (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000204AFAB56A0>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed',))
-2021-06-01 15:14:53,023 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 56, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 101, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+AttributeError: 'NoneType' object has no attribute 'param_config'
+2021-06-08 11:04:40,756 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -78,17 +31,13 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 191, in confirma_solicitud
-    envio = crea_envio(company, user, order, productos, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 211, in crea_envio
-    mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 375, in almacena_envio
-    loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 468, in loguear_error
-    outfile = open(url, "a+")
-FileNotFoundError: [Errno 2] No such file or directory: 'logs/app/1447373_log.txt'
-2021-06-01 15:15:55,563 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-06-01 15:16:25,934 ERROR: Exception on /confirma_solicitud [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 219, in chequear_empresa
+    actualiza = crear_store(store)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 562, in crear_store
+    store_phone = store['store_phone'],
+KeyError: 'store_phone'
+2021-06-08 11:06:19,176 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 11:06:24,163 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -102,12 +51,54 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 191, in confirma_solicitud
-    envio = crea_envio(company, user, order, productos, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 211, in crea_envio
-    mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 375, in almacena_envio
-    loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 468, in loguear_error
-    outfile = open(url, "a+")
-FileNotFoundError: [Errno 2] No such file or directory: 'logs/app/1447373_log.txt'
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 219, in chequear_empresa
+    actualiza = crear_store(store)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 563, in crear_store
+    store_address = store['store_address'],
+KeyError: 'store_address'
+2021-06-08 11:07:22,408 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 219, in chequear_empresa
+    actualiza = crear_store(store)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 570, in crear_store
+    correo_usado = store['correo_usado']
+KeyError: 'correo_usado'
+2021-06-08 11:08:57,431 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 11:09:19,321 ERROR: Exception on /buscar [GET] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 56, in buscar
+    unaEmpresa = buscar_empresa(request.args['empresa'])
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 101, in buscar_empresa
+    settings = guardar_settings(empresa_tmp.param_config)
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 193, in guardar_settings
+    with open(url, encoding='utf-8') as json_file:
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+2021-06-08 11:11:10,546 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 11:11:16,685 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 11:52:17,176 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 11:52:22,703 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 11:52:26,765 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
