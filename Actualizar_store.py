@@ -5,7 +5,7 @@ from app.models import Store
 app=create_app()
 with app.app_context():
 
-  store = Store.query.filter_by(store_id='138327').first()
+  store = Store.query.filter_by(store_id='1631829').first()
   
   db.session.delete(store)
 

@@ -234,7 +234,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
     send_email('Se ha generado una orden en Boris', 
                 sender=company.communication_email,
                 #sender=current_app.config['ADMINS'][0], 
-                recipients=[company.communication_email], 
+                recipients=[company.admin_email], 
                 text_body=render_template('email/nuevo_pedido.txt',
                                          user=user, envio=solicitud_envio, order=order, shipping=session['shipping']),
                 html_body=render_template('email/nuevo_pedido.html',
@@ -623,6 +623,7 @@ def crear_store(store):
     ## datos solo para la creación
     store_id = store['store_id'],
     param_config = conf_url,
+    communication_email = "info@borisreturns.com",
     ## Otros datos
     platform = store['platform'],
     platform_token_type = store['platform_token_type'],
