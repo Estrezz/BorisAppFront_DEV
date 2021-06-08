@@ -571,7 +571,6 @@ def actualizar_store(store):
 
 
 def crear_store(store):
-
   ################################ Crea JSON de Configuración ########################################
   ################################ Datos por defecto de Inicio ###########################################
   if current_app.config['SERVER_ROLE'] == 'DEV':
@@ -632,6 +631,7 @@ def crear_store(store):
     store_url = store['store_url'],
     store_phone = store['store_phone'],
     store_address = store['store_address'],
+    communication_email = store['communication_email'],
     admin_email = store['admin_email'],
     contact_email = store['contact_email'],
     param_logo = store['param_logo'],
