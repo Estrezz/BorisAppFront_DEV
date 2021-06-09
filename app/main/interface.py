@@ -624,7 +624,6 @@ def crear_store(store):
     ## datos solo para la creación
     store_id = store['store_id'],
     param_config = conf_url,
-    communication_email = "info@borisreturns.com",
     ## Otros datos
     platform = store['platform'],
     platform_token_type = store['platform_token_type'],
