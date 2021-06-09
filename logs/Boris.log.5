@@ -1,4 +1,17 @@
-2021-06-08 10:26:21,319 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+2021-06-08 10:28:52,912 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1204, in _execute_context
+    context = constructor(dialect, self, conn, *args)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\default.py", line 839, in _init_compiled
+    param.append(processors[key](compiled_params[key]))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1841, in process
+    value = _strict_as_bool(value)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1816, in _strict_as_bool
+    raise TypeError("Not a boolean value: %r" % value)
+TypeError: Not a boolean value: 'True'
+
+The above exception was the direct cause of the following exception:
+
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -14,66 +27,71 @@ Traceback (most recent call last):
     return self.view_functions[rule.endpoint](**req.view_args)
   File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 217, in chequear_empresa
     actualiza = actualizar_empresa(store)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 536, in actualizar_empresa
-    empresa.platform_token_type = store.platform_token_type
-AttributeError: 'dict' object has no attribute 'platform_token_type'
-2021-06-08 10:27:33,999 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-06-08 10:27:36,945 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
+  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 551, in actualizar_empresa
+    db.session.commit()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\scoping.py", line 163, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 1042, in commit
+    self.transaction.commit()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 504, in commit
+    self._prepare_impl()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 483, in _prepare_impl
+    self.session.flush()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2536, in flush
+    self._flush(objects)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2678, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\langhelpers.py", line 70, in __exit__
+    with_traceback=exc_tb,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
+    raise exception
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\session.py", line 2638, in _flush
+    flush_context.execute()
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\unitofwork.py", line 422, in execute
+    rec.execute(self)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\unitofwork.py", line 589, in execute
+    uow,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\persistence.py", line 236, in save_obj
+    update,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\orm\persistence.py", line 995, in _emit_update_statements
+    statement, multiparams
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1011, in execute
+    return meth(self, multiparams, params)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\elements.py", line 298, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1130, in _execute_clauseelement
+    distilled_params,
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1207, in _execute_context
+    e, util.text_type(statement), parameters, None, None
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1511, in _handle_dbapi_exception
+    sqlalchemy_exception, with_traceback=exc_info[2], from_=e
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
+    raise exception
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\base.py", line 1204, in _execute_context
+    context = constructor(dialect, self, conn, *args)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\engine\default.py", line 839, in _init_compiled
+    param.append(processors[key](compiled_params[key]))
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1841, in process
+    value = _strict_as_bool(value)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\sqlalchemy\sql\sqltypes.py", line 1816, in _strict_as_bool
+    raise TypeError("Not a boolean value: %r" % value)
+sqlalchemy.exc.StatementError: (builtins.TypeError) Not a boolean value: 'True'
+[SQL: UPDATE store SET store_main_language=?, store_phone=?, store_address=?, admin_email=?, param_logo=?, contact_email=?, correo_usado=?, correo_test=? WHERE store.id = ?]
+[parameters: [{'admin_email': 'soporte@borisreturns.com', 'contact_email': 'soporte@borisreturns.com', 'param_logo': 'https://frontprod.borisreturns.com/static/ima ... (28 characters truncated) ... phone': '4800 4800', 'store_address': 'Cuba 2253 3A', 'correo_usado': 'Ninguno', 'correo_test': 'True', 'store_main_language': 'AR', 'store_id_1': 2}]]
+2021-06-08 10:30:41,271 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 10:30:43,588 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
-    raise value
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 217, in chequear_empresa
-    actualiza = actualizar_empresa(store)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 542, in actualizar_empresa
-    empresa.admin_email = empresa['admin_email']
-TypeError: 'Store' object is not subscriptable
-2021-06-08 10:27:39,804 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
-    raise value
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 217, in chequear_empresa
-    actualiza = actualizar_empresa(store)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 542, in actualizar_empresa
-    empresa.admin_email = empresa['admin_email']
-TypeError: 'Store' object is not subscriptable
-2021-06-08 10:28:17,073 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
-2021-06-08 10:28:19,320 ERROR: Exception on /empresa/chequear [POST] [in c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py:1892]
-Traceback (most recent call last):
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\_compat.py", line 39, in reraise
-    raise value
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\routes.py", line 217, in chequear_empresa
-    actualiza = actualizar_empresa(store)
-  File "C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\main\interface.py", line 542, in actualizar_empresa
-    empresa.admin_email = empresa['admin_email']
-TypeError: 'Store' object is not subscriptable
-2021-06-08 10:28:52,376 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "c:\users\erezzonico\proyectos\python\borisappfront\env\lib\site-packages\flask\app.py", line 2131, in make_response
+    " {rv.__class__.__name__}.".format(rv=rv)
+TypeError: The view function did not return a valid response. The return type must be a string, dict, tuple, Response instance, or WSGI callable, but it was a int.
+2021-06-08 10:33:04,416 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 10:47:57,879 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 10:51:01,913 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 10:59:18,236 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]
+2021-06-08 10:59:33,210 INFO: Boris startup [in C:\Users\erezzonico\Proyectos\Python\BorisAppFront\app\__init__.py:63]

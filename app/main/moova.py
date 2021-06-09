@@ -156,10 +156,10 @@ def cotiza_envio_moova(company, user, order, productos):
     if session['correo_test'] == 'True':
         url = "https://api-dev.moova.io//b2b/v2/budgets"
         headers = {
-        'Authorization': company.correo_apikey,
+        'Authorization': company.correo_apikey_test,
         'Content-Type': 'application/json',
         }
-        params = {'appId': company.correo_id}
+        params = {'appId': company.correo_id_test}
 
     ### Usa ambiente de PRODUCCION de MOOVA
     if session['correo_test'] == 'False':
@@ -170,10 +170,12 @@ def cotiza_envio_moova(company, user, order, productos):
         }
         params = {'appId': company.correo_id}
 
+    solicitud_tmp2 = solicitud_tmp
     solicitud_tmp = requests.request("POST", url, headers=headers, params=params, data=json.dumps(solicitud_tmp))
     if solicitud_tmp.status_code != 200:
         #flash('Hubo un problema con la generación del evío. Error {}'.format(solicitud_tmp.status_code))
-        #flash('Hubo un problema con la generación del evío. Error {} '.format(solicitud_tmp.json()))
+        ### sacar ####
+        #flash('Hubo un problema con la generación del evío. Error url:{} - JSON{} '.format(url, json.dumps(solicitud_tmp2) ))
         return 'Failed'
     else:
         solicitud = solicitud_tmp.json()

@@ -154,6 +154,7 @@ def confirma_cambios():
 
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
     area_valida = validar_cobertura(user.province, user.zipcode)
+    
     return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
 
