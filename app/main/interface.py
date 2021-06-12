@@ -460,9 +460,9 @@ def cargar_pedido(unaEmpresa, pedido ):
 ############################## buscar_tracking ##################################################
 def busca_tracking(orden):
   if current_app.config['SERVER_ROLE'] == 'DEV':
-    url='http://front.borisreturns.com/orden/tracking'
+    url='http://back.borisreturns.com/orden/tracking'
   if current_app.config['SERVER_ROLE'] == 'PROD':
-    url='http://frontprod.borisreturns.com/orden/tracking'
+    url='http://backprod.borisreturns.com/orden/tracking'
   params = {'orden_id': orden}
   historia = requests.request("GET", url, params=params).json()
   return historia
