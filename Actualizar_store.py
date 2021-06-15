@@ -5,11 +5,14 @@ from app.models import Store
 app=create_app()
 with app.app_context():
 
-  store = Store.query.filter_by(store_id='1631829').first()
+  store = Store.query.filter_by(store_id='1447373').first()
   
-  db.session.delete(store)
 
-  #store.store_name = 'Abundancia por designio'
+
+
+  #db.session.delete(store)
+
+  store.correo_usado = 'Moova'
   #store.param_logo = 'https://frontprod.borisreturns.com/static/images/abundancia.png'
 
   #store = Store(

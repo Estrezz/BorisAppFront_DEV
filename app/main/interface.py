@@ -253,9 +253,10 @@ def cotiza_envio(company, user, order, productos, correo):
       return 'Retiro Gratuito'
 
   if correo == 'Moova':
+    #flash('cotiza')
     precio = cotiza_envio_moova (company, user, order, productos)
     return precio
-
+  #flash('No cotiza - {}'.format(correo))
   return 'Failed'
 
 
