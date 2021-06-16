@@ -608,16 +608,16 @@ def crear_store(store):
       "promos":{}
     },
     "textos": {
-      "elegir_opcion_cambio": "Seleccioná la opción que queres o elegi generar un cupín si querés cambiarlo por otra cosa",
+      "elegir_opcion_cambio": "Seleccioná la opción que queres o elegí generar un cupón si querés cambiarlo por otra cosa",
       "elegir_opcion_cambio_cupon": "Seleccioná esta opción para obtener un cupón de crédito en nuestra tienda ",
-      "elegir_accion": "Selecciona la acción a realizar",
+      "elegir_accion": "Seleccioná la acción a realizar",
       "envio_manual": "Seleccionaste envío manual",
       "boton_envio_manual": "Traer la orden a nuestro local",
       "boton_envio_manual_desc": "Acercanos el/los productos a nuestros locales/depósito",
       "boton_envio_retiro": "Retirar en tu domicilio",
       "boton_envio_retiro_desc": "Un servicio de correo pasara a buscar los productos por tu domicilio",
       "boton_envio_coordinar": "Coordinar método de retiro",
-      "boton_envio_coordinar_desc": "Coordina con nosotros el metodo de envio que te quede mas cómodo"
+      "boton_envio_coordinar_desc": "Coordiná con nosotros el método de envío que te quede mas cómodo"
     }
   }
   with open(conf_url, "w+") as outfile:
