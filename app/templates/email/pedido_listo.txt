@@ -13,7 +13,7 @@ Tu número de orden es #{{order.order_number}}
 
 
 {% if metodo_envio == 'Coordinar' %}
-    En breve te llamaremos para coordinar la recogida de: 
+    En breve nos comunicamos contigo para coordinar la recogida de: 
     {% for i in productos %}
         {{i.quantity}} - {{i.name}} <br>
     {% endfor %}
