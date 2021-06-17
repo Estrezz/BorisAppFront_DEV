@@ -224,7 +224,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
                                          user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio),
                 html_body=render_template('email/pedido_listo.html',
                                          user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio), 
-                attachments=None, 
+                attachments=None,
                 sync=False,
                 bcc=[current_app.config['ADMINS'][0]])
     except smtplib.SMTPException as e:
