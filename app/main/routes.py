@@ -3,7 +3,7 @@ from app import db
 from app.main.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Store, Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, actualizar_store, crear_store
+from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, actualizar_store, crear_store, actualiza_json
 from app.main import bp
 from flask import request, session
 import requests
@@ -224,7 +224,20 @@ def chequear_empresa():
         else:
             return 'Error',400
 
-    
+
+@bp.route('/empresa_categorias', methods=['POST'])
+def actualizar_empresa_categorias():
+    if request.method == 'POST':
+        data = request.json
+        store = Store.query.filter_by(store_id=data['store_id']).first()
+
+        status = actualiza_json(store.param_config, data)
+        if status == 'Success':
+            return '', 200
+        else:
+            return 'Error',400
+        
+        
 
 
 

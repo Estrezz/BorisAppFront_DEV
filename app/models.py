@@ -143,3 +143,4 @@ class Atributo(db.Model):
 
     def __repr__(self):
         return '<Atributo {}>'.format(self.descripcion)
+

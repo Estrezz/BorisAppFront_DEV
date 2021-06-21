@@ -648,3 +648,17 @@ def crear_store(store):
   db.session.add(unStore)
   db.session.commit()
   return 'Success'
+
+
+def actualiza_json(archivo_config, data):
+
+        with open(archivo_config) as json_file:
+                json_decoded = json.load(json_file)
+
+        json_decoded['politica']['rubros'] = data['categorias']
+
+        with open(archivo_config, 'w') as json_file:
+            json.dump(json_decoded, json_file)
+        
+        return 'Success'
+        

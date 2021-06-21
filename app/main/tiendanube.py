@@ -40,3 +40,4 @@ def buscar_alternativas_tiendanube(empresa, storeid, prod_id):
     }
     product = requests.request("GET", url, headers=headers, data=payload).json()
     return product
+
