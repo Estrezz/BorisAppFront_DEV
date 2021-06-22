@@ -44,6 +44,7 @@ def buscar():
         session.pop('orden', None)
         session.pop('cliente', None)
         session.pop('store', None)
+        session.clear()
 
 
     # Company.query.delete()

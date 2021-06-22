@@ -7,7 +7,7 @@ from app import db
 from app.models import Customer, Order, Producto, Company, Store
 from flask import session, flash, current_app, render_template
 from app.main.moova import crea_envio_moova, cotiza_envio_moova
-from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube
+from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube, validar_categorias_tiendanube
 from app.email import send_email
 
 
@@ -108,7 +108,9 @@ def buscar_empresa(empresa):
     session['textos'] = settings['textos']
     session['envio'] = settings['envio']
     session['motivos'] = settings['motivos']
-
+    session['rubros'] = settings['politica']['rubros']
+    session['ids_filtrados'] = validar_categorias_tiendanube(empresa_tmp)
+    
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
       store_id = empresa_tmp.store_id,
@@ -151,6 +153,8 @@ def buscar_empresa(empresa):
     session['textos'] = settings['textos']
     session['envio'] = settings['envio']
     session['motivos'] = settings['motivos']
+    session['rubros'] = settings['politica']['rubros']
+    session['ids_filtrados'] = []
 
     unaEmpresa = Company(
       platform = 'tiendanube',
@@ -433,6 +437,7 @@ def cargar_pedido(unaEmpresa, pedido ):
 
   for x in range(len(pedido['products'])): 
     promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
+    valida = validar_politica(unaOrden.order_fecha_compra, pedido['products'][x]['product_id'] )
     
     unProducto = Producto(
       id =  pedido['products'][x]['id'],
@@ -444,8 +449,8 @@ def cargar_pedido(unaEmpresa, pedido ):
       image = pedido['products'][x]['image']['src'],
       accion = "ninguna",
       motivo =  "",
-      politica_valida = validar_politica(unaOrden.order_fecha_compra)[0],
-      politica_valida_motivo = validar_politica(unaOrden.order_fecha_compra)[1],
+      politica_valida = valida[0],
+      politica_valida_motivo = valida[1],
       accion_cantidad = pedido['products'][x]['quantity'],
       promo_precio_final = promo_tmp[2],
       promo_descuento = promo_tmp[1],
@@ -477,8 +482,20 @@ def loguear_error(modulo, mensaje, codigo, texto):
   outfile.close()
 
 
-############################## valida_politica ##################################################
-def validar_politica(orden_fecha):
+
+######################### valida si la fecha de compra esta dentro ###############################
+######################### de la ventana establecida en la politica ###############################
+def validar_politica(fecha, prod_id):
+  valida_rubro = validar_politica_rubro(prod_id)
+  if valida_rubro[0] == 'Ninguno':
+    return valida_rubro
+  valida_fecha = validar_politica_fecha(fecha)
+  return valida_fecha
+
+
+######################### valida si la fecha de compra esta dentro ###############################
+######################### de la ventana establecida en la politica ###############################
+def validar_politica_fecha(orden_fecha):
   
   hoy = datetime.utcnow()
   #### valida ventana de cambios ####
@@ -512,7 +529,17 @@ def validar_politica(orden_fecha):
 
   #flash('resultado {}'.format(resultado_politica)) 
   return resultado_politica
-  
+
+
+######################### valida si el articulo esta dentro ###############################
+# ############################# de los rubros excluidos ###################################
+def validar_politica_rubro(prod_id):
+  if prod_id in session['ids_filtrados']:
+    return ["Ninguno",'La categoria no acepta cambio / devolucion']
+  else: 
+    return ["rubro OK",'']
+
+
 
 def validar_cobertura(provincia,zipcode):
   if provincia in session['provincia_codigos_postales']:

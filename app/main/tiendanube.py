@@ -41,3 +41,17 @@ def buscar_alternativas_tiendanube(empresa, storeid, prod_id):
     product = requests.request("GET", url, headers=headers, data=payload).json()
     return product
 
+
+def validar_categorias_tiendanube(company):
+    ids =[]
+    for i in session['rubros']:
+        url = "https://api.tiendanube.com/v1/"+str(company.store_id) +"/products?category_id="+str(i)+"&fields=id"
+        payload={}
+        headers = {
+        'Content-Type': 'application/json',
+        'Authentication': company.platform_token_type+' '+company.platform_access_token
+        }
+        ids_tmp = requests.request("GET", url, headers=headers, data=payload).json()
+        for d in ids_tmp:
+            ids.append(d['id'])
+    return ids
