@@ -127,13 +127,14 @@
                         </div>
                     </div>
                     
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            {{textos['elegir_opcion_cambio_cupon']}}<br><br>
-                            <button class="btn btn-primary" name="opcion_cambio" type="submit" value="Cupon">Generar Cupón</button>
-                           
+                    {% if cupon == 'Si' %}
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                {{textos['elegir_opcion_cambio_cupon']}}<br><br>
+                                <button class="btn btn-primary" name="opcion_cambio" type="submit" value="Cupon">Generar Cupón</button>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </form>
                    
         </div>

@@ -109,6 +109,10 @@ def buscar_empresa(empresa):
     session['envio'] = settings['envio']
     session['motivos'] = settings['motivos']
     session['rubros'] = settings['politica']['rubros']
+    if 'cupon' in settings.keys():
+      session['cupon'] = settings['cupon']
+    else: 
+      session['cupon'] = 'Si'
     session['ids_filtrados'] = validar_categorias_tiendanube(empresa_tmp)
     
     unaEmpresa = Company(
@@ -154,6 +158,10 @@ def buscar_empresa(empresa):
     session['envio'] = settings['envio']
     session['motivos'] = settings['motivos']
     session['rubros'] = settings['politica']['rubros']
+    if 'cupon' in settings.keys():
+      session['cupon'] = settings['cupon']
+    else: 
+      session['cupon'] = 'Si'
     session['ids_filtrados'] = []
 
     unaEmpresa = Company(
