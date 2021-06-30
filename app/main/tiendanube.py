@@ -55,3 +55,16 @@ def validar_categorias_tiendanube(company):
         for d in ids_tmp:
             ids.append(d['id'])
     return ids
+
+##### prueba busqueda producto #####
+def buscar_producto_tiendanube(empresa, desc_prod):
+    url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/products?q="+desc_prod+"&fields=id,name"
+    payload={}
+    headers = {
+        'Content-Type': 'application/json',
+        'Authentication': empresa.platform_token_type+' '+empresa.platform_access_token
+    }
+    product = requests.request("GET", url, headers=headers, data=payload).json()
+    #for i in product:
+    #    flash('producto en Tiendanube {}- {}'.format(i, type(i)) )
+    return product

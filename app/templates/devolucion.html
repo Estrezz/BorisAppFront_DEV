@@ -135,6 +135,26 @@
                             </div>
                         </div>
                     {% endif %}
+                    {% if cupon == 'Si' %}
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <form id="elegir_Producto" action="{{ url_for('main.elegir_producto') }}" method="POST"> 
+                                    <label for="producto">Ingresa el nombre del producto a buscar:</label> <br>
+                                    <input type="text" id="producto_desc" name="producto_desc">
+                                    <span id="elegir">
+                                        <a href="javascript:buscar_producto(
+                                            '#producto_desc',
+                                            '#product_select'
+                                            );"><span class="glyphicon glyphicon-search"></span></a>
+                                    </span>
+                                    <br><br>
+                                    <label for="product_select">Selecciona el producto deseado:</label> <br>
+                                    <select id="product_select"> </select>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
                 </form>
                    
         </div>

@@ -7,7 +7,7 @@ from app import db
 from app.models import Customer, Order, Producto, Company, Store
 from flask import session, flash, current_app, render_template
 from app.main.moova import crea_envio_moova, cotiza_envio_moova
-from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube, validar_categorias_tiendanube
+from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube, validar_categorias_tiendanube, buscar_producto_tiendanube
 from app.email import send_email
 
 
@@ -108,12 +108,15 @@ def buscar_empresa(empresa):
     session['textos'] = settings['textos']
     session['envio'] = settings['envio']
     session['motivos'] = settings['motivos']
-    session['rubros'] = settings['politica']['rubros']
+    
     if 'cupon' in settings.keys():
       session['cupon'] = settings['cupon']
     else: 
       session['cupon'] = 'Si'
+    
+    session['rubros'] = settings['politica']['rubros']
     session['ids_filtrados'] = validar_categorias_tiendanube(empresa_tmp)
+    
     
     unaEmpresa = Company(
       platform = empresa_tmp.platform,
@@ -696,4 +699,11 @@ def actualiza_json(archivo_config, data):
             json.dump(json_decoded, json_file)
         
         return 'Success'
-        
+
+
+def buscar_producto(empresa, desc_prod):     
+  if empresa.platform == 'tiendanube':
+    product = buscar_producto_tiendanube(empresa, desc_prod)
+    # flash('producto en interface {}'.format(product) )
+    return product
+    

@@ -30,7 +30,6 @@
 
 {% endblock %}
 
-
 {% block content %}
     <div class="container">
         {% with messages = get_flashed_messages() %}
@@ -43,4 +42,23 @@
 
         {% block app_content %}{% endblock %}
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+
+        function buscar_producto(desc_prod, destElem) {  
+            $.post('/elegir_producto', {
+                prod: $(desc_prod).val()
+            }).done(function(response) {
+                data = JSON.parse(response);
+                var str=''
+                for(d in data)
+                    str+='<option value="'+data[d]['id']+'">'+data[d]['name']['es']+'</option>'
+                $(destElem).html(str)    
+            }).fail(alert('NOK'))   
+        }
+
+    </script>
 {% endblock %}

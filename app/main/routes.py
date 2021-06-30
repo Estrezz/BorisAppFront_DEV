@@ -1,12 +1,13 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, jsonify
 from app import db
 from app.main.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Store, Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, actualizar_store, crear_store, actualiza_json
+from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, actualizar_store, crear_store, actualiza_json, buscar_producto
 from app.main import bp
 from flask import request, session
 import requests
+import json
 import ast
 
 
@@ -155,7 +156,7 @@ def confirma_cambios():
 
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
     area_valida = validar_cobertura(user.province, user.zipcode)
-    
+
     return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
 
@@ -238,7 +239,11 @@ def actualizar_empresa_categorias():
         else:
             return 'Error',400
         
-        
 
-
-
+@bp.route('/elegir_producto', methods=['POST'])
+def elegir_producto():
+    desc_prod = request.form.get('prod')
+    company = Company.query.filter_by(store_id=session['store']).first()
+    producto = json.dumps(buscar_producto(company, desc_prod)) 
+    #flash('producto {} - tipo {}'.format(producto, type(producto)))
+    return producto
