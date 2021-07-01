@@ -56,10 +56,9 @@
                 var str='<option value="0"> -- Selecciona el producto -- </option>'
                 for(d in data)
                     str+='<option value="'+data[d]['id']+'">'+data[d]['name']['es']+'</option>'
-                $(destElem).html(str);
-                $(destElem).prop('disabled', false);
+                $(destElem).html(str)    
             }).fail(function(){
-                $(destElem).html('<option value="0"> -- No existe ese articulo -- </option>');
+                $(destElem).html('<option value="0"> -- No existe ese articulo -- </option>')
             })   
         }
         
@@ -69,7 +68,6 @@
 
             if (productId == "0") {
                 $("#alternativa_select").html('<option value="seleccionar"> -- Selecciona la variante -- </option>');
-                $("#alternativa_select").prop('disabled', 'disabled');   
                 return;
             }
            
@@ -81,8 +79,8 @@
                 jQuery.each(data, function(index, item) {
                     str+='<option value="'+item['id']+'">'+item['desc']+'</option>';
                 });
-                $("#alternativa_select").html(str);
-                $("#alternativa_select").prop('disabled', false);   
+                
+                $("#alternativa_select").html(str)    
             })
             
         });

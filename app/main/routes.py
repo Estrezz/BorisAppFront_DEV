@@ -98,7 +98,7 @@ def pedidos():
             order = Order.query.get(session['orden'])
             item = Producto.query.get(prod_id)
             alternativas = buscar_alternativas(company, session['store'], item.prod_id, item.variant, 'variantes')
-            return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'], lista_motivos=session['motivos'], cupon=session['cupon'])
+            return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'], lista_motivos=session['motivos'], cupon=session['cupon'], otracosa=session['otracosa'])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
         prod_id = request.form.get("Prod_Id")
@@ -275,5 +275,5 @@ def elegir_alternativa():
 
     atributos = json.dumps(atributos_tmp)
     alternativas = json.dumps(alternativas_tmp)
-    
+
     return alternativas

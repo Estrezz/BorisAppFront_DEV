@@ -135,11 +135,9 @@
                             </div>
                         </div>
                     {% endif %}
-
-                    {% if otracosa == 'Si' %}
+                    {% if cupon == 'Si' %}
                         <div class="panel panel-default">
                             <div class="panel-body">
-                                {{textos['elegir_opcion_otra_cosa']}}<br><br>
                                 <form id="elegir_Producto" action="{{ url_for('main.elegir_producto') }}" method="POST"> 
                                     <label for="producto">Ingresa el nombre del producto a buscar:</label> <br>
                                     <input type="text" id="producto_desc" name="producto_desc">
@@ -151,11 +149,9 @@
                                     </span>
                                     <br><br>
                                     <label for="product_select">Selecciona el producto deseado:</label> <br>
-                                    <select id="product_select" style="margin-top: 10px; margin-bottom: 10px; " disabled> <option value="0"> -- Selecciona el producto -- </option> </select> <br>
-                                    <select id="alternativa_select" disabled > <option value="0"> -- Selecciona la variante -- </option> </select>    
+                                    <select id="product_select"> </select> <br>
+                                    <select id="alternativa_select"> </select>    
                                 </form>
-                                <br><br>
-                                <button class="btn btn-primary" name="opcion_cambio" type="submit" value="otraCosa">Seleccionar </button>
                             </div>
                         </div>
                     {% endif %}
