@@ -123,7 +123,15 @@ def pedidos():
         if opcion_cambio == 'Cupon':
             item.accion_cambiar_por = '1'
             item.accion_cambiar_por_desc = 'Cupón'
-            
+
+        ## Si se seleccionó el Boton de Otra Cosa
+        if opcion_cambio == 'otraCosa':
+            variante_id = request.form.get("alternativa_select")
+            producto = request.form.get("producto_nombre")
+            variante = request.form.get("variante_nombre")
+            item.accion_cambiar_por = variante_id
+            item.accion_cambiar_por_desc = producto+"("+variante+")"
+
         item.accion_reaccion = True
         db.session.commit() 
 

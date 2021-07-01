@@ -151,10 +151,12 @@
                                     </span>
                                     <br><br>
                                     <label for="product_select">Selecciona el producto deseado:</label> <br>
-                                    <select id="product_select" style="margin-top: 10px; margin-bottom: 10px; " disabled> <option value="0"> -- Selecciona el producto -- </option> </select> <br>
-                                    <select id="alternativa_select" disabled > <option value="0"> -- Selecciona la variante -- </option> </select>    
+                                    <select id="product_select" name="product_select" style="margin-top: 10px; margin-bottom: 10px; " disabled> <option value="0"> -- Selecciona el producto -- </option> </select> <br>
+                                    <select id="alternativa_select" name="alternativa_select" disabled > <option value="0"> -- Selecciona la variante -- </option> </select>    
                                 </form>
                                 <br><br>
+                                <input type="hidden" id="producto_nombre" name="producto_nombre">
+                                <input type="hidden" id="variante_nombre" name="variante_nombre">
                                 <button class="btn btn-primary" name="opcion_cambio" type="submit" value="otraCosa">Seleccionar </button>
                             </div>
                         </div>

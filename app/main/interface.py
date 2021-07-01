@@ -172,6 +172,11 @@ def buscar_empresa(empresa):
     else: 
       session['cupon'] = 'Si'
     session['ids_filtrados'] = []
+    
+    if 'otracosa' in settings.keys():
+      session['otracosa'] = settings['otracosa']
+    else: 
+      session['otracosa'] = 'No'
 
     unaEmpresa = Company(
       platform = 'tiendanube',
