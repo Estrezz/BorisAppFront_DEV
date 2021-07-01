@@ -53,12 +53,30 @@
                 prod: $(desc_prod).val()
             }).done(function(response) {
                 data = JSON.parse(response);
-                var str=''
+                var str='<option value="0"> -- Selecciona el producto -- </option>'
                 for(d in data)
                     str+='<option value="'+data[d]['id']+'">'+data[d]['name']['es']+'</option>'
                 $(destElem).html(str)    
-            }).fail(alert('NOK'))   
+            }).fail(function(){
+                $(destElem).html('<option value="0"> -- No existe ese articulo -- </option>')
+            })   
         }
+        
+        
+        $(document.body).on('change',"#product_select",function () {
+            var productId= $("#product_select option:selected").val();
+            $.post('/elegir_alternativa', {
+                prod_id: productId
+            }).done(function(response) {
+                data = JSON.parse(response);
+                var str='<option value="seleccionar"> -- Selecciona la variante -- </option>'
+                jQuery.each(data, function(index, item) {
+                    str+='<option value="'+item['id']+'">'+item['desc']+'</option>';
+                });
+                $("#alternativa_select").html(str)    
+            }).fail(alert('NOK'))  
+        });
+        
 
     </script>
 {% endblock %}

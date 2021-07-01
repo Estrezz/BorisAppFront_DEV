@@ -83,6 +83,7 @@ def buscar_alternativas(company, storeid, prod_id, item_variant, param):
   devolver = [variantes, product['attributes']]
   return devolver
 
+
 ############################## describir_variante ##################################################
 ## Arma string con las descripcion de las variantes
 def describir_variante(values):

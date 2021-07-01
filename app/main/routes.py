@@ -244,6 +244,36 @@ def actualizar_empresa_categorias():
 def elegir_producto():
     desc_prod = request.form.get('prod')
     company = Company.query.filter_by(store_id=session['store']).first()
-    producto = json.dumps(buscar_producto(company, desc_prod)) 
-    #flash('producto {} - tipo {}'.format(producto, type(producto)))
-    return producto
+    producto = buscar_producto(company, desc_prod)
+    if type(producto) == dict:
+        return json.dumps({'success':False}), 400, {'ContentType':'application/json'} 
+    return json.dumps(producto)
+
+
+@bp.route('/elegir_alternativa', methods=['POST'])
+def elegir_alternativa():
+    prod_id = request.form.get('prod_id')
+    variant = 0
+    company = Company.query.filter_by(store_id=session['store']).first()
+    data = buscar_alternativas(company, company.store_id, prod_id, variant, 'variantes')
+
+    atributos_tmp = []
+    for i in data[1]:
+        atributos_tmp.append(i['es'])
+    
+    alternativas_tmp = []
+   
+    for i in data[0]:
+        alternativa_id = i['id']
+        alternativa_desc = ""
+        for x in i['values']:
+            if alternativa_desc == "":
+                alternativa_desc = str(x['es'])
+            else:
+                alternativa_desc = alternativa_desc +','+ str(x['es'])
+        alternativas_tmp.append({'id': alternativa_id,'desc': alternativa_desc})
+
+    atributos = json.dumps(atributos_tmp)
+    alternativas = json.dumps(alternativas_tmp)
+    
+    return alternativas

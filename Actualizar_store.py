@@ -5,14 +5,16 @@ from app.models import Store
 app=create_app()
 with app.app_context():
 
-  store = Store.query.filter_by(store_id='1447373').first()
+  store = Store.query.filter_by(store_id='630942').first()
   
+
+
 
 
 
   #db.session.delete(store)
 
-  store.param_logo = '//d2r9epyceweg5n.cloudfront.net/stores/962/628/themes/common/logo-444853454-1608665108-19714e3db78dff93053c5f7a01f53ed11608665109.jpg?0'
+  store.platform_access_token = '907ca431ffc80b712641b0d565eada6efd9e860f'
   #store.param_logo = 'https://frontprod.borisreturns.com/static/images/abundancia.png'
 
   #store = Store(
