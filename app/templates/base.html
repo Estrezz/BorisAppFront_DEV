@@ -48,11 +48,15 @@
     {{ super() }}
     <script>
     
-        $('#producto_desc').keypress(function(e) {
-            buscar_producto('#producto_desc', '#product_select')
-            event.preventDefault();
-            $("#elegir").focus();
+        $('#producto_desc').on('keydown', function (e) {
+                 if (e.key === 'Enter' || e.keyCode === 13) {
+                    e.preventDefault();
+                    buscar_producto('#producto_desc', '#product_select');
+                    $("#elegir").focus();
+                 }
+                 
         });
+            
 
         function buscar_producto(desc_prod, destElem) {  
             $('#loading').show();
@@ -71,6 +75,7 @@
                 $(destElem).html(str);
                 $(destElem).prop('disabled', false);
             }).fail(function(){
+                $('#loading').hide();
                 $(destElem).html('<option value="0"> -- No existe ese articulo -- </option>');
             })   
         }
@@ -86,7 +91,8 @@
 
             if (productId == "0") {
                 $("#alternativa_select").html('<option value="seleccionar"> -- Selecciona la variante -- </option>');
-                $("#alternativa_select").prop('disabled', 'disabled');   
+                $("#alternativa_select").prop('disabled', 'disabled');
+                $('#loading2').hide();   
                 return;
             }
            
