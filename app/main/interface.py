@@ -700,25 +700,24 @@ def crear_store(store):
 
 
 def actualiza_json_categoria(archivo_config, data):
-
-        with open(archivo_config) as json_file:
+        with open(archivo_config, encoding='utf-8') as json_file:
                 json_decoded = json.load(json_file)
 
         json_decoded['politica']['rubros'] = data['categorias']
 
-        with open(archivo_config, 'w') as json_file:
+        with open(archivo_config, 'w', encoding='utf8') as json_file:
             json.dump(json_decoded, json_file)
   
         return 'Success'
 
 
 def actualiza_json(archivo_config, clave, data):
-        with open(archivo_config) as json_file:
+        with open(archivo_config, encoding='utf-8') as json_file:
           json_decoded = json.load(json_file)
 
           json_decoded['textos'][clave] = data[clave]
 
-        with open(archivo_config, 'w') as json_file:
+        with open(archivo_config, 'w', encoding='utf8' ) as json_file:
             json.dump(json_decoded, json_file)
 
         return 'Success'
