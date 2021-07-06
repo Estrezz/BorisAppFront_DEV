@@ -68,3 +68,15 @@ def buscar_producto_tiendanube(empresa, desc_prod):
     #for i in product:
     #    flash('producto en Tiendanube {}- {}'.format(i, type(i)) )
     return product
+
+def agregar_nota_tiendanube(company, order):
+    url = "https://api.tiendanube.com/v1/"+str(company.store_id)+"/orders/"+str(order.order_original_id)
+    data={
+        "owner_note": "Esta orden tienen una gestión iniciada en BORIS",
+    }
+    headers = {
+        'Content-Type': 'application/json',
+        'Authentication': company.platform_token_type+' '+company.platform_access_token
+    }
+    requests.request("PUT", url, headers=headers, data=json.dumps(data))
+    

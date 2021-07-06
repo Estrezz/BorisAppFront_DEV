@@ -7,7 +7,7 @@ from app import db
 from app.models import Customer, Order, Producto, Company, Store
 from flask import session, flash, current_app, render_template
 from app.main.moova import crea_envio_moova, cotiza_envio_moova
-from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube, validar_categorias_tiendanube, buscar_producto_tiendanube
+from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube, validar_categorias_tiendanube, buscar_producto_tiendanube, agregar_nota_tiendanube
 from app.email import send_email
 
 
@@ -247,9 +247,9 @@ def crea_envio(company, user, order, productos, metodo_envio):
                 sender=company.communication_email,
                 recipients=[user.email], 
                 text_body=render_template('email/pedido_listo.txt',
-                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio),
+                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio, textos=session['textos']),
                 html_body=render_template('email/pedido_listo.html',
-                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio), 
+                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio, textos=session['textos']), 
                 attachments=None,
                 sync=False,
                 bcc=[current_app.config['ADMINS'][0]])
@@ -699,7 +699,7 @@ def crear_store(store):
   return 'Success'
 
 
-def actualiza_json(archivo_config, data):
+def actualiza_json_categoria(archivo_config, data):
 
         with open(archivo_config) as json_file:
                 json_decoded = json.load(json_file)
@@ -708,8 +708,21 @@ def actualiza_json(archivo_config, data):
 
         with open(archivo_config, 'w') as json_file:
             json.dump(json_decoded, json_file)
-        
+  
         return 'Success'
+
+
+def actualiza_json(archivo_config, clave, data):
+        with open(archivo_config) as json_file:
+          json_decoded = json.load(json_file)
+
+          json_decoded['textos'][clave] = data[clave]
+
+        with open(archivo_config, 'w') as json_file:
+            json.dump(json_decoded, json_file)
+
+        return 'Success'
+
 
 
 def buscar_producto(empresa, desc_prod):     
@@ -717,4 +730,11 @@ def buscar_producto(empresa, desc_prod):
     product = buscar_producto_tiendanube(empresa, desc_prod)
     # flash('producto en interface {}'.format(product) )
     return product
-    
+
+
+def agregar_nota(company, order):
+    if company.platform == 'tiendanube':
+      agregar_nota_tiendanube(company, order)
+      return
+    else:
+      return

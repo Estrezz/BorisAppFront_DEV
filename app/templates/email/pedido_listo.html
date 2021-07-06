@@ -19,6 +19,10 @@
                     {{i.quantity}} - {{i.name}} <br>
                 {% endfor %}
     </p>
+    <br>
+    <p style="text-align:left">
+        {{textos['confirma_manual_note']}} <br>
+    </p>
 {% endif %}
 
 <!-- ---------------------------  Envío COORDINAR  ------------------------------------------ -->
@@ -31,6 +35,11 @@
                     {{i.quantity}} - {{i.name}} <br>
                 {% endfor %}
     </p>
+    <br>
+    <p style="text-align:left">
+        {{textos['confirma_coordinar_note']}} <br>
+    </p>
+    
 {% endif %}
 
 <!-- ---------------------------  Envío CORREO ------------------------------------------ -->
@@ -54,6 +63,10 @@
                     Un mensajero de Moova para a retirarlo
                 </p>
             {% endif %}
+            <br>
+            <p style="text-align:left">
+                {{textos['confirma_moova_note']}} <br>
+            </p>
          
     {% else %}
         <p style="text-align:center"> 

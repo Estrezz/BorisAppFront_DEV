@@ -3,7 +3,7 @@ from app import db
 from app.main.forms import LoginForm, DireccionForm
 from app.email import send_email
 from app.models import Store, Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, actualizar_store, crear_store, actualiza_json, buscar_producto
+from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, actualizar_store, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota
 from app.main import bp
 from flask import request, session
 import requests
@@ -202,13 +202,15 @@ def confirma_solicitud():
     productos = db.session.query(Producto).filter((Producto.order_id == session['orden'])).filter((Producto.accion != 'ninguna'))
     
     envio = crea_envio(company, user, order, productos, metodo_envio)
+    ##### Agrega nota en Orden Original
+    agregar_nota(company, order)
     #### borra el pedido de la base
     Producto.query.filter_by(order_id=session['orden']).delete()
     Order.query.filter_by(id=session['orden']).delete()
     Customer.query.filter_by(id=session['cliente']).delete()
     db.session.commit()
     
-    return render_template('envio.html', NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio)
+    return render_template('envio.html', NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
 
 
 @bp.route('/tracking/<order>',methods=['GET', 'POST'])
@@ -241,7 +243,21 @@ def actualizar_empresa_categorias():
         data = request.json
         store = Store.query.filter_by(store_id=data['store_id']).first()
 
-        status = actualiza_json(store.param_config, data)
+        status = actualiza_json_categoria(store.param_config, data)
+        if status == 'Success':
+            return '', 200
+        else:
+            return 'Error',400
+
+
+@bp.route('/empresa_json', methods=['POST'])
+def actualizar_empresa_json():
+    if request.method == 'POST':
+        data = request.json
+        clave = request.args.get('clave')
+        store = Store.query.filter_by(store_id=data['store_id']).first()
+
+        status = actualiza_json(store.param_config, clave, data)
         if status == 'Success':
             return '', 200
         else:
@@ -256,6 +272,7 @@ def elegir_producto():
     if type(producto) == dict:
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'} 
     return json.dumps(producto)
+
 
 
 @bp.route('/elegir_alternativa', methods=['POST'])
