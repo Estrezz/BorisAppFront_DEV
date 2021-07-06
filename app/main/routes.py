@@ -201,6 +201,17 @@ def confirma_solicitud():
     order = Order.query.get(session['orden'])
     productos = db.session.query(Producto).filter((Producto.order_id == session['orden'])).filter((Producto.accion != 'ninguna'))
     
+    #### valida que la dirección esta cargada si el método elegido es A Coordinar o Moova ################
+    if (metodo_envio == 'Coordinar' or metodo_envio =='Moova') and (None in {user.address, user.zipcode}):
+        if request.args.get('area_valida') == 'True':
+            area_valida = True
+        else:
+            area_valida = False
+        precio_envio = request.args.get('precio_envio')
+        flash("Por favor completa tus datos de contacto")
+        return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
+
+
     envio = crea_envio(company, user, order, productos, metodo_envio)
     ##### Agrega nota en Orden Original
     agregar_nota(company, order)
