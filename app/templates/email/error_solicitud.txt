@@ -1,0 +1,3 @@
+ERROR en creación de Pedido - {{company.company_name}}
+{{company.store_id}}
+{{ data }}

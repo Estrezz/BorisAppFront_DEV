@@ -403,6 +403,19 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       if solicitud.status_code != 200:
         flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
         loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
+
+        if current_app.config['SERVER_ROLE'] == 'PROD':
+          send_email('ERROR en creación solicitud', 
+                  sender=current_app.config['ADMINS'][0],
+                  recipients=current_app.config['ADMINS'], 
+                  text_body=render_template('email/error_solicitud.txt',
+                                          user=user, data=json.dumps(data), company=company),
+                  html_body=render_template('email/error_solicitud.html',
+                                          user=user, data=json.dumps(data), company=company), 
+                  attachments=None, 
+                  sync=False,
+                  bcc=[])
+          
         return 'Failed'
       else: 
         flash('Se envio el pedido correctamente')
