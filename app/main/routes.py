@@ -109,6 +109,7 @@ def pedidos():
             if request.form.get("variante"):
                 variante = ast.literal_eval(request.form.get("variante"))
                 item.accion_cambiar_por = variante['id']
+                item.accion_cambiar_por_prod_id = item.prod_id
                 ### Busca el nombre del producto  ###
                 producto_name = buscar_alternativas(company, session['store'], item.prod_id, item.variant,'nombre')
                 item.accion_cambiar_por_desc = producto_name + " ("+ describir_variante(variante['values']) +")"
@@ -122,6 +123,7 @@ def pedidos():
         ## Si se seleccionó el Boton de CUPON
         if opcion_cambio == 'Cupon':
             item.accion_cambiar_por = '1'
+            item.accion_cambiar_por_prod_id = '1'
             item.accion_cambiar_por_desc = 'Cupón'
 
         ## Si se seleccionó el Boton de Otra Cosa
@@ -129,7 +131,10 @@ def pedidos():
             variante_id = request.form.get("alternativa_select")
             producto = request.form.get("producto_nombre")
             variante = request.form.get("variante_nombre")
+            producto_id = request.form.get("producto_id")
+            
             item.accion_cambiar_por = variante_id
+            item.accion_cambiar_por_prod_id = producto_id
             item.accion_cambiar_por_desc = producto+"("+variante+")"
 
         item.accion_reaccion = True
