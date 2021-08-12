@@ -34,7 +34,7 @@ def home():
 @bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
     ## Borrar todos los datos de la base de datos ##
-    if 'orden' in session:
+    if 'uid' in session:
         Producto.query.filter_by(order_id=session['orden']).delete()
         ### Version anterior del borrado de Ordenes y Clientes
         # Order.query.filter_by(id=session['orden']).delete()
