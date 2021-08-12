@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f6520373ddc2
+Revision ID: e307ac29f1b6
 Revises: 
-Create Date: 2021-04-19 10:44:55.124701
+Create Date: 2021-08-11 19:01:33.144369
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f6520373ddc2'
+revision = 'e307ac29f1b6'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -35,6 +35,7 @@ def upgrade():
     sa.Column('company_main_currency', sa.String(length=20), nullable=True),
     sa.Column('company_country', sa.String(length=20), nullable=True),
     sa.Column('company_name', sa.String(length=64), nullable=True),
+    sa.Column('company_url', sa.String(length=120), nullable=True),
     sa.Column('admin_email', sa.String(length=120), nullable=True),
     sa.Column('communication_email', sa.String(length=120), nullable=True),
     sa.Column('logo', sa.String(length=200), nullable=True),
@@ -64,10 +65,14 @@ def upgrade():
     sa.Column('platform_token_type', sa.String(length=30), nullable=True),
     sa.Column('platform_access_token', sa.String(length=64), nullable=True),
     sa.Column('store_id', sa.String(length=64), nullable=True),
-    sa.Column('store_name', sa.String(length=64), nullable=True),
+    sa.Column('store_name', sa.String(length=120), nullable=True),
     sa.Column('store_main_language', sa.String(length=20), nullable=True),
     sa.Column('store_main_currency', sa.String(length=20), nullable=True),
     sa.Column('store_country', sa.String(length=20), nullable=True),
+    sa.Column('store_url', sa.String(length=120), nullable=True),
+    sa.Column('store_plan', sa.String(length=64), nullable=True),
+    sa.Column('store_phone', sa.String(length=20), nullable=True),
+    sa.Column('store_address', sa.String(length=120), nullable=True),
     sa.Column('admin_email', sa.String(length=120), nullable=True),
     sa.Column('communication_email', sa.String(length=120), nullable=True),
     sa.Column('param_logo', sa.String(length=200), nullable=True),
@@ -103,12 +108,14 @@ def upgrade():
     sa.Column('phone', sa.String(length=15), nullable=True),
     sa.Column('address', sa.String(length=64), nullable=True),
     sa.Column('number', sa.String(length=10), nullable=True),
-    sa.Column('floor', sa.String(length=10), nullable=True),
+    sa.Column('floor', sa.String(length=64), nullable=True),
     sa.Column('zipcode', sa.String(length=8), nullable=True),
-    sa.Column('locality', sa.String(length=64), nullable=True),
+    sa.Column('locality', sa.String(length=150), nullable=True),
     sa.Column('city', sa.String(length=64), nullable=True),
     sa.Column('province', sa.String(length=64), nullable=True),
     sa.Column('country', sa.String(length=64), nullable=True),
+    sa.Column('instructions', sa.String(length=150), nullable=True),
+    sa.Column('customer_uid', sa.String(length=150), nullable=True),
     sa.ForeignKeyConstraint(['company_id'], ['company.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -128,6 +135,7 @@ def upgrade():
     sa.Column('gastos_shipping_owner', sa.Float(), nullable=True),
     sa.Column('gastos_shipping_customer', sa.Float(), nullable=True),
     sa.Column('gastos_promocion', sa.Float(), nullable=True),
+    sa.Column('order_uid', sa.String(length=150), nullable=True),
     sa.Column('customer_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['customer_id'], ['customer.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -143,11 +151,12 @@ def upgrade():
     sa.Column('accion', sa.String(length=10), nullable=True),
     sa.Column('accion_reaccion', sa.Boolean(), nullable=True),
     sa.Column('accion_cambiar_por', sa.Integer(), nullable=True),
+    sa.Column('accion_cambiar_por_prod_id', sa.Integer(), nullable=True),
     sa.Column('accion_cambiar_por_desc', sa.String(length=100), nullable=True),
     sa.Column('accion_cantidad', sa.Integer(), nullable=True),
-    sa.Column('motivo', sa.String(length=50), nullable=True),
+    sa.Column('motivo', sa.String(length=150), nullable=True),
     sa.Column('politica_valida', sa.String(length=50), nullable=True),
-    sa.Column('politica_valida_motivo', sa.String(length=50), nullable=True),
+    sa.Column('politica_valida_motivo', sa.String(length=100), nullable=True),
     sa.Column('image', sa.String(length=200), nullable=True),
     sa.Column('promo_descuento', sa.Float(), nullable=True),
     sa.Column('promo_nombre', sa.String(length=10), nullable=True),

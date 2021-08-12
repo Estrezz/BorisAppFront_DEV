@@ -36,16 +36,11 @@ def buscar():
     ## Borrar todos los datos de la base de datos ##
     if 'orden' in session:
         Producto.query.filter_by(order_id=session['orden']).delete()
-        ### Version anterior del borrado de Ordenes y Clientes
-        # Order.query.filter_by(id=session['orden']).delete()
-        # Customer.query.filter_by(id=session['cliente']).delete()
-        #Company.query.filter_by(store_id=session['store']).delete()
-        Order.query.filter_by(order_uid=str(session['uid'])).delete()
-        Customer.query.filter_by(customer_uid=str(session['uid'])).delete()
-        Company.query.filter_by(company_uid=str(session['uid'])).delete()
+        Order.query.filter_by(id=session['orden']).delete()
+        Customer.query.filter_by(id=session['cliente']).delete()
         #cust_tmp = Customer.query.filter_by(id=session['cliente']).delete()
         #db.session.delete(cust_tmp)
-        
+        Company.query.filter_by(store_id=session['store']).delete()
         db.session.commit()
         session.pop('orden', None)
         session.pop('cliente', None)
@@ -227,14 +222,8 @@ def confirma_solicitud():
     agregar_nota(company, order)
     #### borra el pedido de la base
     Producto.query.filter_by(order_id=session['orden']).delete()
-
-    ### Version Anterior del Borrado de Ordenes y Clientes
-    # Order.query.filter_by(id=session['orden']).delete()
-    # Customer.query.filter_by(id=session['cliente']).delete()
-
-    Order.query.filter_by(order_uid=str(session['uid'])).delete()
-    Customer.query.filter_by(customer_uid=str(session['uid'])).delete()
-
+    Order.query.filter_by(id=session['orden']).delete()
+    Customer.query.filter_by(id=session['cliente']).delete()
     db.session.commit()
     
     return render_template('envio.html', NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])

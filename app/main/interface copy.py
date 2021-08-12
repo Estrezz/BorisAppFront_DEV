@@ -2,7 +2,6 @@ import requests
 import json
 import datetime
 import smtplib
-import uuid
 from datetime import datetime
 from app import db
 from app.models import Customer, Order, Producto, Company, Store
@@ -428,7 +427,6 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
 ############################## carga_pedido ##################################################
 def cargar_pedido(unaEmpresa, pedido ):
 
-  session['uid'] = uuid.uuid4()
   session['store'] = unaEmpresa.store_id
   session['plataforma'] = unaEmpresa.platform
 
@@ -449,7 +447,6 @@ def cargar_pedido(unaEmpresa, pedido ):
       city = pedido['shipping_address']['city'],
       province = pedido['shipping_address']['province'],
       country = pedido['shipping_address']['country'],
-      customer_uid = str(session['uid']),
       pertenece = unaEmpresa
       )
   session['cliente'] = unCliente.id
@@ -470,7 +467,6 @@ def cargar_pedido(unaEmpresa, pedido ):
       gastos_shipping_owner = pedido['shipping_cost_owner'],
       gastos_shipping_customer = pedido['shipping_cost_customer'],
       gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
-      order_uid = str(session['uid']),
       buyer = unCliente
       )
   session['orden'] = unaOrden.id       

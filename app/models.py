@@ -70,6 +70,7 @@ class Company(db.Model):
     shipping_province = db.Column(db.String(64))
     shipping_country = db.Column(db.String(64))
     shipping_info = db.Column(db.String(120))
+    company_uid = db.Column(db.String(150))
     clientes = db.relationship('Customer', backref='pertenece', lazy='dynamic')
 
 class Customer(db.Model):
@@ -89,6 +90,7 @@ class Customer(db.Model):
     province = db.Column(db.String(64))
     country = db.Column(db.String(64))
     instructions = db.Column(db.String(150))
+    customer_uid = db.Column(db.String(150))
 
     def __repr__(self):
         return '<Cliente {}>'.format(self.name)    
@@ -106,6 +108,7 @@ class Order(db.Model):
     gastos_shipping_owner = db.Column(db.Float)
     gastos_shipping_customer = db.Column(db.Float)
     gastos_promocion = db.Column(db.Float)
+    order_uid = db.Column(db.String(150))
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     products = db.relationship('Producto', backref='articulos', lazy='dynamic')
 
