@@ -650,7 +650,11 @@ def crear_store(store):
     conf_url='app/static/conf/'+store['store_id']+'.json'
   if current_app.config['SERVER_ROLE'] == 'PROD':
     conf_url='app/static/conf/'+store['store_id']+'.json'
-    
+  
+  ## "envio": ["manual", "retiro", "coordinar"]
+  ## manual: el cliente evia manualmente
+  ## retiro: agrega opcion Moova
+  ## coordinar: Opcion a Coordinar
   conf_file = {
     "currency": store['store_main_currency'],
     "shipping": "customer",
@@ -674,9 +678,12 @@ def crear_store(store):
       "rubros":{},
       "promos":{}
     },
+    "cupon": "No",
+    "otracosa": "Si",
     "textos": {
-      "elegir_opcion_cambio": "Seleccioná la opción que queres o elegí generar un cupón si querés cambiarlo por otra cosa",
+      "elegir_opcion_cambio": "Seleccioná si queres cambiarlo por una variante del mismo articulo o elegí otro producto",
       "elegir_opcion_cambio_cupon": "Seleccioná esta opción para obtener un cupón de crédito en nuestra tienda ",
+      "elegir_opcion_otra_cosa": "Elegí en nuestra tienda el artículo que querés, ingresa el nombre y presion buscar",
       "elegir_accion": "Seleccioná la acción a realizar",
       "envio_manual": "Seleccionaste envío manual",
       "boton_envio_manual": "Traer la orden a nuestro local",
