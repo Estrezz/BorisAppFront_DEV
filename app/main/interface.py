@@ -74,7 +74,9 @@ def buscar_alternativas(company, storeid, prod_id, item_variant, param):
         x['values']= [{"es": "Mismo Articulo"}]
       variantes.append(x)
     else: 
-      if x['stock'] > 1 :
+      # Se coorigio el 13 -08
+      # if x['stock'] > 1 :
+      if x['stock'] > 0 :
         if x['id'] == item_variant:
           x['values']= [{"es": "Mismo Articulo"}]
         variantes.append(x)
