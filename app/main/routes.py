@@ -35,7 +35,8 @@ def home():
 def buscar():
     ## Borrar todos los datos de la base de datos ##
     if 'uid' in session:
-        Producto.query.filter_by(order_id=session['orden']).delete()
+        if 'orden' in session:
+            Producto.query.filter_by(order_id=session['orden']).delete()
         ### Version anterior del borrado de Ordenes y Clientes
         # Order.query.filter_by(id=session['orden']).delete()
         # Customer.query.filter_by(id=session['cliente']).delete()
