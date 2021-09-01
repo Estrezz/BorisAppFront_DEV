@@ -92,7 +92,7 @@
                       <button class="btn btn-primary btn-lg"> <span class="glyphicon glyphicon-home"></span> <br> </button>
                       <strong>  <br> {{textos['boton_envio_retiro'] }} <br>
                         Costo: {{precio_envio}} </strong>
-                      <br> {{textos['boton_envio_retiro_desc'] }}
+                      <br> {{textos['boton_envio_retiro_desc'] | safe }}
                   </a>
                   </div>
                 </div>
@@ -107,7 +107,7 @@
             <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Manual') }}" >
               <button class="btn btn-primary btn-lg" > <span class="glyphicon glyphicon-envelope"></span> </button>
               <strong> <br> {{textos['boton_envio_manual']}} </strong>
-              <br>{{textos['boton_envio_manual_desc']}}
+              <br>{{textos['boton_envio_manual_desc'] | safe}}
             </a>
           </div>
         </div>
@@ -119,7 +119,7 @@
             <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Coordinar', area_valida=area_valida, precio_envio=precio_envio) }}" >
               <button class="btn btn-primary btn-lg" > <span class="glyphicon glyphicon-headphones"></span> </button>
               <strong> <br> {{textos['boton_envio_coordinar']}} </strong>
-              <br>{{textos['boton_envio_coordinar_desc']}}
+              <br>{{textos['boton_envio_coordinar_desc'] | safe}}
             </a>
           </div>
         </div>
