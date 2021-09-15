@@ -82,7 +82,7 @@ class Customer(db.Model):
     phone = db.Column(db.String(15))
     orders = db.relationship('Order', backref='buyer', lazy='dynamic')
     address = db.Column(db.String(64))
-    number = db.Column(db.String(10))
+    number = db.Column(db.String(35))
     floor = db.Column(db.String(64))
     zipcode = db.Column(db.String(8))
     locality = db.Column(db.String(250))
