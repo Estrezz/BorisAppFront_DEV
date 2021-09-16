@@ -7,8 +7,22 @@ from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas,
 from app.main import bp
 from flask import request, session
 import requests
+from datetime import datetime,timedelta
 import json
 import ast
+
+
+##### Prueba Limpieza
+#@bp.before_app_first_request
+#def limpiar_database():
+#    hoy = datetime.utcnow()
+#    old = hoy - timedelta(minutes=20)
+#    tmp = Order.query.filter(Order.timestamp <= old).all()
+#    if(len(tmp)) != 0:
+#        #Order.query.filter_by(order_uid=str(session['uid']))
+#        cust = Customer.query.filter_by(id=tmp.customer_id).all()
+#        #Company.query.filter_by(company_uid=str(session['uid']))
+#    print(cust)
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -229,11 +243,6 @@ def confirma_solicitud():
     agregar_nota(company, order)
     #### borra el pedido de la base
     Producto.query.filter_by(order_id=session['orden']).delete()
-
-    ### Version Anterior del Borrado de Ordenes y Clientes
-    # Order.query.filter_by(id=session['orden']).delete()
-    # Customer.query.filter_by(id=session['cliente']).delete()
-
     Order.query.filter_by(order_uid=str(session['uid'])).delete()
     Customer.query.filter_by(customer_uid=str(session['uid'])).delete()
 
