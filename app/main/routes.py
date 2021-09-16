@@ -14,15 +14,8 @@ import ast
 
 ##### Prueba Limpieza
 #@bp.before_app_first_request
+#@bp.before_app_first_request
 #def limpiar_database():
-#    hoy = datetime.utcnow()
-#    old = hoy - timedelta(minutes=20)
-#    tmp = Order.query.filter(Order.timestamp <= old).all()
-#    if(len(tmp)) != 0:
-#        #Order.query.filter_by(order_uid=str(session['uid']))
-#        cust = Customer.query.filter_by(id=tmp.customer_id).all()
-#        #Company.query.filter_by(company_uid=str(session['uid']))
-#    print(cust)
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -48,32 +41,47 @@ def home():
 @bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
     ## Borrar todos los datos de la base de datos ##
+    ############## limpieza de Base #######################################
+    ## Limpia todo lo que tiene mas de 15 minutos #########################
+    #######################################################################
+    hoy = datetime.utcnow()
+    old = hoy - timedelta(minutes=20)
+    empresa_tmp = Company.query.filter(Company.timestamp <= old).all()
+    orden_tmp = Order.query.filter(Order.timestamp <= old).all()
+    cliente_tmp = Customer.query.filter(Customer.timestamp <= old).all()
+    producto_tmp = Producto.query.filter(Producto.timestamp <= old).all()
+   
+    if(len(producto_tmp)) != 0:
+        for p in producto_tmp:
+            Producto.query.filter(Producto.timestamp <= old).delete()
+            print('Se borarron productos',p)
+    if(len(orden_tmp)) != 0:
+        for o in producto_tmp:
+            Order.query.filter(Order.timestamp <= old).delete()
+            print('Se borarron ordenes',o)
+    if(len(cliente_tmp)) != 0:
+        for c in cliente_tmp:
+            Customer.query.filter(Customer.timestamp <= old).delete()
+            print('Se borarron clientes',c)
+    if(len(empresa_tmp)) != 0:
+        for e in empresa_tmp:
+            Company.query.filter(Company.timestamp <= old).delete()
+            print('Se borarron empresas',e)
+    db.session.commit()
+    ################################# fin limpieza ###########################
+
     if 'uid' in session:
         if 'orden' in session:
             Producto.query.filter_by(order_id=session['orden']).delete()
-        ### Version anterior del borrado de Ordenes y Clientes
-        # Order.query.filter_by(id=session['orden']).delete()
-        # Customer.query.filter_by(id=session['cliente']).delete()
-        #Company.query.filter_by(store_id=session['store']).delete()
         Order.query.filter_by(order_uid=str(session['uid'])).delete()
         Customer.query.filter_by(customer_uid=str(session['uid'])).delete()
-        Company.query.filter_by(company_uid=str(session['uid'])).delete()
-        #cust_tmp = Customer.query.filter_by(id=session['cliente']).delete()
-        #db.session.delete(cust_tmp)
-        
+        Company.query.filter_by(company_uid=str(session['uid'])).delete()        
         db.session.commit()
         session.pop('orden', None)
         session.pop('cliente', None)
         session.pop('store', None)
         session.clear()
 
-
-    # Company.query.delete()
-    # Customer.query.delete()
-    # Order.query.delete()
-    # Producto.query.delete()
-    # db.session.commit()
-    #### fin borrado #################################
 
     unaEmpresa = buscar_empresa(request.args['empresa'])
 

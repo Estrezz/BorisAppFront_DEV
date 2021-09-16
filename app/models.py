@@ -71,6 +71,7 @@ class Company(db.Model):
     shipping_country = db.Column(db.String(64))
     shipping_info = db.Column(db.String(120))
     company_uid = db.Column(db.String(150))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     clientes = db.relationship('Customer', backref='pertenece', lazy='dynamic')
 
 class Customer(db.Model):
@@ -91,6 +92,7 @@ class Customer(db.Model):
     country = db.Column(db.String(64))
     instructions = db.Column(db.String(150))
     customer_uid = db.Column(db.String(150))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Cliente {}>'.format(self.name)    
@@ -135,6 +137,7 @@ class Producto(db.Model):
     promo_descuento = db.Column(db.Float)
     promo_nombre = db.Column(db.String(10))
     promo_precio_final = db.Column(db.Float)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
 
     def __repr__(self):
