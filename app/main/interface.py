@@ -60,7 +60,11 @@ def buscar_promo(promociones, Id_Producto ):
 def buscar_alternativas(company, storeid, prod_id, item_variant, param):
   if company.platform == 'tiendanube':
     product = buscar_alternativas_tiendanube(company, storeid, prod_id)
-  
+    #### Si el producto fue eliminado luego de la compra #####
+    if product == 404:
+      atributos = []
+      devolver = ['',atributos]
+      return devolver
   variantes = []
 
   if param == "nombre":
@@ -81,8 +85,7 @@ def buscar_alternativas(company, storeid, prod_id, item_variant, param):
           x['values']= [{"es": "Mismo Articulo"}]
         variantes.append(x)
   
-  ## cambio para ver si no existen variantes del producto
-
+  
   devolver = [variantes, product['attributes']]
   return devolver
 

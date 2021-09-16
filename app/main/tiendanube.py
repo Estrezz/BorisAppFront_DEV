@@ -39,6 +39,11 @@ def buscar_alternativas_tiendanube(empresa, storeid, prod_id):
         'Authentication': empresa.platform_token_type+' '+empresa.platform_access_token
     }
     product = requests.request("GET", url, headers=headers, data=payload).json()
+    ### Si no exsite el producto -- Se da cuando el Merchant elimina el producto adquirido ###
+    if 'code' in product.keys():
+        if product['code'] == 404:
+            return product['code']
+    #####
     return product
 
 

@@ -100,11 +100,24 @@
                 prod_id: productId
             }).done(function(response) {
                 data = JSON.parse(response);
-                var str='<option value="seleccionar"> -- Selecciona la variante -- </option>'
-                jQuery.each(data, function(index, item) {
+                if (data.length == 1) {
+                    jQuery.each(data, function(index, item) {
+                        if (item['desc']==''){
+                            var desc='No tiene Variantes'
+                        } else {
+                            var desc= item['desc']
+                        };
+                        str+='<option value="'+item['id']+'"data-prod="'+item['desc']+'">'+desc+'</option>';
+                    });
+                } else {
+                    var str='<option value="seleccionar"> -- Selecciona la variante -- </option>'
+                    jQuery.each(data, function(index, item) {
                     //str+='<option value="'+item['id']+'">'+item['desc']+'</option>';
                     str+='<option value="'+item['id']+'" data-prod="'+item['desc']+'">'+item['desc']+'</option>';
                 });
+                }
+                
+                
                 $('#loading2').hide();
                 $("#alternativa_select").html(str);
                 $("#producto_id").val(productId);
