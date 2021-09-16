@@ -213,7 +213,8 @@ def confirma_solicitud():
     productos = db.session.query(Producto).filter((Producto.order_id == session['orden'])).filter((Producto.accion != 'ninguna'))
     
     #### valida que la dirección esta cargada si el método elegido es A Coordinar o Moova ################
-    if (metodo_envio == 'Coordinar' or metodo_envio =='Moova') and (None in {user.address, user.zipcode}):
+    
+    if (metodo_envio == 'Coordinar' or metodo_envio =='Moova') and ((user.address == None or user.address == '') or (user.zipcode == None) ):
         if request.args.get('area_valida') == 'True':
             area_valida = True
         else:
