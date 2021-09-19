@@ -29,7 +29,7 @@ Hola {{ user.name }}!
 {% endif %}
 
 Podes hacer el seguimiento de tu orden acá:
-        http://front.borisreturns.com/tracking/{{order.order_number}}
+        http://devfront.borisreturns.com/tracking/{{order.order_number}}
         
 
 

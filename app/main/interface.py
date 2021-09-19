@@ -300,7 +300,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       url='../Boris_common/logs/pedido'+str(order.id)+'.json'
     else: 
       if current_app.config['SERVER_ROLE'] == 'DEV':
-        url="http://back.borisreturns.com/pedidos"
+        url="http://devback.borisreturns.com/pedidos"
       if current_app.config['SERVER_ROLE'] == 'PROD':
         url="http://backprod.borisreturns.com/pedidos"
 
@@ -511,7 +511,7 @@ def cargar_pedido(unaEmpresa, pedido ):
 ############################## buscar_tracking ##################################################
 def busca_tracking(orden):
   if current_app.config['SERVER_ROLE'] == 'DEV':
-    url='http://back.borisreturns.com/orden/tracking'
+    url='http://devback.borisreturns.com/orden/tracking'
   if current_app.config['SERVER_ROLE'] == 'PROD':
     url='http://backprod.borisreturns.com/orden/tracking'
   params = {'orden_id': orden}
