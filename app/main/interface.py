@@ -300,9 +300,9 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       url='../Boris_common/logs/pedido'+str(order.id)+'.json'
     else: 
       if current_app.config['SERVER_ROLE'] == 'DEV':
-        url="http://devback.borisreturns.com/pedidos"
+        url="https://devback.borisreturns.com/pedidos"
       if current_app.config['SERVER_ROLE'] == 'PROD':
-        url="http://backprod.borisreturns.com/pedidos"
+        url="https://backprod.borisreturns.com/pedidos"
 
   headers = {
     'Content-Type': 'application/json'
