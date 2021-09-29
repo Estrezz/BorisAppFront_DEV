@@ -76,7 +76,7 @@ class Company(db.Model):
 
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id', ondelete='CASCADE'))
     name = db.Column(db.String(64), index=True)
     identification = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True)
@@ -111,7 +111,7 @@ class Order(db.Model):
     gastos_shipping_customer = db.Column(db.Float)
     gastos_promocion = db.Column(db.Float)
     order_uid = db.Column(db.String(150))
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id', ondelete='CASCADE'))
     products = db.relationship('Producto', backref='articulos', lazy='dynamic')
 
     def __repr__(self):
@@ -138,7 +138,7 @@ class Producto(db.Model):
     promo_nombre = db.Column(db.String(10))
     promo_precio_final = db.Column(db.Float)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id', ondelete='CASCADE'))
 
     def __repr__(self):
         return '<Product {}>'.format(self.name)
