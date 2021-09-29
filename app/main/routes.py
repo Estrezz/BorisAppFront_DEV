@@ -53,8 +53,8 @@ def buscar():
    
     if(len(producto_tmp)) != 0:
         for p in producto_tmp:
-            Producto.query.filter(Producto.timestamp <= old).delete()
-            print('Se borarron productos',p)
+            #Producto.query.filter(Producto.timestamp <= old).delete()
+            #print('Se borarron productos',p)
     if(len(orden_tmp)) != 0:
         for o in producto_tmp:
             Order.query.filter(Order.timestamp <= old).delete()
