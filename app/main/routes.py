@@ -51,8 +51,8 @@ def buscar():
     cliente_tmp = Customer.query.filter(Customer.timestamp <= old).all()
     producto_tmp = Producto.query.filter(Producto.timestamp <= old).all()
    
-    if(len(producto_tmp)) != 0:
-        for p in producto_tmp:
+    #if(len(producto_tmp)) != 0:
+    #    for p in producto_tmp:
             #Producto.query.filter(Producto.timestamp <= old).delete()
             #print('Se borarron productos',p)
     if(len(orden_tmp)) != 0:
