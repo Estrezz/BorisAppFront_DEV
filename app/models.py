@@ -1,44 +1,6 @@
 from datetime import datetime
 from app import db
 
-class Store(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    platform = db.Column(db.String(64), index=True)
-    platform_token_type = db.Column(db.String(30))
-    platform_access_token = db.Column(db.String(64))
-    store_id = db.Column(db.String(64), index=True)
-    store_name = db.Column(db.String(120))
-    store_main_language = db.Column(db.String(20))
-    store_main_currency = db.Column(db.String(20))
-    store_country = db.Column(db.String(20))
-    store_url = db.Column(db.String(120))
-    store_plan = db.Column(db.String(64))
-    store_phone = db.Column(db.String(20))
-    store_address= db.Column(db.String(120)) 
-    admin_email = db.Column(db.String(120))
-    communication_email = db.Column(db.String(120))
-    param_logo = db.Column(db.String(200))
-    param_fondo = db.Column(db.String(120))
-    param_config = db.Column(db.String(120))
-    contact_name = db.Column(db.String(64))
-    contact_phone = db.Column(db.String(15))
-    contact_email = db.Column(db.String(120))
-    correo_usado = db.Column(db.String(64))
-    correo_apikey = db.Column(db.String(50))
-    correo_id = db.Column(db.String(50))
-    correo_test = db.Column(db.Boolean)
-    correo_apikey_test = db.Column(db.String(50))
-    correo_id_test = db.Column(db.String(50))
-    shipping_address = db.Column(db.String(64))
-    shipping_number = db.Column(db.String(64))
-    shipping_floor = db.Column(db.String(64))
-    shipping_zipcode = db.Column(db.String(64))
-    shipping_city = db.Column(db.String(64))
-    shipping_province = db.Column(db.String(64))
-    shipping_country = db.Column(db.String(64))
-    shipping_info = db.Column(db.String(120))
-    
-
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     platform = db.Column(db.String(64))
@@ -53,6 +15,7 @@ class Company(db.Model):
     admin_email = db.Column(db.String(120))
     communication_email = db.Column(db.String(120))
     logo = db.Column(db.String(200))
+    fondo = db.Column(db.String(200))
     contact_name = db.Column(db.String(64))
     contact_phone = db.Column(db.String(15))
     contact_email = db.Column(db.String(120))
@@ -75,12 +38,13 @@ class Company(db.Model):
     clientes = db.relationship('Customer', backref='pertenece', lazy='dynamic')
 
 class Customer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    customer_uid = db.Column(db.String(150), primary_key=True)
+    id = db.Column(db.Integer)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id', ondelete='CASCADE'))
     name = db.Column(db.String(64), index=True)
     identification = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True)
-    phone = db.Column(db.String(15))
+    phone = db.Column(db.String(20))
     orders = db.relationship('Order', backref='buyer', lazy='dynamic')
     address = db.Column(db.String(64))
     number = db.Column(db.String(35))
@@ -91,14 +55,14 @@ class Customer(db.Model):
     province = db.Column(db.String(64))
     country = db.Column(db.String(64))
     instructions = db.Column(db.String(150))
-    customer_uid = db.Column(db.String(150))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Cliente {}>'.format(self.name)    
 
 class Order(db.Model):
-    id =  db.Column(db.Integer, primary_key=True)
+    order_uid = db.Column(db.String(150), primary_key=True)
+    id =  db.Column(db.Integer)
     order_number = db.Column(db.Integer)
     order_original_id = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -110,14 +74,14 @@ class Order(db.Model):
     gastos_shipping_owner = db.Column(db.Float)
     gastos_shipping_customer = db.Column(db.Float)
     gastos_promocion = db.Column(db.Float)
-    order_uid = db.Column(db.String(150))
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id', ondelete='CASCADE'))
+    customer_id = db.Column(db.String(150), db.ForeignKey('customer.customer_uid', ondelete='CASCADE'))
     products = db.relationship('Producto', backref='articulos', lazy='dynamic')
 
     def __repr__(self):
         return '<Order {}>'.format(self.order_number)
 
 class Producto(db.Model):
+    order_id = db.Column(db.Integer, db.ForeignKey('order.order_uid', ondelete='CASCADE'), primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     prod_id = db.Column(db.Integer, index=True)
     name = db.Column(db.String(120))
@@ -138,8 +102,7 @@ class Producto(db.Model):
     promo_nombre = db.Column(db.String(10))
     promo_precio_final = db.Column(db.Float)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id', ondelete='CASCADE'))
-
+    
     def __repr__(self):
         return '<Product {}>'.format(self.name)
 

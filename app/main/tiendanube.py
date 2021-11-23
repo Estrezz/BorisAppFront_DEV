@@ -1,15 +1,15 @@
 import requests
 import json
-import datetime
-from datetime import datetime
+
+
 from app import db
-from app.models import Customer, Order, Producto, Company, Store
-from flask import session, flash, current_app, render_template
+
+from flask import session, current_app
 
 
 
-def buscar_pedido_tiendanube(empresa, form):
-    url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/orders?q="+form.ordermail.data    
+def buscar_pedido_tiendanube(empresa, ordermail):
+    url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/orders?q="+ordermail    
     payload={}
     headers = {
         'Content-Type': 'application/json',
@@ -76,12 +76,26 @@ def buscar_producto_tiendanube(empresa, desc_prod):
 
 def agregar_nota_tiendanube(company, order):
     url = "https://api.tiendanube.com/v1/"+str(company.store_id)+"/orders/"+str(order.order_original_id)
-    data={
-        "owner_note": "Esta orden tienen una gestión iniciada en BORIS",
-    }
+
+    #https://api.tiendanube.com/v1/1698970/orders/438624469?fields=id,owner_note
+    
     headers = {
         'Content-Type': 'application/json',
         'Authentication': company.platform_token_type+' '+company.platform_access_token
+    }
+    payload={}
+    nota_tmp = requests.request("GET", url+"?fields=owner_note", headers=headers, data=payload).json()
+
+    if nota_tmp['owner_note'] != None:
+        if nota_tmp['owner_note'] != "Esta orden tienen una gestión iniciada en BORIS":
+            nota = nota_tmp['owner_note'] + " - Esta orden tienen una gestión iniciada en BORIS"
+        else: 
+            return
+    else :
+        nota = "Esta orden tienen una gestión iniciada en BORIS"
+
+    data={
+        "owner_note": nota,
     }
     requests.request("PUT", url, headers=headers, data=json.dumps(data))
     

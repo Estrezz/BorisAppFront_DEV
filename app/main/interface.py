@@ -5,7 +5,7 @@ import smtplib
 import uuid
 from datetime import datetime
 from app import db
-from app.models import Customer, Order, Producto, Company, Store
+from app.models import Customer, Order, Producto, Company
 from flask import session, flash, current_app, render_template
 from app.main.moova import crea_envio_moova, cotiza_envio_moova
 from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube, validar_categorias_tiendanube, buscar_producto_tiendanube, agregar_nota_tiendanube
@@ -20,15 +20,15 @@ def buscar_nro_pedido(lista, valor):
      return 'None'
 
 
-def buscar_pedido(empresa, form):
+def buscar_pedido(empresa, ordernum, ordermail):
   if empresa.platform == 'tiendanube':
-    order_tmp = buscar_pedido_tiendanube(empresa, form)
+    order_tmp = buscar_pedido_tiendanube(empresa, ordermail)
     
 
   if type(order_tmp) == dict:
     return 'None'
   else:
-    order = buscar_nro_pedido(order_tmp, form.ordernum.data)
+    order = buscar_nro_pedido(order_tmp, int(ordernum))
     return order
 
 
@@ -46,9 +46,13 @@ def buscar_pedido_conNro(empresa, orderid):
 #############################################################################
 def buscar_promo(promociones, Id_Producto ):
   promo = ("",0,0)
-  for x in promociones: 
+  for x in promociones:
     if x['id'] == Id_Producto:
-      promo = (x['discount_script_type'], x['discount_amount'], x['final_price'])
+      ### correccion PROMO -- si la orden tiene error el tipo de x['discount_script_type'] es DICT####
+      if isinstance(x['discount_script_type'], str):
+        #flash('Descuento {}'.format(type(x['discount_script_type'])))
+        promo = (x['discount_script_type'], x['discount_amount'], x['final_price'])
+        #promo = (type(x['discount_script_type']), x['discount_amount'], x['final_price'])
       return promo
   return promo
   
@@ -103,9 +107,49 @@ def describir_variante(values):
 ############################## buscar_empresa ##################################################
 def buscar_empresa(empresa):
   if empresa != 'Ninguna':
-    empresa_tmp = Store.query.filter(Store.store_id == empresa).first()
+
+    if current_app.config['SERVER_ROLE'] == 'DEV':
+      url='http://back.borisreturns.com/datos_empresa'
+    if current_app.config['SERVER_ROLE'] == 'PROD':
+      url='http://backprod.borisreturns.com/datos_empresa'
+    params = {'store_id': empresa}
+    empresa_tmp = requests.request("GET", url, params=params).json()
+  
+    unaEmpresa = Company(
+      platform = empresa_tmp['platform'],
+      store_id = empresa_tmp['store_id'],
+      platform_token_type = empresa_tmp['platform_token_type'],
+      platform_access_token = empresa_tmp['platform_access_token'],
+      company_name = empresa_tmp['company_name'],
+      company_url = empresa_tmp['company_url'],
+      company_country = empresa_tmp['company_country'],
+      company_main_language = empresa_tmp['company_main_language'],
+      company_main_currency = empresa_tmp['company_main_currency'],
+      admin_email = empresa_tmp['admin_email'],
+      communication_email = empresa_tmp['communication_email'],
+      logo = empresa_tmp['param_logo'],
+      fondo = empresa_tmp['param_fondo'],
+      correo_usado = empresa_tmp['correo_usado'],
+      correo_apikey = empresa_tmp['correo_apikey'],
+      correo_id = empresa_tmp['correo_id'],
+      correo_test = empresa_tmp['correo_test'],
+      correo_apikey_test = empresa_tmp['correo_apikey_test'],
+      correo_id_test = empresa_tmp['correo_id_test'],
+      contact_name = empresa_tmp['contact_name'],
+      contact_email = empresa_tmp['contact_email'],
+      contact_phone = empresa_tmp['contact_phone'],
+      shipping_address = empresa_tmp['shipping_address'],
+      shipping_number = empresa_tmp['shipping_number'],
+      shipping_floor = empresa_tmp['shipping_floor'],
+      shipping_zipcode = empresa_tmp['shipping_zipcode'],
+      shipping_city = empresa_tmp['shipping_city'],
+      shipping_province = empresa_tmp['shipping_province'],
+      shipping_country = empresa_tmp['shipping_country'],
+      shipping_info = empresa_tmp['shipping_info']
+    )
+    #empresa_tmp = Store.query.filter(Store.store_id == empresa).first()
     #### guarda settings de la empresa
-    settings = guardar_settings(empresa_tmp.param_config)
+    settings = guardar_settings(empresa)
     session['shipping'] = settings['shipping']
     session['test'] = settings['test']
     session['correo_test'] = settings['correo_test']
@@ -127,42 +171,12 @@ def buscar_empresa(empresa):
       session['otracosa'] = 'No'
     
     session['rubros'] = settings['politica']['rubros']
-    session['ids_filtrados'] = validar_categorias_tiendanube(empresa_tmp)
+    session['ids_filtrados'] = validar_categorias_tiendanube(unaEmpresa)
     
     
-    unaEmpresa = Company(
-      platform = empresa_tmp.platform,
-      store_id = empresa_tmp.store_id,
-      platform_token_type = empresa_tmp.platform_token_type,
-      platform_access_token = empresa_tmp.platform_access_token,
-      company_name = empresa_tmp.store_name,
-      company_url = empresa_tmp.store_url,
-      company_country = empresa_tmp.store_country,
-      company_main_language = empresa_tmp.store_main_language,
-      company_main_currency = empresa_tmp.store_main_currency,
-      admin_email = empresa_tmp.admin_email,
-      communication_email = empresa_tmp.communication_email,
-      logo = empresa_tmp.param_logo,
-      correo_usado = empresa_tmp.correo_usado,
-      correo_apikey = empresa_tmp.correo_apikey,
-      correo_id = empresa_tmp.correo_id,
-      correo_test = empresa_tmp.correo_test,
-      correo_apikey_test = empresa_tmp.correo_apikey_test,
-      correo_id_test = empresa_tmp.correo_id_test,
-      contact_name = empresa_tmp.contact_name,
-      contact_email = empresa_tmp.contact_email,
-      contact_phone = empresa_tmp.contact_phone,
-      shipping_address = empresa_tmp.shipping_address,
-      shipping_number = empresa_tmp.shipping_number,
-      shipping_floor = empresa_tmp.shipping_floor,
-      shipping_zipcode = empresa_tmp.shipping_zipcode,
-      shipping_city = empresa_tmp.shipping_city,
-      shipping_province = empresa_tmp.shipping_province,
-      shipping_country = empresa_tmp.shipping_country,
-      shipping_info = empresa_tmp.shipping_info
-    )
+    
   else: 
-    settings = guardar_settings('app/static/conf/boris.json')
+    settings = guardar_settings('1447373')
     session['shipping'] = settings['shipping']
     session['test'] = settings['test']
     session['correo_test'] = settings['correo_test']
@@ -197,6 +211,7 @@ def buscar_empresa(empresa):
       company_url= 'https://demoboris.mitiendanube.com',
       admin_email = 'info@borisreturns.com',
       logo = 'https://frontprod.borisreturns.com/static/images/Boris_Naranja.png',
+      fondo = '/static/images/Boris_back.png',
       correo_usado = 'Moova',
       correo_apikey = 'b23920003684e781d87e7e5b615335ad254bdebc',
       correo_id = 'b22bc380-439f-11eb-8002-a5572ae156e7',
@@ -221,7 +236,8 @@ def buscar_empresa(empresa):
 ################################# guardar_settings ##########################################
 ##################### Carga el archivo de settings desde el campo param_config ##############
 ############################## de la base de empresas #######################################
-def guardar_settings(url):
+def guardar_settings(store_id):
+  url = 'app/static/conf/'+str(store_id)+'.json'
   with open(url, encoding='utf-8') as json_file:
     data = json.load(json_file)
     return data
@@ -300,7 +316,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       url='../Boris_common/logs/pedido'+str(order.id)+'.json'
     else: 
       if current_app.config['SERVER_ROLE'] == 'DEV':
-        url="https://devback.borisreturns.com/pedidos"
+        url="https://back.borisreturns.com/pedidos"
       if current_app.config['SERVER_ROLE'] == 'PROD':
         url="https://backprod.borisreturns.com/pedidos"
 
@@ -408,11 +424,27 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
     else:     
       solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
       if solicitud.status_code != 200:
-        flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
-        loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
+        if solicitud.status_code == 409:
+          flash('Ya existe una solicitud para esa orden. Error {}'.format(solicitud.status_code))
+          respuesta_tmp = solicitud.content
+          respuesta = respuesta_tmp.decode("utf-8")
+
+          if respuesta == 'Cambio de accion':
+            mensaje = 'El cliente está intentando cambiar su decisión inicial'
+          if respuesta == 'Cambio de producto':
+            mensaje = 'El cliente está intentando cambiar el producto seleccionado inicialmente'
+          if respuesta == 'Agrega / quita artículos':
+            mensaje = 'El cliente está intentando agregar o quitar un producto'
+          if respuesta == 'Solicitud duplicada':
+            mensaje = 'Las solicitudes parecen iguales'
+          
+          loguear_error('almacena_envio', 'Ya existe una solicitud', solicitud.status_code, json.dumps(data) )
+        else:
+          flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
+          loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
 
         if current_app.config['SERVER_ROLE'] == 'PROD':
-          send_email('ERROR en creación solicitud', 
+          send_email('ERROR en creación solicitud '+respuesta, 
                   sender=current_app.config['ADMINS'][0],
                   recipients=current_app.config['ADMINS'], 
                   text_body=render_template('email/error_solicitud.txt',
@@ -422,6 +454,17 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
                   attachments=None, 
                   sync=False,
                   bcc=[])
+        
+          send_email('ERROR en creación solicitud ', 
+                  sender=current_app.config['ADMINS'][0],
+                  recipients=[company.admin_email], 
+                  text_body=render_template('email/error_solicitud_cliente.txt',
+                                          user=user, data=mensaje, order=order, company=company),
+                  html_body=render_template('email/error_solicitud_cliente.html',
+                                          user=user, data=mensaje, order=order, company=company), 
+                  attachments=None, 
+                  sync=False,
+                  bcc=[current_app.config['ADMINS'][0]])
           
         return 'Failed'
       else: 
@@ -437,10 +480,8 @@ def cargar_pedido(unaEmpresa, pedido ):
   session['store'] = unaEmpresa.store_id
   session['plataforma'] = unaEmpresa.platform
 
-  if Customer.query.get(pedido['customer']['id']):
-    unCliente = Customer.query.get(pedido['customer']['id'])
-  else: 
-    unCliente = Customer(
+  unCliente = Customer(
+      customer_uid = str(session['uid']),
       id = pedido['customer']['id'],
       name =pedido['customer']['name'],
       identification = pedido['customer']['identification'],
@@ -454,16 +495,13 @@ def cargar_pedido(unaEmpresa, pedido ):
       city = pedido['shipping_address']['city'],
       province = pedido['shipping_address']['province'],
       country = pedido['shipping_address']['country'],
-      customer_uid = str(session['uid']),
       pertenece = unaEmpresa
       )
-  session['cliente'] = unCliente.id
+  session['cliente'] = unCliente.customer_uid
 
-  ## cambio
-  if Order.query.get(pedido['id']):
-    unaOrden = Order.query.get(pedido['id'])
-  else: 
-    unaOrden = Order(
+
+  unaOrden = Order(
+      order_uid = str(session['uid']),
       id = pedido['id'],
       order_number = pedido['number'],
       order_original_id = pedido['id'],
@@ -475,10 +513,9 @@ def cargar_pedido(unaEmpresa, pedido ):
       gastos_shipping_owner = pedido['shipping_cost_owner'],
       gastos_shipping_customer = pedido['shipping_cost_customer'],
       gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
-      order_uid = str(session['uid']),
       buyer = unCliente
       )
-  session['orden'] = unaOrden.id       
+  session['orden'] = unaOrden.order_uid      
 
   for x in range(len(pedido['products'])): 
     promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
@@ -511,7 +548,7 @@ def cargar_pedido(unaEmpresa, pedido ):
 ############################## buscar_tracking ##################################################
 def busca_tracking(orden):
   if current_app.config['SERVER_ROLE'] == 'DEV':
-    url='http://devback.borisreturns.com/orden/tracking'
+    url='http://back.borisreturns.com/orden/tracking'
   if current_app.config['SERVER_ROLE'] == 'PROD':
     url='http://backprod.borisreturns.com/orden/tracking'
   params = {'orden_id': orden}
@@ -606,47 +643,6 @@ def traducir_texto(string, fp):
       return line.split(string,1)[1] 
 
 
-def actualizar_store(store):
-  empresa = Store.query.filter_by(store_id=store['store_id']).first()
-  ## Actualiza datos JSON
-
-  ## carga datos nuevos de la empresa en BBDD
-  empresa.platform = store['platform']
-  empresa.platform_token_type = store['platform_token_type']
-  empresa.platform_access_token = store['platform_access_token']
-  empresa.store_name = store['store_name']
-  empresa.store_url = store['store_url']
-  empresa.store_phone = store['store_phone']
-  empresa.store_address = store['store_address']
-  empresa.admin_email = store['admin_email']
-  empresa.communication_email = store['communication_email']
-  empresa.param_logo = store['param_logo']
-  empresa.param_fondo = store['param_fondo']
-  empresa.store_main_language = store['store_main_language']
-  empresa.store_main_currency = store['store_main_currency']
-  empresa.store_country = store['store_country']
-  empresa.correo_test = store['correo_test']
-  empresa.correo_usado = store['correo_usado']
-  empresa.correo_apikey = store['correo_apikey']
-  empresa.correo_apikey_test = store['correo_apikey_test']
-  empresa.correo_id = store['correo_id']
-  empresa.correo_id_test = store['correo_id_test']
-  empresa.contact_email = store['contact_email']
-  empresa.contact_name = store['contact_name']
-  empresa.contact_email = store['contact_email']
-  empresa.contact_phone = store['contact_phone'] 
-  empresa.shipping_address = store['shipping_address']
-  empresa.shipping_number = store['shipping_number']
-  empresa.shipping_floor = store['shipping_floor']
-  empresa.shipping_zipcode = store['shipping_zipcode']
-  empresa.shipping_city = store['shipping_city']
-  empresa.shipping_province = store['shipping_province']
-  empresa.shipping_country = store['shipping_country']
-  empresa.shipping_info = store['shipping_info']
-
-  db.session.commit()
-  return 'Success'
-
 
 def crear_store(store):
   ################################ Crea JSON de Configuración ########################################
@@ -665,7 +661,7 @@ def crear_store(store):
     "shipping": "customer",
     "test": "False",
     "correo_test": "True",
-    "envio": ["manual", "retiro", "coordinar"],
+    "envio": ["manual", "coordinar"],
     "provincia_codigos_postales": {
       "Capital Federal":"All",
       "Buenos Aires": [1636, 1637, 1638, 1602, 1605, 1606]
@@ -675,7 +671,8 @@ def crear_store(store):
       "Es grande",
       "Es chico",
       "Mala calidad",
-      "No gusta color"
+      "No gusta color",
+      "No es lo que esperaba"
     ],
     "politica": {
       "ventana_cambio":30,
@@ -702,31 +699,7 @@ def crear_store(store):
   with open(conf_url, "w+") as outfile:
     json.dump(conf_file, outfile)
 
-  ################################ Crea el Store en la BBD ########################################
-  unStore = Store(
-    ## datos solo para la creación
-    store_id = store['store_id'],
-    param_config = conf_url,
-    ## Otros datos
-    platform = store['platform'],
-    platform_token_type = store['platform_token_type'],
-    platform_access_token = store['platform_access_token'],
-    store_name = store['store_name'],
-    store_url = store['store_url'],
-    store_phone = store['store_phone'],
-    store_address = store['store_address'],
-    communication_email = store['communication_email'],
-    admin_email = store['admin_email'],
-    contact_email = store['contact_email'],
-    param_logo = store['param_logo'],
-    store_main_language = store['store_main_language'],
-    store_main_currency = store['store_main_currency'],
-    store_country = store['store_country'],
-    correo_test = store['correo_test']
-  )
-  db.session.add(unStore)
-  db.session.commit()
-  return 'Success'
+  
 
 
 def actualiza_json_categoria(archivo_config, data):
@@ -741,11 +714,15 @@ def actualiza_json_categoria(archivo_config, data):
         return 'Success'
 
 
-def actualiza_json(archivo_config, clave, data):
+def actualiza_json(archivo_config, clave, data, key):
         with open(archivo_config, encoding='utf-8') as json_file:
           json_decoded = json.load(json_file)
 
-          json_decoded['textos'][clave] = data[clave]
+          if (key=='textos' or key=='politica' or key=='provincia_codigos_postales'):
+            json_decoded[key][clave] = data[clave]
+
+          if key=='otros':
+            json_decoded[clave] = data[clave]
 
         with open(archivo_config, 'w', encoding='utf8' ) as json_file:
             json.dump(json_decoded, json_file)

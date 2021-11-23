@@ -2,194 +2,264 @@
 
 {% block app_content %}
 <div class='container'>
-    <form id="item" action="{{ url_for('main.pedidos') }}" method="POST"> 
-
-        <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
-                <img src="{{ item['image'] }}"  class="img-responsive img-thumbnail" style="text-align:center; vertical-align:middle"> </img> 
-         
-                <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
-                <input type="hidden" id="form_item" name="form_item" value="elegir_item">
-                <br> <strong> {{ item['name'] }} </strong>
-                <br> Cantidad:  {{ item['quantity']}} 
-               <!-- <br> Precio: {{ item['price']}}   -->
-            </div>
-
-            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="text-align:left">
-                <p style="text-align:left"> Qué deseas hacer? </p>
-                
-                {% if (item.politica_valida == 'Ambos') or (item.politica_valida == 'Solo Cambio') %}
-                    {% if  item['accion'] == 'cambiar' %}
-                        <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar" checked=true>  
-                        <label for="cambiar">Cambiar</label> 
-                        <br>
-                    {% else %}
-                        <input type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar">  
-                        <label for="cambiar">Cambiar</label>
-                        <br>
-                    {% endif %}
-                {% endif %}
-                {% if (item.politica_valida == 'Ambos') or (item.politica_valida == 'Solo Devolucion') %}
-                    {% if  item['accion'] == 'devolver' %}
-                        <input type="radio" id="devolver"
-                        name="accion{{ item['id'] }}" value="devolver" checked=true>
-                        <label for="devolver">Devolver</label>
-                        <br>
-                    {% else %}
-                        <input type="radio" id="devolver"
-                        name="accion{{ item['id'] }}" value="devolver">
-                        <label for="devolver">Devolver</label>
-                        <br>
-                    {% endif %}
-                {% endif %}
-                {% if  item['accion'] == 'ninguna' %}
-                    <input type="radio" id="ninguna"
-                    name="accion{{ item['id'] }}" value="ninguna" checked=true>
-                    <label for="ninguna">Me lo quedo!</label>
-                    <br>
-                {% else %}
-                    <input type="radio" id="ninguna"
-                    name="accion{{ item['id'] }}" value="ninguna">
-                    <label for="ninguna">Me lo quedo!</label>
-                    <br>
-                {% endif %}
-
-                <p style="text-align:left"> Qué cantidad ? </p>
-                <input type="number" id="accion_cantidad" name="accion_cantidad{{ item['id'] }}" 
-                    min="1" max="{{ item['quantity'] }}" value="{{ item['accion_cantidad'] }}"> 
-                <br>
-                <br>
-                <input name="motivo{{ item['id'] }}" id=motivo 
-                value = "{{ item['motivo']}}" list="motivos" placeholder="Motivo">
-                <datalist id="motivos">
-                    {% for un_motivo in lista_motivos %}
-                        <option value="{{ un_motivo }}" />
-                    {% endfor %}
-                </datalist>
-                <br>
-                <br>
-                <button class="btn btn-default" type="submit">Confirmar</button>
-            </div>
-
-        </div>
-    </form>
-</div>
 <br>
-<div class='container'>
-    {% if title == 'Cambio' %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                  <b>Seleccioná la opción deseada</b>
-              </h4>
+<br>
+ <div class="col d-flex "  >
+    <div class="card border-light rounded px-4 py-3">    
+        <div class="card mb-2 ">
+            <div class="card-body">
+                <form id="item" action="{{ url_for('main.pedidos') }}" method="POST"> 
+                    <div class="row no-gutters">
+                        
+                            
+                        <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
+                            <img src="{{ item['image'] }}"  class="card-img img-thumbnail" style="text-align:center; vertical-align:middle"> </img> 
+                            <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
+                            <input type="hidden" id="form_item" name="form_item" value="elegir_item">
+                        </div>
+
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 ml-3" style="text-align:left">
+                            <strong> {{ item['name'] }} </strong> <br>
+                            <small>      
+                            Cantidad:  {{ item['quantity']}}<br>
+                            <div class="row mt-2">
+                                <div class="col-sm-5 mb-2">
+                                    <strong>Qué deseas hacer?<br></strong>
+                                    {% if (item.politica_valida == 'Ambos') or (item.politica_valida == 'Solo Cambio') %}
+                                        {% if  item['accion'] == 'cambiar' %}
+                                            <div class="form-check ml-2">
+                                                <input class="form-check-input" type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar" checked=true>  
+                                                <label class="form-check-label" for="cambiar">Cambiar</label> 
+                                                <br>
+                                            </div>
+                                        {% else %}
+                                            <div class="form-check ml-2">
+                                                <input class="form-check-input"  type="radio" id="cambiar" name="accion{{ item['id'] }}" value="cambiar">  
+                                                <label class="form-check-label" for="cambiar">Cambiar</label>
+                                                <br>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if (item.politica_valida == 'Ambos') or (item.politica_valida == 'Solo Devolucion') %}
+                                        {% if  item['accion'] == 'devolver' %}
+                                            <div class="form-check ml-2">
+                                                <input class="form-check-input" type="radio" id="devolver"
+                                                name="accion{{ item['id'] }}" value="devolver" checked=true>
+                                                <label class="form-check-label" for="devolver">Devolver</label>
+                                                <br>
+                                            </div>
+                                        {% else %}
+                                            <div class="form-check ml-2">
+                                                <input class="form-check-input" type="radio" id="devolver"
+                                                name="accion{{ item['id'] }}" value="devolver">
+                                                <label class="form-check-label" for="devolver">Devolver</label>
+                                                <br>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if  item['accion'] == 'ninguna' %}
+                                        <div class="form-check ml-2">
+                                            <input class="form-check-input" type="radio" id="ninguna"
+                                            name="accion{{ item['id'] }}" value="ninguna" checked=true>
+                                            <label class="form-check-label" for="ninguna">Me lo quedo!</label>
+                                            <br>
+                                        </div>
+                                    {% else %}
+                                        <div class="form-check ml-2">
+                                            <input class="form-check-input" type="radio" id="ninguna"
+                                            name="accion{{ item['id'] }}" value="ninguna">
+                                            <label class="form-check-label" for="ninguna">Me lo quedo!</label>
+                                            <br>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group row">
+                                        <strong > <label for="accion_cantidad" class="ml-2"> Qué cantidad ?</label> </strong>
+                                        <input type="number" class="form-control form-control-sm" id="accion_cantidad" name="accion_cantidad{{ item['id'] }}" 
+                                            min="1" max="{{ item['quantity'] }}" value="{{ item['accion_cantidad'] }}"placeholder="Cantidad">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                            </small>
+                            <div class="row">
+                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="text-align:left">
+                                    <select class="custom-select custom-select-sm mt-4" name="motivo{{ item['id'] }}" id=motivo placeholder="Motivo" value = "{{ item['motivo']}}" >
+                                        <option selected disabled>Elegí un motivo</option>
+                                        {% for un_motivo in lista_motivos %}
+                                            {% if un_motivo == item['motivo'] %}
+                                                <option value="{{ un_motivo }}" selected >{{ un_motivo }}</option>
+                                            {% else %}
+                                                <option value="{{ un_motivo }}" >{{ un_motivo }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% if title == 'Accion' %}
+                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-center">
+                                    <button class="btn btn-info bt-sm mt-4" type="submit">Confirmar</button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="panel-body">
+        </div>
+        
+        <br>
+
+        {% if title == 'Cambio' %}
+        
+        <small>
+        <div class="card mb-2 ">        
+            <div class="card-body">
+            <h5>Seleccioná la opción deseada</h5>
+            
+            <!------------------------------- CAMBIO x VARIANTE ----------------------------------------------->
+            <div class="card-body">               
                 {{textos['elegir_opcion_cambio']}} <br> <br>
-               
                 <form id="Alternativas" action="{{ url_for('main.pedidos') }}" method="POST"> 
                     <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
                     <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
-                            
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h5 class="panel-title">
-                                <b>Cambiá por una variante del mismo artículo</b>
-                            </h5>
-                        </div>
-                        <div class="panel-body">
-                          
-                            <div class="row">
-                                <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
-                                    {% if alternativas|length > 0 %}
-                                        <table class="table">
-                                            <tr>
-                                                <th></th>
-                                                {% for x in atributos %}
-                                                    <th scope="col"> {{ x['es'] }} </th>
-                                                {% endfor %}
-                                            </tr>
-                                        {% for x in alternativas %}     
-                                            <tr>
-                                                <td>
-                                                    <input type="radio" id="variante" name="variante" value="{{ x }}" > 
-                                                </td>
-                                                {% for i in x['values'] %}
-                                                    <td> {{ i['es'] }} </td> 
-                                                {% endfor %}
-                                            </tr>
-                                        {% endfor %} 
-                                        </table>      
-                                        <br>
-                                        <button class="btn btn-primary" name="opcion_cambio" type="submit" value="Variante">Seleccionar </button>
-                                    {% else %}
-                                        <tr><strong> 
-                                            <h5 style="text-align: center; "> No hay Stock disponible para ese artículo <br>
-                                            Por favor comunicate con nostros o selecciona cambiar por otro producto</h5> 
-                                        </strong></tr> <br>
-                                    {% endif %}
+
+                    <div class="accordion" id="accordion">     
+                        <div class="card mb-2 bg-info">
+                            <div class="card-header" id="variante_heading">   
+                                <button type="button" class="btn collapsed" data-toggle="collapse" data-target="#variante" aria-expanded="true" aria-controls="variante">
+                                    <i class="fa fa-plus text-white"></i> <strong class="text-white">&nbsp; Cambiá por una variante del mismo artículo</strong>
+                                </button>
+                            </div>
+                                
+                            <div id="variante" class="collapse" aria-labelledby="variante_heading" data-parent="#accordion">
+                                <div class="card-body" style="background-color: white;">     
+                                    <div class="row">
+                                        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+                                            {% if alternativas|length > 0 %}
+                                                <table class="table table-sm">
+                                                    <tr>
+                                                        <th></th>
+                                                        {% for x in atributos %}
+                                                            <th scope="col"> {{ x['es'] }} </th>
+                                                        {% endfor %}
+                                                    </tr>
+                                                    {% for x in alternativas %}     
+                                                        <tr>
+                                                            <td>
+                                                                <input type="radio"  id="variante" name="variante" value="{{ x }}" > 
+                                                            </td>
+                                                            {% for i in x['values'] %}
+                                                                <td> {{ i['es'] }} </td> 
+                                                            {% endfor %}
+                                                        </tr>
+                                                    {% endfor %} 
+                                                </table>      
+                                                <br>
+                                                <button class="btn btn-info btn-sm" name="opcion_cambio" type="submit" value="Variante">Seleccionar </button>
+                                            {% else %}
+                                                <tr><strong> 
+                                                    <h5 style="text-align: center; "> No hay Stock disponible para ese artículo <br>
+                                                        Por favor comunicate con nostros o selecciona cambiar por otro producto</h5> 
+                                                </strong></tr> <br>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    {% if cupon == 'Si' %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h5 class="panel-title">
-                                    <b>Cambiá por crédito en nuestra tienda</b>
-                                </h5>
-                            </div>
-                            <div class="panel-body">
-                                {{textos['elegir_opcion_cambio_cupon']}}<br><br>
-                                <button class="btn btn-primary" name="opcion_cambio" type="submit" value="Cupon">Generar Cupón</button>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    {% if otracosa == 'Si' %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h5 class="panel-title">
-                                    <b>Cambiá por otro producto</b>
-                                </h5>
-                            </div>
-                            <div class="panel-body">
-                                {{textos['elegir_opcion_otra_cosa']}}<br><br>
-                                <form id="elegir_Producto" action="{{ url_for('main.elegir_producto') }}" method="POST"> 
-                                    <label for="producto">Ingresá el nombre del producto a buscar:</label> <br>
-
-                                    <div id="custom-search-input">
-                                        <div class="input-group">
-                                            <input type="text" id="producto_desc" name="producto_desc" placeholder="Buscar..." />
-                                                <span id="elegir">
-                                                    <a class="btn btn-primary" href="javascript:buscar_producto(
-                                                        '#producto_desc',
-                                                        '#product_select'
-                                                        );"><span class="glyphicon glyphicon-search"></span></a>
-                                                </span>
-                                        </div>
+                        
+                        <!------------------------------- CAMBIO x CUPON ----------------------------------------------->
+                        {% if cupon == 'Si' %}
+                            <div class="card mb-2 bg-info">
+                                <div class="card-header" id="cupon_heading">
+                                    <button type="button"  class="btn collapsed" data-toggle="collapse" data-target="#cupon" aria-expanded="false" aria-controls="cupon">
+                                        <i class="fa fa-plus text-white"></i> <strong class="text-white">&nbsp; Cambiá por crédito en nuestra tienda </strong>
+                                    </button>
+                                </div>
+                                <div id="cupon" class="collapse" aria-labelledby="cupon_heading" data-parent="#accordion">
+                                    <div class="card-body" style="background-color: white;">    
+                                        {{textos['elegir_opcion_cambio_cupon']}}<br><br>
+                                        <button class="btn btn-info btn-sm" name="opcion_cambio" type="submit" value="Cupon">Generar Cupón</button>
                                     </div>
-                                    <br>
-                                    <label for="product_select">Seleccioná el producto deseado:</label> <br>
-                                    <select id="product_select" name="product_select" style="margin-top: 10px; margin-bottom: 10px; " disabled> <option value="0"> -- Selecciona el producto -- </option> </select> 
-                                    <span id="loading" style="display:none;"><img src="/static/images/loading.gif" alt="" /> buscando!</span>
-                                    <br>
-                                    <select id="alternativa_select" name="alternativa_select" disabled > <option value="0"> -- Selecciona la variante -- </option> </select>
-                                    <span id="loading2" style="display:none;"><img src="/static/images/loading.gif" alt="" /> buscando!</span>    
-                                </form>
-                                <br><br>
-                                <input type="hidden" id="producto_nombre" name="producto_nombre">
-                                <input type="hidden" id="producto_id" name="producto_id">
-                                <input type="hidden" id="variante_nombre" name="variante_nombre">
-                                <button class="btn btn-primary" name="opcion_cambio" type="submit" value="otraCosa">Seleccionar </button>
+                                </div>
                             </div>
-                        </div>
-                    {% endif %}
-                </form>
-                   
+                        {% endif %}
+
+                        <!------------------------------- CAMBIO x OTRA COSA ----------------------------------------------->
+                        {% if otracosa == 'Si' %}
+                            <div class="card mb-2 bg-info">
+                                <div class="card-header" id="otracosa_heading">
+                                    <button type="button"  class="btn collapsed" data-toggle="collapse" data-target="#otracosa" aria-expanded="false" aria-controls="cupon">
+                                        <i class="fa fa-plus text-white"></i> <strong class="text-white">&nbsp; Cambiá por otro producto </strong>
+                                    </button>
+                                </div>
+                                <div id="otracosa" class="collapse" aria-labelledby="otracosa_heading" data-parent="#accordion">
+                                    <div class="card-body" style="background-color: white;">    
+                                        {{textos['elegir_opcion_otra_cosa']}}<br><br>
+                                        <form id="elegir_Producto" action="{{ url_for('main.elegir_producto') }}" method="POST"> 
+                                                <label for="producto">Ingresá el nombre del producto a buscar:</label> <br>
+                                                <div id="custom-search-input">
+                                                    <div class="input-group">
+                                                        <input type="text" id="producto_desc" name="producto_desc" placeholder="Buscar..." />
+                                                        <span id="elegir">
+                                                            <a class="btn btn-info btn-sm" href="javascript:buscar_producto(
+                                                                        '#producto_desc',
+                                                                        '#product_select'
+                                                                        );"><span class="fa fa-search"></span></a>
+                                                        </span>
+                                                     </div>
+                                                </div>
+                                                <br>
+                                                <label for="product_select">Seleccioná el producto deseado:</label> <br>
+                                                <select id="product_select" name="product_select" style="margin-top: 10px; margin-bottom: 10px; " disabled> <option value="0"> -- Selecciona el producto -- </option> </select> 
+                                                <span id="loading" style="display:none;"><img src="/static/images/loading.gif" alt="" /> buscando!</span>
+                                                <br>
+                                                <select id="alternativa_select" name="alternativa_select" disabled > <option value="0"> -- Selecciona la variante -- </option> </select>
+                                                <span id="loading2" style="display:none;"><img src="/static/images/loading.gif" alt="" /> buscando!</span>    
+                                        </form>
+                                        <br><br>
+                                        <input type="hidden" id="producto_nombre" name="producto_nombre">
+                                        <input type="hidden" id="producto_id" name="producto_id">
+                                        <input type="hidden" id="variante_nombre" name="variante_nombre">
+                                        <button class="btn btn-info btn-sm" name="opcion_cambio" type="submit" value="otraCosa">Seleccionar </button>
+                                    </div>
+                                </div>    
+                            </div>
+                        {% endif %}
+                    </div>
+                </form>       
+            </div>
+            </div>
+        </div>
+        </small>
+        </div>
         </div>
         {% endif %}
-    </div>
+    </div> 
 </div>
-   
 {% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+
+        $(document).ready(function(){
+        //Add a minus icon to the collapse element that is open by default
+            $('.collapse.show').each(function(){
+                $(this).parent().find(".fa").removeClass("fa-plus").addClass("fa-minus");
+            });
+            
+        //Toggle plus/minus icon on show/hide of collapse element
+            $('.collapse').on('shown.bs.collapse', function(){
+                $(this).parent().find(".fa").removeClass("fa-plus").addClass("fa-minus");
+            }).on('hidden.bs.collapse', function(){
+                $(this).parent().find(".fa").removeClass("fa-minus").addClass("fa-plus");
+            });       
+        });
+
+    </script> 
+{% endblock %}  

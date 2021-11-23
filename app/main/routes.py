@@ -1,21 +1,12 @@
-from flask import render_template, flash, redirect, url_for, jsonify
+from flask import render_template, flash, redirect, url_for
 from app import db
-from app.main.forms import LoginForm, DireccionForm
-from app.email import send_email
-from app.models import Store, Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_promo, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, actualizar_store, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota
+from app.models import Customer, Order, Producto, Company
+from app.main.interface import buscar_pedido, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota
 from app.main import bp
 from flask import request, session
-import requests
 from datetime import datetime,timedelta
 import json
 import ast
-
-
-##### Prueba Limpieza
-#@bp.before_app_first_request
-#@bp.before_app_first_request
-#def limpiar_database():
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -32,7 +23,6 @@ def home():
         return redirect(url_for('main.buscar', empresa = empresa))
     else: 
         unaEmpresa = buscar_empresa(empresa)
-        ## cambios
         pedido = buscar_pedido_conNro(unaEmpresa, request.args.get('order_id'))
         cargar_pedido(unaEmpresa, pedido)
         return redirect(url_for('main.pedidos'))
@@ -40,9 +30,9 @@ def home():
 
 @bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
-    ## Borrar todos los datos de la base de datos ##
+
     ############## limpieza de Base #######################################
-    ## Limpia todo lo que tiene mas de 15 minutos #########################
+    ## Limpia todo lo que tiene mas de 20 minutos #########################
     #######################################################################
     hoy = datetime.utcnow()
     old = hoy - timedelta(minutes=20)
@@ -51,12 +41,12 @@ def buscar():
     cliente_tmp = Customer.query.filter(Customer.timestamp <= old).all()
     producto_tmp = Producto.query.filter(Producto.timestamp <= old).all()
    
-    #if(len(producto_tmp)) != 0:
-    #    for p in producto_tmp:
-            #Producto.query.filter(Producto.timestamp <= old).delete()
-            #print('Se borarron productos',p)
+    if(len(producto_tmp)) != 0:
+        for p in producto_tmp:
+            Producto.query.filter(Producto.timestamp <= old).delete()
+            print('Se borarron productos',p)
     if(len(orden_tmp)) != 0:
-        for o in producto_tmp:
+        for o in orden_tmp:
             Order.query.filter(Order.timestamp <= old).delete()
             print('Se borarron ordenes',o)
     if(len(cliente_tmp)) != 0:
@@ -82,22 +72,23 @@ def buscar():
         session.pop('store', None)
         session.clear()
 
+    ID_empresa = request.args['empresa']
+    unaEmpresa = buscar_empresa(ID_empresa)
 
-    unaEmpresa = buscar_empresa(request.args['empresa'])
-
-    form = LoginForm()
-    if form.validate_on_submit():
-        ## cambios
-        pedido = buscar_pedido(unaEmpresa, form)
+    if request.method == "POST":
+        ordernum = request.form.get("ordernum")
+        ordermail = request.form.get('ordermail')
+        
+        pedido = buscar_pedido(unaEmpresa, ordernum, ordermail)
 
         if pedido == 'None':
             flash('No se encontro un pedido para esa combinación Pedido-Email')
-            return render_template('buscar.html', title='Inicia tu gestión', NombreStore=unaEmpresa.company_name, form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
+            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa)
         else:
             cargar_pedido(unaEmpresa, pedido)
             return redirect(url_for('main.pedidos'))
 
-    return render_template('buscar.html', title='Inicia tu Gestión', NombreStore=unaEmpresa.company_name, form=form, store=unaEmpresa.company_name, logo=unaEmpresa.logo)
+    return render_template('buscar.html', title='Inicia tu Gestión', empresa=unaEmpresa)
 
 
 
@@ -114,7 +105,7 @@ def pedidos():
         accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
         accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
         motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
-        item = Producto.query.get(prod_id)
+        item = Producto.query.get((session['orden'],prod_id))
         item.accion = accion
         item.accion_reaccion = False 
         item.accion_cantidad = accion_cantidad
@@ -124,14 +115,14 @@ def pedidos():
         if accion == 'cambiar' and item.accion_reaccion == False:   
             user = Customer.query.get(session['cliente'])
             order = Order.query.get(session['orden'])
-            item = Producto.query.get(prod_id)
+            item = Producto.query.get((session['orden'],prod_id))
             alternativas = buscar_alternativas(company, session['store'], item.prod_id, item.variant, 'variantes')
-            return render_template('devolucion.html', title='Cambio', NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'], lista_motivos=session['motivos'], cupon=session['cupon'], otracosa=session['otracosa'])
+            return render_template('devolucion.html', title='Cambio', empresa=company, NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'], lista_motivos=session['motivos'], cupon=session['cupon'], otracosa=session['otracosa'])
 
     if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
         prod_id = request.form.get("Prod_Id")
         opcion_cambio = request.form.get("opcion_cambio")
-        item = Producto.query.get(prod_id)
+        item = Producto.query.get((session['orden'],prod_id))
         ## Si se seleccionó el Boton de VARIANTE
         if opcion_cambio == 'Variante':
             if request.form.get("variante"):
@@ -156,6 +147,27 @@ def pedidos():
 
         ## Si se seleccionó el Boton de Otra Cosa
         if opcion_cambio == 'otraCosa':
+            ##### Si no hay stock del articulo seleccionado"
+            if request.form.get("alternativa_select") == '0':
+                flash('No hay stock disponible para ese articulo' )
+                item.accion = 'ninguna'
+                db.session.commit() 
+                return render_template('pedido.html', title='Pedido',empresa=company,  NombreStore=company.company_name, user=user, order = order, productos = productos)
+
+            ##### Si no se seleccionó ninguna producto
+            if request.form.get("alternativa_select") == None:
+                flash('Debe seleccionar un producto' )
+                item.accion = 'ninguna'
+                db.session.commit() 
+                return render_template('pedido.html', title='Pedido', empresa=company,  NombreStore=company.company_name, user=user, order = order, productos = productos)
+
+            ##### Si no se seleccionó ninguna variante
+            if request.form.get("alternativa_select") == 'seleccionar':
+                flash('Debe seleccionar alguna variante ' )
+                item.accion = 'ninguna'
+                db.session.commit() 
+                return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
+
             variante_id = request.form.get("alternativa_select")
             producto = request.form.get("producto_nombre")
             variante = request.form.get("variante_nombre")
@@ -167,8 +179,8 @@ def pedidos():
 
         item.accion_reaccion = True
         db.session.commit() 
-
-    return render_template('pedido.html', title='Pedido', NombreStore=company.company_name, user=user, order = order, productos = productos)
+    
+    return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
 
 
 @bp.route('/pedidos_unitarios', methods=['GET', 'POST'])
@@ -178,8 +190,8 @@ def pedidos_unitarios():
         prod_id = request.form.get("Prod_Id")
         user = Customer.query.get(session['cliente'])
         order = Order.query.get(session['orden'])
-        item = Producto.query.get(prod_id)
-    return render_template('devolucion.html', title='Accion', NombreStore=company.company_name, user=user, order = order, item = item, textos=session['textos'],  lista_motivos=session['motivos'], cupon=session['cupon'])
+        item = Producto.query.get((session['orden'], prod_id))
+    return render_template('devolucion.html', title='Accion', empresa=company, NombreStore=company.company_name, user=user, order = order, item = item, textos=session['textos'],  lista_motivos=session['motivos'], cupon=session['cupon'])
 
 
 
@@ -193,36 +205,37 @@ def confirma_cambios():
     if productos.count() == 0:
         flash('Por favor, especifica alguna acción a realizar')
         productos = Producto.query.filter_by(order_id=session['orden']).all()
-        return render_template('pedido.html', title='Pedido', NombreStore=company.company_name, user=user, order = order, productos = productos)
+        return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
 
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
     area_valida = validar_cobertura(user.province, user.zipcode)
 
-    return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
+    return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
 
 
 @bp.route('/direccion', methods=['GET', 'POST'])
 def direccion():
+    company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
-    form = DireccionForm()
-    if request.method == 'GET':
-        form.name.data = user.name
-        form.email.data = user.email
-        form.phone.data = user.phone
-        form.address.data = user.address
-        form.number.data = user.number
-        form.floor.data = user.floor
-        form.zipcode.data = user.zipcode
-        form.locality.data = user.locality
-        form.city.data = user.city
-        form.province.data = user.province
-        form.country.data = user.country
-    if form.validate_on_submit():
-        form.populate_obj(obj=user)
+       
+    if request.method == "POST":
+        user.name = request.form.get('user_name')
+        user.mail = request.form.get('user_mail')
+        user.phone = request.form.get('user_phone')
+        user.address = request.form.get('user_address')
+        user.number = request.form.get('user_number')
+        user.floor = request.form.get('user_floor')
+        user.locality = request.form.get('user_locality')
+        user.zipcode = request.form.get('user_zipcode')
+        user.city = request.form.get('user_city')
+        user.province = request.form.get('user_province')
+        user.country = request.form.get('user_country')
+        user.instructions = request.form.get('user_instructions')
+        
         db.session.commit() 
         return redirect(url_for('main.confirma_cambios'))
-    return render_template('direccion.html', form=form, user=user)
+    return render_template('direccion.html',  empresa=company, user=user)
 
 
 
@@ -243,20 +256,21 @@ def confirma_solicitud():
             area_valida = False
         precio_envio = request.args.get('precio_envio')
         flash("Por favor completa tus datos de contacto")
-        return render_template('pedido_confirmar.html', title='Confirmar', NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
+        return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
 
     envio = crea_envio(company, user, order, productos, metodo_envio)
     ##### Agrega nota en Orden Original
     agregar_nota(company, order)
+
     #### borra el pedido de la base
-    Producto.query.filter_by(order_id=session['orden']).delete()
-    Order.query.filter_by(order_uid=str(session['uid'])).delete()
-    Customer.query.filter_by(customer_uid=str(session['uid'])).delete()
+    #Producto.query.filter_by(order_id=session['orden']).delete()
+    #Order.query.filter_by(order_uid=str(session['uid'])).delete()
+    #Customer.query.filter_by(customer_uid=str(session['uid'])).delete()
 
     db.session.commit()
     
-    return render_template('envio.html', NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
+    return render_template('envio.html', empresa=company, NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
 
 
 @bp.route('/tracking/<order>',methods=['GET', 'POST'])
@@ -272,10 +286,7 @@ def chequear_empresa():
         store = request.json
         
         actualiza = 'Failed'
-        if Store.query.filter_by(store_id=store['store_id']).first():
-            actualiza = actualizar_store(store)
-        else:
-           actualiza = crear_store(store)
+        actualiza = crear_store(store)
 
         if actualiza == 'Success':
             return '', 200
@@ -287,9 +298,9 @@ def chequear_empresa():
 def actualizar_empresa_categorias():
     if request.method == 'POST':
         data = request.json
-        store = Store.query.filter_by(store_id=data['store_id']).first()
+        empresa = Company.query.filter_by(store_id=data['store_id']).first()
 
-        status = actualiza_json_categoria(store.param_config, data)
+        status = actualiza_json_categoria(empresa.param_config, data)
         if status == 'Success':
             return '', 200
         else:
@@ -301,9 +312,15 @@ def actualizar_empresa_json():
     if request.method == 'POST':
         data = request.json
         clave = request.args.get('clave')
-        store = Store.query.filter_by(store_id=data['store_id']).first()
+        
+        if request.args.get('key'):
+            key = request.args.get('key')
+        else:
+            key='textos'
 
-        status = actualiza_json(store.param_config, clave, data)
+        empresa = Company.query.filter_by(store_id=data['store_id']).first()
+
+        status = actualiza_json(empresa.param_config, clave, data, key)
         if status == 'Success':
             return '', 200
         else:

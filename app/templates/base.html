@@ -1,136 +1,160 @@
-{% extends 'bootstrap/base.html' %}
-{% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="/static/style.css">
-{% endblock %}
+<!doctype html>
+<html>
+  <head>
+        {% block head %}
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+            <link rel="stylesheet" href="/static/style.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+            <style>
+               
+                body {
+                  background-image: url('{{empresa.fondo}}');
+                  background-repeat: no-repeat;
+                  background-attachment: fixed;
+                  background-size: cover;
+                }
+            </style>
+        {% endblock %}
+
+    </head>
+    <body>
+
+        {% block navbar %}
+
+            {% if config['SERVER_ROLE']== 'DEV' %}
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            {% endif %}
+            {% if config['SERVER_ROLE']== 'PROD' %}
+                <nav class="navbar navbar-expand-lg bg-light navbar-light">
+            {% endif %}
 
 
-{% block title %}
-    {% if title %}{{ title }} - {{NombreStore}} returns - Boris Returns {% else %}Boris Returns{% endif %}
-{% endblock %}
+            {% if config['SERVER_ROLE']== 'DEV' %}
+                <a class="navbar-brand" href="{{ url_for('main.buscar', empresa = 'Ninguna') }}">DEV - Buscar orden</a>
+            {%endif %}
+            {% if config['SERVER_ROLE']== 'PROD' %}
+                <a class="navbar-brand" href="#">Powered by BORIS</a>
+            {%endif %}
 
+            </nav>
 
-{% block navbar %}
+        {% endblock %}
 
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <div class="navbar-header">
-                {% if config['SERVER_ROLE'] == 'DEV' %}
-                    <a class="navbar-brand" href="{{ url_for('main.buscar', empresa = 'Ninguna') }}">DEV - Buscar orden</a>
+        <div id="content">
+        {% block content %}
+            <div class="container">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% endfor %}
                 {% endif %}
-                {% if config['SERVER_ROLE'] == 'PROD' %}
-                    <a class="navbar-brand" href="#">Powered by BORIS</a>
-                {% endif %}
+                {% endwith %}
+
+                {% block app_content %}{% endblock %}
             </div>
+        {% endblock %}
         </div>
-    </nav>
-    <div>
-    
-        </div>
-
-{% endblock %}
-
-{% block content %}
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
-
-        {% block app_content %}{% endblock %}
-    </div>
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script>
-    
-        $('#producto_desc').on('keydown', function (e) {
-                 if (e.key === 'Enter' || e.keyCode === 13) {
-                    e.preventDefault();
-                    buscar_producto('#producto_desc', '#product_select');
-                    $("#elegir").focus();
-                 }
-                 
-        });
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+        {% block scripts %}
             
-
-        function buscar_producto(desc_prod, destElem) {  
-            $('#loading').show();
-            $.post('/elegir_producto', {
-                prod: $(desc_prod).val()
-            }).done(function(response) {
-                data = JSON.parse(response);
-                //var str='<option value="0"> -- Selecciona el producto -- </option>'
-                var str='<option value="0"> -- Selecciona el producto -- </option>'
-                for(d in data)
-                    //str+='<option value="'+data[d]['id']+'">'+data[d]['name']['es']+'</option>'
-                // agregado
-                    str+='<option value="'+data[d]['id']+'" data-prod="'+data[d]['name']['es']+'">'+data[d]['name']['es']+'</option>'
-                // cambiar a str1
-                $('#loading').hide();
-                $(destElem).html(str);
-                $(destElem).prop('disabled', false);
-            }).fail(function(){
-                $('#loading').hide();
-                $(destElem).html('<option value="0"> -- No existe ese articulo -- </option>');
-            })   
-        }
-        
-        
-        $(document.body).on('change',"#product_select",function () {
-            $('#loading2').show();
-            var productId= $("#product_select option:selected").val();
+            <script>
+                
             
-            // inserta el nombre en el tag oculto #producto_nombre
-            var nombre = $("#product_select").find(':selected').data('prod');
-            $("#producto_nombre").val(nombre);
-
-            if (productId == "0") {
-                $("#alternativa_select").html('<option value="seleccionar"> -- Selecciona la variante -- </option>');
-                $("#alternativa_select").prop('disabled', 'disabled');
-                $('#loading2').hide();   
-                return;
-            }
-           
-            $.post('/elegir_alternativa', {
-                prod_id: productId
-            }).done(function(response) {
-                data = JSON.parse(response);
-                if (data.length == 1) {
-                    jQuery.each(data, function(index, item) {
-                        if (item['desc']==''){
-                            var desc='No tiene Variantes'
-                        } else {
-                            var desc= item['desc']
-                        };
-                        str+='<option value="'+item['id']+'"data-prod="'+item['desc']+'">'+desc+'</option>';
-                    });
-                } else {
-                    var str='<option value="seleccionar"> -- Selecciona la variante -- </option>'
-                    jQuery.each(data, function(index, item) {
-                    //str+='<option value="'+item['id']+'">'+item['desc']+'</option>';
-                    str+='<option value="'+item['id']+'" data-prod="'+item['desc']+'">'+item['desc']+'</option>';
+                $('#producto_desc').on('keydown', function (e) {
+                        if (e.key === 'Enter' || e.keyCode === 13) {
+                            e.preventDefault();
+                            buscar_producto('#producto_desc', '#product_select');
+                            $("#elegir").focus();
+                        }
+                        
                 });
+                    
+
+                function buscar_producto(desc_prod, destElem) {  
+                    $('#loading').show();
+                    $.post('/elegir_producto', {
+                        prod: $(desc_prod).val()
+                    }).done(function(response) {
+                        data = JSON.parse(response);
+                        //var str='<option value="0"> -- Selecciona el producto -- </option>'
+                        var str='<option value="0"> -- Selecciona el producto -- </option>'
+                        for(d in data)
+                            //str+='<option value="'+data[d]['id']+'">'+data[d]['name']['es']+'</option>'
+                        // agregado
+                            str+='<option value="'+data[d]['id']+'" data-prod="'+data[d]['name']['es']+'">'+data[d]['name']['es']+'</option>'
+                        // cambiar a str1
+                        $('#loading').hide();
+                        $(destElem).html(str);
+                        $(destElem).prop('disabled', false);
+                    }).fail(function(){
+                        $('#loading').hide();
+                        $(destElem).html('<option value="0"> -- No existe ese articulo -- </option>');
+                    })   
                 }
                 
                 
-                $('#loading2').hide();
-                $("#alternativa_select").html(str);
-                $("#producto_id").val(productId);
-                $("#alternativa_select").prop('disabled', false);   
-            })
-            
-        });
-    
-        $(document.body).on('change',"#alternativa_select",function () {
-            // inserta el nombre en el tag oculto #producto_nombre
-            var nombre = $("#alternativa_select").find(':selected').data('prod');
-            $("#variante_nombre").val(nombre);
-        });
+                $(document.body).on('change',"#product_select",function () {
+                    $('#loading2').show();
+                    var productId= $("#product_select option:selected").val();
+                    
+                    // inserta el nombre en el tag oculto #producto_nombre
+                    var nombre = $("#product_select").find(':selected').data('prod');
+                    $("#producto_nombre").val(nombre);
 
-    </script>
-{% endblock %}
+                    if (productId == "0") {
+                        $("#alternativa_select").html('<option value="seleccionar"> -- Selecciona la variante -- </option>');
+                        $("#alternativa_select").prop('disabled', 'disabled');
+                        $('#loading2').hide();   
+                        return;
+                    }
+                
+                    $.post('/elegir_alternativa', {
+                        prod_id: productId
+                    }).done(function(response) {
+                        data = JSON.parse(response);
+                        
+                        if (data.length == 0) {
+                            str+='<option value="'+'0'+'"data-prod="'+'No hay stock para ese producto'+'">'+'No hay stock para ese producto'+'</option>';
+                        }
+                        if (data.length == 1) {
+                            jQuery.each(data, function(index, item) {
+                                if (item['desc']==''){
+                                    var desc='No tiene Variantes'
+                                } else {
+                                    var desc= item['desc']
+                                };
+                                str+='<option value="'+item['id']+'"data-prod="'+item['desc']+'">'+desc+'</option>';
+                            });
+                        }
+                        if (data.length > 1) {
+                            var str='<option value="seleccionar"> -- Selecciona la variante -- </option>'
+                            jQuery.each(data, function(index, item) {
+                            //str+='<option value="'+item['id']+'">'+item['desc']+'</option>';
+                            str+='<option value="'+item['id']+'" data-prod="'+item['desc']+'">'+item['desc']+'</option>';
+                        });
+                        }
+                        
+                        
+                        $('#loading2').hide();
+                        $("#alternativa_select").html(str);
+                        $("#producto_id").val(productId);
+                        $("#alternativa_select").prop('disabled', false);   
+                    })
+                    
+                });
+            
+                $(document.body).on('change',"#alternativa_select",function () {
+                    // inserta el nombre en el tag oculto #producto_nombre
+                    var nombre = $("#alternativa_select").find(':selected').data('prod');
+                    $("#variante_nombre").val(nombre);
+                });
+
+            </script>
+        {% endblock %}
+
+</body>
+</html>

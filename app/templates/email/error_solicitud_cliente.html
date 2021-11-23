@@ -1,0 +1,20 @@
+
+<h3 style="text-align:left">
+    ERROR en creación de Pedido - {{company.company_name}}<br> <br>
+</h3>
+<p>
+    EL cliente <strong>{{ user.name }}</strong> ha intentado abrir la solicitud <strong> #{{order.order_number}} </strong> para una orden que ya tenía una creada. <br>
+    
+    {{data}}<br>
+    
+    Por si desean contactarlo, los datos de contacto del cliente son: <br>
+    Mail: <a href="mailto:{{user.email}}">{{user.email}}</a> <br>
+    Teléfono: <a href="https://wa.me/{{user.phone}}" target="_blank">{{user.phone}}</a><br>
+    <br> 
+    
+    Un saludo,
+    <br>
+    El equipo de BORIS
+    <br><br>
+    <small>Este mail se genera automáticamente. Cualquier dato, correción o información que se desee agregar, por favor escribir a <a href="mailto:soporte@borisreturns.com">soporte@borisreturns.com</a> </small>
+</p>

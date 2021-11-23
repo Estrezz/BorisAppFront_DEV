@@ -4,131 +4,146 @@
 
 
 
-<div class='container'>
-    <h3>Confirmá tu orden </h3>
-    <h4>Por favor, revisa que los datos de contacto sean correctos</h4>
+<br>
+<br>
+<div class="col d-flex" >
+  <div class="card border-light rounded px-4 py-3">
+  
+    <h4>Confirmá tu orden </h4>
+    <h5>Por favor, revisa que los datos de contacto sean correctos</h5>
+    <div class="card-body" style="font-size: 0.875em;">
+  
     {% for producto in productos %}
-      
-      <div class="row">
-        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
-          <img src="{{ producto['image'] }}" class="img-responsive img-thumbnail"  > </img> 
-        </div>
+      {% if producto['accion'] == 'cambiar' %}
+        {% set accion = 'Cambiar' %}
+      {% endif %}
+      {% if producto['devolver'] == 'cambiar' %}
+        {% set accion = 'Devolver' %}
+      {% endif %}
+      <div class="card mb-2 ">
+        <div class="card-body">       
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+              <img src="{{ producto['image'] }}" class="card-img img-thumbnail"  > </img> 
+            </div>
 
-        <div class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
-          <br> <strong>{{ producto['accion']}} </strong> - {{ producto['accion_cantidad'] }} Unid.
-          <br> {{ producto['name'] }} 
-          <br> 
-          {% if producto['accion'] == 'cambiar' %}
-           por  {{ producto['accion_cambiar_por_desc']}}<br> 
-          {% endif %}
-          {% if producto['accion'] != 'cambiar' %}
-            {% if producto['promo_descuento'] %}
-              <strong>Monto a devolver: ${{ producto['promo_precio_final'] * producto['accion_cantidad'] }}</strong> <br>
-            {% else %}
-            <strong>Monto a devolver: ${{ producto['price'] * producto['accion_cantidad'] }} </strong> <br>
-            {% endif %}
-            Método de devolución: {{ order['metodo_de_pago'] }} 
-            {% if order['tarjeta_de_pago'] != None %}
-              {{ order['tarjeta_de_pago']}}
-            {% endif %}  
-          {% endif %}
-          <br> Motivo: {{ producto['motivo']}} <br><br>
+            <div class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
+                <strong>{{ accion}} <br>
+                {{ producto['name'] }}</strong> 
+                 - {{ producto['accion_cantidad'] }} Unid.
+                <br>
+                {% if producto['accion'] == 'cambiar' %}
+                  por  {{ producto['accion_cambiar_por_desc']}}<br> 
+                {% endif %}
+                {% if producto['accion'] != 'cambiar' %}
+                  {% if producto['promo_descuento'] %}
+                    <strong>Monto a devolver: ${{ producto['promo_precio_final'] * producto['accion_cantidad'] }}</strong> <br>
+                  {% else %}
+                  <strong>Monto a devolver: ${{ producto['price'] * producto['accion_cantidad'] }} </strong> <br>
+                  {% endif %}
+                  Método de devolución: {{ order['metodo_de_pago'] }} 
+                  {% if order['tarjeta_de_pago'] != None %}
+                    {{ order['tarjeta_de_pago']}}
+                  {% endif %}  
+                {% endif %}
+                <br> Motivo: {{ producto['motivo']}} <br><br>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
       <br>
       {% endfor %}
-</div> 
 
-<br>
-
-<div class='container'>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-        <b>Datos de Contacto </b>
-        </h4>
-    </div>
-    <div class="panel-body">
-        <div class="items">
-          <strong>{{  user.name }}</strong> <br>
-          {{  user.email }} <br>
-          {{  user.phone }} <br>
-          {{  user.address }} {{  user.number }} {{  user.floor }} <br>
-          {{  user.locality }}  {{  user.zipcode }} <br>
-          {{  user.city }} {{  user.province }} <br>
-          {{  user.country }} <br>
-          <br>
-          <strong>Instrucciones para el retiro:</strong>
-          {% if user.instructions != 'None' %}
-            {{  user.instructions }} <br>
-          {% endif %}
-          <br>
+      <div class="card mb-2 ">
+        <div class="card-body">       
+          <h5><strong>Datos de Contacto </strong></h5>
+          
+            <strong>{{  user.name }}</strong> <br>
+            {{  user.email }} <br>
+            {{  user.phone }} <br>
+          
+            {{  user.address }} {{  user.number }} {{  user.floor }} <br>
+            {{  user.locality }}  {{  user.zipcode }} <br>
+            {{  user.city }} {{  user.province }} <br>
+            {{  user.country }} <br>
+          
+            <br>
+            <strong>Instrucciones para el retiro:</strong>
+              <br>
+              {{  user.instructions or ''}} <br>
+            
+            <br>
+          
           <a href="{{ url_for('main.direccion') }}">
-                <button class="btn btn-default">Corregir datos</button>
+                <button class="btn btn-info btn-sm">Corregir datos</button>
           </a>
-      </div> 
+        </div>
+      </div>
+
+      <br>
+
+      <div class="card mb-2 ">
+        <div class="card-body">       
+          <h5>Alternativas disponibles para el envío de la orden</h5>
+       
+          <!-- Si la tienda tiene configurado un correo para retirar a domiclio -->
+          <!--  conf/archivo.json - envio: configura si tiene retiro o no  -->
+          <!--  correo_usado (en la base): configura la empresa de correo -->
+          {% if 'retiro' in envio %}
+            {% if correo == 'Moova' %}
+              {% if area_valida == True %}
+                {% if precio_envio != 'Failed'%}
+                     <div class="card border-info mt-3">
+                        <div class="card-body">       
+                        <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Moova', area_valida=area_valida, precio_envio=precio_envio) }}" >
+                          <button class="btn btn-info btn-lg"> <span class="bi bi-house-fill"></span> <br> </button>
+                          <p class="text-info" >
+                          <strong>  {{textos['boton_envio_retiro'] }} <br>
+                            Costo: {{precio_envio}} </strong>
+                          <br> {{textos['boton_envio_retiro_desc'] | safe }}
+                          </p>
+                        </a>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+
+            {% if 'manual' in envio %}
+            <div class="card border-info mt-3 ">
+              <div class="card-body">       
+                <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Manual') }}" >
+                  <button class="btn btn-info btn-lg" > <span class="bi bi-handbag"></span> </button>
+                  <p class="text-info" >
+                  <strong> {{textos['boton_envio_manual']}} </strong>
+                  <br>{{textos['boton_envio_manual_desc'] | safe}}
+                  </p>
+                </a>
+              </div>
+            </div>
+            {% endif %}
+              
+            {% if 'coordinar' in envio %}
+            <div class="card border-info mt-3 ">
+              <div class="card-body">       
+                <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Coordinar', area_valida=area_valida, precio_envio=precio_envio) }}" >
+                  <button class="btn btn-info btn-lg" > <span class="bi bi-headphones"></span> </button>
+                  <p class="text-info" >
+                  <strong> {{textos['boton_envio_coordinar']}} </strong>
+                  <br>{{textos['boton_envio_coordinar_desc'] | safe}}
+                  </p>
+                </a>
+              </div>
+            </div>
+            {% endif %}
+              
+          </div>
+        </div>
     </div>
   </div>
 </div>
-<div class=container>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-        <b>Alternativas disponibles para el envío de la orden</b>
-        </h4>
-    </div>
-    <div class="panel-body">
-        <div class="items">
-        <!-- Si la tienda tiene configurado un correo para retirar a domiclio -->
-        <!--  conf/archivo.json - envio: configura si tiene retiro o no  -->
-        <!--  correo_usado (en la base): configura la empresa de correo -->
-        {% if 'retiro' in envio %}
-          {% if correo == 'Moova' %}
-            {% if area_valida == True %}
-              {% if precio_envio != 'Failed'%}
-                <div class="panel panel-default">
-                  <div class="panel-body">
-                    <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Moova', area_valida=area_valida, precio_envio=precio_envio) }}" >
-                      <button class="btn btn-primary btn-lg"> <span class="glyphicon glyphicon-home"></span> <br> </button>
-                      <strong>  <br> {{textos['boton_envio_retiro'] }} <br>
-                        Costo: {{precio_envio}} </strong>
-                      <br> {{textos['boton_envio_retiro_desc'] | safe }}
-                  </a>
-                  </div>
-                </div>
-              {% endif %}
-            {% endif %}
-          {% endif %}
-        {% endif %}
 
-        {% if 'manual' in envio %}
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Manual') }}" >
-              <button class="btn btn-primary btn-lg" > <span class="glyphicon glyphicon-envelope"></span> </button>
-              <strong> <br> {{textos['boton_envio_manual']}} </strong>
-              <br>{{textos['boton_envio_manual_desc'] | safe}}
-            </a>
-          </div>
-        </div>
-        {% endif %}
-          
-        {% if 'coordinar' in envio %}
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Coordinar', area_valida=area_valida, precio_envio=precio_envio) }}" >
-              <button class="btn btn-primary btn-lg" > <span class="glyphicon glyphicon-headphones"></span> </button>
-              <strong> <br> {{textos['boton_envio_coordinar']}} </strong>
-              <br>{{textos['boton_envio_coordinar_desc'] | safe}}
-            </a>
-          </div>
-        </div>
-        {% endif %}
-          
-        </div>
-      </div>
-    </div>
-</div>
 
 
 {% endblock %}

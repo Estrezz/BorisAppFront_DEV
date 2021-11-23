@@ -1,22 +1,44 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
 
-<h2 style="text-align:center"> {{store}} </h2>
-<div class='container-fluid'>
-    <img  class="center-block img-responsive" src={{logo}}> 
-</div>
+
+<div class="container-fluid">
 <br>
 <br>
 
-<div class='container'>
-<h4 style="text-align:center"> Busca tu orden </h4>
 <div class="row">
-    <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-xs-12">
-        {{ wtf.quick_form(form) }}
+    <div class="col-md-1 col-lg-3"></div>
+    
+<div class="col d-flex justify-content-center"  >
+    <div class="card border-light rounded text-center px-4 py-3">
+      
+            <h3 >{{empresa.company_name}}</h3>
+            <img src="{{empresa.logo}}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <hr>
+            <strong class="card-title mb-2 ">Busca tu orden</strong>
+           
+            <form id="buscar_orden" action="{{ url_for('main.buscar', empresa=empresa.store_id)}}" method="POST">
+            
+                <div class="form-group row mt-4">
+                   
+                    <input type="integer" class="form-control" id="ordernum" name="ordernum" placeholder="Número de orden">
+                </div>
+                <div class="form-group row">
+                    <!-- <label for="ordermail" >Email con el que se realizó la compra</label> -->
+                    <input type="email" class="form-control" id="ordermail" name="ordermail" placeholder="Email con el que se realizó la compra">
+                </div>
+                <button type="submit" class="btn btn-info mt-2">Buscar</button>
+            </form>
+        </div>
     </div>
 </div>
+
+<div class="col-md-1 col-lg-3"></div>
+</div>
+<br>
+<br>
 </div>
 
 {% endblock%}

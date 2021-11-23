@@ -1,4 +1,5 @@
 import os
+import redis
 from dotenv import load_dotenv
 
 
@@ -22,4 +23,9 @@ class Config(object):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['soporte@borisreturns.com']
     SERVER_ROLE = os.environ.get('SERVER_ROLE')
-   
+
+    SESSION_TYPE = os.environ.get('SESSION_TYPE')
+    SESSION_REDIS = redis.from_url(os.environ.get('SESSION_REDIS'))
+    
+
+    

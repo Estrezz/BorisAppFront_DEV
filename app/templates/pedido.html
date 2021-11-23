@@ -1,81 +1,96 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-
-<div class='container'>
-  <div>
-    <h2>Hola, {{ user.name }}!</h2>
-    <h3> Esta es tu orden #{{ order.order_number}}</h3>
+<br>
+<br>
+<div class="col d-flex "  >
+  <div class="card border-light rounded px-4 py-3">
+  
+    <h3>Hola, {{ user.name }}!</h3>
+    <h4> Esta es tu orden #{{ order.order_number}}</h4>
     <p> Seleccioná los articulos que querés cambiar o devolver y luego presioná Confirmar</p>
-             
-      {% for producto in productos %}
-      
-      
+    
+    <div class="card-body">
+      {% for producto in productos %} 
       <form id="producto{{ producto['id'] }}" action="{{ url_for('main.pedidos_unitarios') }}" method="POST"> 
 
+        <div class="card mb-2 ">
+          <div class="card-body">
             <div class="row">
+
               <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
-                <img src="{{ producto['image'] }}" class="img-responsive img-thumbnail"  > </img> 
+                <img src="{{ producto['image'] }}" class="card-img img-thumbnail"  > </img> 
               </div>
 
               <div class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
                 <input type="hidden" id="{{ producto['id'] }}" name="Prod_Id" value="{{ producto['id'] }}">
-                <br> <strong> {{ producto['name'] }} </strong>
-                <br>
+                <strong> {{ producto['name'] }} </strong> <br>
+                <small>
                   {% if producto['accion'] != 'ninguna' %}
-                      <strong style="color:blue;"> {{ producto['accion']}} - {{ producto['accion_cantidad'] }} Unid. </strong>
+                    <strong class="text-info"> {{ producto['accion']}} - {{ producto['accion_cantidad'] }} Unid. </strong>
                   {% else %}
-                      {{ producto['accion_cantidad'] }} Unid.
+                    {{ producto['accion_cantidad'] }} Unid.
                   {% endif %}
-                  {% if producto['accion'] == 'cambiar' %}
-                    <strong style="color:blue;"> por  {{ producto['accion_cambiar_por_desc']}} </strong>
-                  {% endif %}
-                <br> {{ producto['motivo']}} <br>
-                <div> Precio : $ {{ producto['price']}}
-                {% if producto['promo_descuento'] %}
-                  <br> Precio Abonado: {{ producto['promo_descuento'] }} - ({{ producto['promo_nombre'] }}) 
-                {% endif %}
-                </div>
-                <br>
-                
-                {% if producto['politica_valida'] == 'Ambos' %} 
-                  {% set accion_posible = 'Devolver / Cambiar' %}
-                {% endif %}
-                {% if producto['politica_valida'] == 'Solo Cambio' %} 
-                  {% set accion_posible = 'Cambiar' %}
-                {% endif %}
-                {% if producto['politica_valida'] == 'Solo Devolucion' %} 
-                  {% set accion_posible = 'Devolver' %}
-                {% endif %}
-                {% if producto['politica_valida'] == 'Ninguno' %}
-                  {% set accion_posible = 'Ninguna' %}
-                {% endif %}
 
-                {% if accion_posible != 'Ninguna' %}
-                  <button class="btn btn-default" type="submit">{{accion_posible}}</button>
-                  {% if producto['politica_valida'] != 'Ambos' %}
-                  <br> <br> <strong style="background-color:powderblue;"> &nbsp;{{ producto['politica_valida_motivo'] }}&nbsp; </strong>
+                  {% if producto['accion'] == 'cambiar' %}
+                    <strong class="text-info"> por  {{ producto['accion_cambiar_por_desc']}} </strong>
                   {% endif %}
-                {% else %}
-                  <strong style="background-color:powderblue;">&nbsp; {{ producto['politica_valida_motivo'] }} </strong>
-                {% endif %}
+
+                  <br> {{ producto['motivo']}} <br>
+                  <div> 
+                    Precio : $ {{ producto['price']}}
+                    {% if producto['promo_descuento'] %}
+                      <br> Precio Abonado: {{ producto['promo_descuento'] }} - ({{ producto['promo_nombre'] }}) 
+                    {% endif %}
+                  </div>
+                  <br>
+                    
+                  {% if producto['politica_valida'] == 'Ambos' %} 
+                    {% set accion_posible = 'Devolver / Cambiar' %}
+                  {% endif %}
+
+                  {% if producto['politica_valida'] == 'Solo Cambio' %} 
+                    {% set accion_posible = 'Cambiar' %}
+                  {% endif %}
+
+                  {% if producto['politica_valida'] == 'Solo Devolucion' %} 
+                    {% set accion_posible = 'Devolver' %}
+                  {% endif %}
+
+                  {% if producto['politica_valida'] == 'Ninguno' %}
+                    {% set accion_posible = 'Ninguna' %}
+                  {% endif %}
+
+                  {% if accion_posible != 'Ninguna' %}
+                      <button class="btn btn-info btn-sm" type="submit">{{accion_posible}}</button>
+                      {% if producto['politica_valida'] != 'Ambos' %}
+                      <br> <br> <strong style="background-color:powderblue;"> &nbsp;{{ producto['politica_valida_motivo'] }}&nbsp; </strong>
+                      {% endif %}
+                  {% else %}
+                      <strong style="background-color:powderblue;">&nbsp; {{ producto['politica_valida_motivo'] }} </strong>
+                  {% endif %}
+                </small>
               </div>
-              
+                  
             </div>
-            <br>
-          
+          </div>
+        </div>
+      
       </form>
-      
-     
       {% endfor %}
-      
-      <form id="confirma_cambios" 
-        action="{{ url_for('main.confirma_cambios') }}" method="POST"> 
-        <p align="center">
+    </div>
+    
+    <div class="container">
+      <div class="row">
+        <div class="col text-center mt-2">
             <a href="{{ url_for('main.confirma_cambios') }}" >
-            <button class="btn btn-primary" style="margin:auto;display:block">Confirmar</button>
-        </a>
-        </p>
-        </form>
+            <button class="btn btn-info" >Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
         
 {% endblock %}

@@ -1,0 +1,14 @@
+ ERROR en creación de Pedido - {{company.company_name}}
+
+
+    EL cliente {{ user.name }} ha intentado abrir la solicitud  #{{order.order_number}} para una orden que ya tenía una creada. 
+
+    {{data}}
+
+    Por si desean contactarlo, los datos de contacto del cliente son: <br>
+    Mail: {{user.email}}
+    Teléfono: {{user.phone}}
+    
+    Un saludo,
+
+    El equipo de BORIS

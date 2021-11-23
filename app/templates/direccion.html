@@ -1,13 +1,95 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
+
 
 {% block app_content %}
-    <h2 style="text-align:center"> ¿Donde queres que retiremos tu producto? </h2>
-  
-    <div class="row">
-        <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-xs-12">
-            {{ wtf.quick_form(form) }}
+<br>
+<br>
+<div class="col d-flex "  >
+  <div class="card border-light rounded px-4 py-3">
+   
+    <h4 style="text-align:center"> ¿Dónde queres que retiremos tu producto? </h4>
+            <br>
+            <form id="form_direccion" action="{{ url_for('main.direccion')}}" method="POST">
+            <small>
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="user_name" >Nombre y Apellido</label>
+                        <input type="text" class="form-control form-control-sm" id="user_name" name="user_name" value="{{  user.name }}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="user_mail" >Email</label>
+                        <input type="email" class="form-control form-control-sm" id="user_mail" name="user_mail" value="{{  user.email }}">
+                    </div>
+                    <div class="col">
+                        <label for="user_phone" >Teléfono</label>
+                        <input type="phone" class="form-control form-control-sm" id="user_phone" name="user_phone" value="{{  user.phone }}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="user_address" >Calle</label>
+                        <input type="text" class="form-control form-control-sm" id="user_address" name="user_address" value="{{  user.address }}">
+                    </div>
+                    <div class="col">
+                        <label for="user_number" >Número</label>
+                        <input type="text" class="form-control form-control-sm" id="user_number" name="user_number" value="{{  user.number }}">
+                    </div>
+                    <div class="col">
+                        <label for="user_floor" >Piso</label>
+                        <input type="text" class="form-control form-control-sm" id="user_floor" name="user_floor" value="{{  user.floor }}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="user_locality" >Localidad</label>
+                        <input type="text" class="form-control form-control-sm" id="user_locality" name="user_locality" value="{{  user.locality }}">
+                    </div>
+                    <div class="col">
+                        <label for="user_zipcode" >Cod. Postal</label>
+                        <input type="text" class="form-control form-control-sm" id="user_zipcode" name="user_zipcode" value="{{  user.zipcode }}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="user_city" >Ciudad</label>
+                        <input type="text" class="form-control form-control-sm" id="user_city" name="user_city" value="{{  user.city }}">
+                    </div>
+                    <div class="col">
+                        <label for="user_province" >Provincia</label>
+                        <input type="text" class="form-control form-control-sm" id="user_province" name="user_province" value="{{  user.province }}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="user_country" >País</label>
+                        <input type="text" class="form-control form-control-sm" id="user_country" name="user_country" value="{{  user.country }}">
+                    </div>
+                </div>
+                <br>
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="user_instructions" >Instrucciones para el envío</label>
+                        <input type="text" class="form-control form-control-sm" id="user_instructions" name="user_instructions" value="{{  user.instructions or ''}}">
+                    </div>
+                </div>
+
+               
+                <button type="submit" class="btn btn-info btn-sm mt-2">Guardar</button>
+
+            </small>
+            </form>
+            
         </div>
-    </div>
+    
+    
+</div>
+</div>
 
 {% endblock%}
