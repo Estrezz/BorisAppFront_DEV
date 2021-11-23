@@ -137,7 +137,7 @@ def pedidos():
                 flash('Por favor, indica por que item queres realizar el cambio' )
                 item.accion = 'ninguna'
                 db.session.commit() 
-                return render_template('pedido.html', title='Pedido', NombreStore=company.company_name, user=user, order = order, productos = productos)
+                return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
 
         ## Si se seleccionó el Boton de CUPON
         if opcion_cambio == 'Cupon':

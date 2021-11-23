@@ -32,7 +32,7 @@
 
 
             {% if config['SERVER_ROLE']== 'DEV' %}
-                <a class="navbar-brand" href="{{ url_for('main.buscar', empresa = 'Ninguna') }}">DEV - Buscar orden</a>
+                <a class="navbar-brand" href="{{ url_for('main.buscar', empresa = 'Ninguna') }}">DEV - Buscar orden - {{empresa.fondo}}</a>
             {%endif %}
             {% if config['SERVER_ROLE']== 'PROD' %}
                 <a class="navbar-brand" href="#">Powered by BORIS</a>
