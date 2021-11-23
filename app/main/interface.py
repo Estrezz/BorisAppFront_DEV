@@ -108,6 +108,8 @@ def describir_variante(values):
 def buscar_empresa(empresa):
   if empresa != 'Ninguna':
 
+    if current_app.config['SERVER_ROLE'] == 'PREDEV':
+      url='http://backdev.borisreturns.com/datos_empresa'
     if current_app.config['SERVER_ROLE'] == 'DEV':
       url='http://back.borisreturns.com/datos_empresa'
     if current_app.config['SERVER_ROLE'] == 'PROD':
@@ -315,6 +317,8 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
     if session['test'] == 'True':
       url='../Boris_common/logs/pedido'+str(order.id)+'.json'
     else: 
+      if current_app.config['SERVER_ROLE'] == 'PREDEV':
+        url='http://backdev.borisreturns.com/datos_empresa'
       if current_app.config['SERVER_ROLE'] == 'DEV':
         url="https://back.borisreturns.com/pedidos"
       if current_app.config['SERVER_ROLE'] == 'PROD':
@@ -547,6 +551,8 @@ def cargar_pedido(unaEmpresa, pedido ):
 
 ############################## buscar_tracking ##################################################
 def busca_tracking(orden):
+  if current_app.config['SERVER_ROLE'] == 'PREDEV':
+    url='http://backdev.borisreturns.com/datos_empresa'
   if current_app.config['SERVER_ROLE'] == 'DEV':
     url='http://back.borisreturns.com/orden/tracking'
   if current_app.config['SERVER_ROLE'] == 'PROD':
