@@ -17,7 +17,7 @@ class Company(db.Model):
     logo = db.Column(db.String(200))
     fondo = db.Column(db.String(200))
     contact_name = db.Column(db.String(64))
-    contact_phone = db.Column(db.String(15))
+    contact_phone = db.Column(db.String(20))
     contact_email = db.Column(db.String(120))
     correo_usado = db.Column(db.String(64))
     correo_apikey = db.Column(db.String(50))

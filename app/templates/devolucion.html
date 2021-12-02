@@ -12,16 +12,17 @@
                     <div class="row no-gutters">
                         
                             
-                        <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
-                            <img src="{{ item['image'] }}"  class="card-img img-thumbnail" style="text-align:center; vertical-align:middle"> </img> 
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3">
+                            <img src="{{ item['image'] }}"  class="card-img-top img-thumbnail" style="text-align:center; vertical-align:middle"> </img> 
                             <input type="hidden" id="{{ item['id'] }}" name="Prod_Id" value="{{ item['id'] }}">
                             <input type="hidden" id="form_item" name="form_item" value="elegir_item">
                         </div>
 
-                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 ml-3" style="text-align:left">
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 ml-2" style="text-align:left">
                             <strong> {{ item['name'] }} </strong> <br>
-                            <small>      
+                            <!-- <small>      -->
                             Cantidad:  {{ item['quantity']}}<br>
+                            <br>
                             <div class="row mt-2">
                                 <div class="col-sm-5 mb-2">
                                     <strong>Qué deseas hacer?<br></strong>
@@ -84,10 +85,10 @@
                                 </div>
                                 <div class="col-sm-4"></div>
                             </div>
-                            </small>
+                            <!-- </small> -->
                             <div class="row">
                                 <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="text-align:left">
-                                    <select class="custom-select custom-select-sm mt-4" name="motivo{{ item['id'] }}" id=motivo placeholder="Motivo" value = "{{ item['motivo']}}" >
+                                    <select class="custom-select  mt-4" name="motivo{{ item['id'] }}" id=motivo placeholder="Motivo" value = "{{ item['motivo']}}" >
                                         <option selected disabled>Elegí un motivo</option>
                                         {% for un_motivo in lista_motivos %}
                                             {% if un_motivo == item['motivo'] %}
@@ -137,7 +138,7 @@
                             <div id="variante" class="collapse" aria-labelledby="variante_heading" data-parent="#accordion">
                                 <div class="card-body" style="background-color: white;">     
                                     <div class="row">
-                                        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                             {% if alternativas|length > 0 %}
                                                 <table class="table table-sm">
                                                     <tr>

@@ -1,6 +1,7 @@
 import os
 import redis
 from dotenv import load_dotenv
+from datetime import timedelta
 
 
 
@@ -26,6 +27,9 @@ class Config(object):
 
     SESSION_TYPE = os.environ.get('SESSION_TYPE')
     SESSION_REDIS = redis.from_url(os.environ.get('SESSION_REDIS'))
+
+    SESSION_PERMANENT = os.environ.get('SESSION_PERMANENT')
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=120)
     
 
     

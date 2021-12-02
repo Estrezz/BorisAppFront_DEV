@@ -8,34 +8,41 @@
 <br>
 
 <div class="row">
-    <div class="col-md-1 col-lg-3"></div>
+    <div class="col-sm-1 col-md-2 col-lg-4"></div>
     
-<div class="col d-flex justify-content-center"  >
-    <div class="card border-light rounded text-center px-4 py-3">
-      
-            <h3 >{{empresa.company_name}}</h3>
-            <img src="{{empresa.logo}}" class="card-img-top" alt="...">
-            <div class="card-body">
-                <hr>
-            <strong class="card-title mb-2 ">Busca tu orden</strong>
-           
-            <form id="buscar_orden" action="{{ url_for('main.buscar', empresa=empresa.store_id)}}" method="POST">
+    <div class="col  justify-content-center"  >
+        <div class="card border-light rounded text-center px-4 py-4">
+        
+                <!-- <h3 >{{empresa.company_name}}</h3> -->
+                <img src="{{empresa.logo}}" class="card-img-top mx-auto" alt="logo" >
+                <div class="card-body">
+                   <!-- <h5>Cambios y Devoluciones</h5> -->
+                    <h5>{{textos['portal_titulo'] or '' | safe}}</h5>
+                    <hr>
+                <strong class="card-title mb-2 ">Busca tu orden</strong>
             
-                <div class="form-group row mt-4">
-                   
-                    <input type="integer" class="form-control" id="ordernum" name="ordernum" placeholder="Número de orden">
-                </div>
-                <div class="form-group row">
-                    <!-- <label for="ordermail" >Email con el que se realizó la compra</label> -->
-                    <input type="email" class="form-control" id="ordermail" name="ordermail" placeholder="Email con el que se realizó la compra">
-                </div>
-                <button type="submit" class="btn btn-info mt-2">Buscar</button>
-            </form>
+                <form id="buscar_orden" action="{{ url_for('main.buscar', empresa=empresa.store_id)}}" method="POST">
+                
+                    <div class="form-group row mt-4">
+                        <input type="integer" class="form-control" id="ordernum" name="ordernum" placeholder="Número de orden">
+                    </div>
+                    <div class="form-group row">
+                        <input type="email" class="form-control" id="ordermail" name="ordermail" placeholder="Email con el que se realizó la compra">
+                    </div>
+                    <button type="submit" class="btn btn-info mt-2">Inicia tu gestión</button>
+                </form>
+                
+                {% if textos['portal_texto'] %}
+                    <small>
+                    <hr>
+                    {{textos['portal_texto'] | safe}}
+                    </small>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 
-<div class="col-md-1 col-lg-3"></div>
+    <div class="col-sm-1 col-md-2 col-lg-4"></div>
 </div>
 <br>
 <br>

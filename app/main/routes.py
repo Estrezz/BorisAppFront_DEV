@@ -32,10 +32,11 @@ def home():
 def buscar():
 
     ############## limpieza de Base #######################################
-    ## Limpia todo lo que tiene mas de 20 minutos #########################
+    #  Limpia todo lo que tiene mas de 120 minutos ########################
+    # Ver que coincida con el tiempo de permanent session en config.py    #
     #######################################################################
     hoy = datetime.utcnow()
-    old = hoy - timedelta(minutes=20)
+    old = hoy - timedelta(minutes=120)
     empresa_tmp = Company.query.filter(Company.timestamp <= old).all()
     orden_tmp = Order.query.filter(Order.timestamp <= old).all()
     cliente_tmp = Customer.query.filter(Customer.timestamp <= old).all()
@@ -83,12 +84,12 @@ def buscar():
 
         if pedido == 'None':
             flash('No se encontro un pedido para esa combinación Pedido-Email')
-            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa)
+            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos = session['textos'])
         else:
             cargar_pedido(unaEmpresa, pedido)
             return redirect(url_for('main.pedidos'))
 
-    return render_template('buscar.html', title='Inicia tu Gestión', empresa=unaEmpresa)
+    return render_template('buscar.html', title='Inicia tu Gestión', empresa=unaEmpresa, textos = session['textos'])
 
 
 
@@ -152,7 +153,7 @@ def pedidos():
                 flash('No hay stock disponible para ese articulo' )
                 item.accion = 'ninguna'
                 db.session.commit() 
-                return render_template('pedido.html', title='Pedido',empresa=company,  NombreStore=company.company_name, user=user, order = order, productos = productos)
+                return render_template('pedido.html', title='Pedido', empresa=company,  NombreStore=company.company_name, user=user, order = order, productos = productos)
 
             ##### Si no se seleccionó ninguna producto
             if request.form.get("alternativa_select") == None:
@@ -185,12 +186,19 @@ def pedidos():
 
 @bp.route('/pedidos_unitarios', methods=['GET', 'POST'])
 def pedidos_unitarios():   
-    if request.method == "POST": 
-        company = Company.query.filter_by(store_id=session['store']).first()
-        prod_id = request.form.get("Prod_Id")
-        user = Customer.query.get(session['cliente'])
-        order = Order.query.get(session['orden'])
-        item = Producto.query.get((session['orden'], prod_id))
+
+    company = Company.query.filter_by(store_id=session['store']).first()
+    prod_id = request.form.get("Prod_Id")
+    user = Customer.query.get(session['cliente'])
+    order = Order.query.get(session['orden'])
+    item = Producto.query.get((session['orden'], prod_id))
+    
+    #if request.method == "POST": 
+    #    company = Company.query.filter_by(store_id=session['store']).first()
+    #    prod_id = request.form.get("Prod_Id")
+    #    user = Customer.query.get(session['cliente'])
+    #    order = Order.query.get(session['orden'])
+    #    item = Producto.query.get((session['orden'], prod_id))
     return render_template('devolucion.html', title='Accion', empresa=company, NombreStore=company.company_name, user=user, order = order, item = item, textos=session['textos'],  lista_motivos=session['motivos'], cupon=session['cupon'])
 
 

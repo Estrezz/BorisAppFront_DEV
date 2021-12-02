@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block app_content %}
+
+
 <div class='container-fluid'>
     <br>
     <br>
-    <div class="col d-flex " >
+    <div class="col d-flex justify-content-center" >
       <div class="card border-light rounded px-4 py-3">
       
         <h4 style="text-align:center"> <i class="bi bi-clipboard-check"></i>&nbsp;Tu orden se ha iniciado con éxito</h4>
@@ -63,6 +65,17 @@
                 </a>
                 <br><br><br>
             </p>
+
+
+            
+            <div class="row">
+                <div class="col text-center mt-2">
+                    <a class="btn btn-info btn-sm" href="{{empresa.company_url}}">Salir y volver a la tienda</a>      
+                </div>
+            </div>
+            
+            
+
         </div>
     </div>
 </div>
