@@ -218,6 +218,14 @@ def confirma_cambios():
     precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
     area_valida = validar_cobertura(user.province, user.zipcode)
 
+    #############################################################################
+    ### Si hay al menos un cambio de producto mara la orden entera como cambio
+    #############################################################################
+    accion_general = 'Devolucion'
+    for p in productos:
+        if p.accion == 'cambiar':
+            accion_general = 'Cambio'
+    
     return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
 
@@ -278,7 +286,16 @@ def confirma_solicitud():
 
     db.session.commit()
     
-    return render_template('envio.html', empresa=company, NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
+    #return render_template('envio.html', empresa=company, NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
+    return redirect(url_for('main.envio', envio=envio, metodo_envio=metodo_envio))
+
+
+@bp.route('/envio(<envio>/<metodo_envio>',methods=['GET', 'POST'])
+def envio( envio,metodo_envio ):
+    company = Company.query.filter_by(store_id=session['store']).first()
+    user = Customer.query.get(session['cliente'])
+    order = Order.query.get(session['orden'])
+    return render_template('envio.html', empresa=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
 
 
 @bp.route('/tracking/<order>',methods=['GET', 'POST'])

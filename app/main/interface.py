@@ -117,6 +117,13 @@ def buscar_empresa(empresa):
     params = {'store_id': empresa}
     empresa_tmp = requests.request("GET", url, params=params).json()
   
+    ### Setea el nombre del SENDER en el mail saliente - SI no lo tiene configurado
+    ### toma la parte anterior al @
+    if 'communication_name' in empresa_tmp.keys():
+      communication_name_tmp = empresa_tmp['communication_name']
+    else:
+      communication_name_tmp =  empresa_tmp['communication_email'].split("@")[0]
+
     unaEmpresa = Company(
       platform = empresa_tmp['platform'],
       store_id = empresa_tmp['store_id'],
@@ -129,6 +136,7 @@ def buscar_empresa(empresa):
       company_main_currency = empresa_tmp['company_main_currency'],
       admin_email = empresa_tmp['admin_email'],
       communication_email = empresa_tmp['communication_email'],
+      communication_name = communication_name_tmp,
       logo = empresa_tmp['param_logo'],
       fondo = empresa_tmp['param_fondo'],
       correo_usado = empresa_tmp['correo_usado'],
@@ -149,6 +157,7 @@ def buscar_empresa(empresa):
       shipping_country = empresa_tmp['shipping_country'],
       shipping_info = empresa_tmp['shipping_info']
     )
+    
     #empresa_tmp = Store.query.filter(Store.store_id == empresa).first()
     #### guarda settings de la empresa
     settings = guardar_settings(empresa)
@@ -268,7 +277,8 @@ def crea_envio(company, user, order, productos, metodo_envio):
     try:
       send_email('Tu orden ha sido iniciada', 
                 #sender=current_app.config['ADMINS'][0], 
-                sender=company.communication_email,
+                sender=(company.communication_name, company.communication_email),
+                #sender=company.communication_email,
                 recipients=[user.email], 
                 text_body=render_template('email/pedido_listo.txt',
                                          user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio, textos=session['textos']),
@@ -282,7 +292,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
       flash('Mensaje {}'.format('a.error_mail'))
 
     send_email('Se ha generado una orden en Boris', 
-                sender=company.communication_email,
+                sender=(company.communication_name, company.communication_email),
                 #sender=current_app.config['ADMINS'][0], 
                 recipients=[company.admin_email], 
                 text_body=render_template('email/nuevo_pedido.txt',
@@ -504,6 +514,16 @@ def cargar_pedido(unaEmpresa, pedido ):
   session['cliente'] = unCliente.customer_uid
 
 
+  #### Si el pedido ya tiene una nota la carga #########################
+  if pedido['owner_note'] != None:
+    if pedido['owner_note'] != "Esta orden tienen una gestión iniciada en BORIS":
+      nota = pedido['owner_note'] + " - Esta orden tienen una gestión iniciada en BORIS"
+    else :
+      nota = "Esta orden tienen una gestión iniciada en BORIS"
+  else :
+    nota = "Esta orden tienen una gestión iniciada en BORIS"
+
+
   unaOrden = Order(
       order_uid = str(session['uid']),
       id = pedido['id'],
@@ -517,6 +537,8 @@ def cargar_pedido(unaEmpresa, pedido ):
       gastos_shipping_owner = pedido['shipping_cost_owner'],
       gastos_shipping_customer = pedido['shipping_cost_customer'],
       gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
+      #### owner_note
+      owner_note = nota,
       buyer = unCliente
       )
   session['orden'] = unaOrden.order_uid      
@@ -614,6 +636,8 @@ def validar_politica_fecha(orden_fecha):
       else: 
         if cambio == "NOK" and devolucion == "NOK":
           resultado_politica =  ["Ninguno",' El período para realizar cambios/devoluciones expiró ']
+          #flash('periodo {} {}'.format(orden_fecha,periodo_cambio))
+    
 
   #flash('resultado {}'.format(resultado_politica)) 
   return resultado_politica

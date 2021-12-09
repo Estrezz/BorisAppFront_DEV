@@ -84,18 +84,8 @@ def agregar_nota_tiendanube(company, order):
         'Authentication': company.platform_token_type+' '+company.platform_access_token
     }
     payload={}
-    nota_tmp = requests.request("GET", url+"?fields=owner_note", headers=headers, data=payload).json()
-
-    if nota_tmp['owner_note'] != None:
-        if nota_tmp['owner_note'] != "Esta orden tienen una gestión iniciada en BORIS":
-            nota = nota_tmp['owner_note'] + " - Esta orden tienen una gestión iniciada en BORIS"
-        else: 
-            return
-    else :
-        nota = "Esta orden tienen una gestión iniciada en BORIS"
-
+    
     data={
-        "owner_note": nota,
+        "owner_note": order.owner_note,
     }
     requests.request("PUT", url, headers=headers, data=json.dumps(data))
-    

@@ -8,7 +8,7 @@
 <br>
 
 <div class="row">
-    <div class="col-sm-1 col-md-2 col-lg-4"></div>
+    <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3"></div>
     
     <div class="col  justify-content-center"  >
         <div class="card border-light rounded text-center px-4 py-4">
@@ -17,7 +17,9 @@
                 <img src="{{empresa.logo}}" class="card-img-top mx-auto" alt="logo" >
                 <div class="card-body">
                    <!-- <h5>Cambios y Devoluciones</h5> -->
-                    <h5>{{textos['portal_titulo'] or '' | safe}}</h5>
+                   {% if textos['portal_texto'] %}
+                    <h5>{{textos['portal_titulo'] | safe}}</h5>
+                    {% endif %}
                     <hr>
                 <strong class="card-title mb-2 ">Busca tu orden</strong>
             
@@ -42,7 +44,7 @@
         </div>
     </div>
 
-    <div class="col-sm-1 col-md-2 col-lg-4"></div>
+    <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3"></div>
 </div>
 <br>
 <br>

@@ -5,7 +5,8 @@
 <br>
 <br>
  <div class="col d-flex "  >
-    <div class="card border-light rounded px-4 py-3">    
+    <!-- <div class="card border-light rounded px-4 py-3">  -->
+    <div class="card border-light rounded px-sm-2 py-sm-2 px-md-4 py-md-3">  
         <div class="card mb-2 ">
             <div class="card-body">
                 <form id="item" action="{{ url_for('main.pedidos') }}" method="POST"> 
@@ -121,7 +122,7 @@
             <h5>Seleccioná la opción deseada</h5>
             
             <!------------------------------- CAMBIO x VARIANTE ----------------------------------------------->
-            <div class="card-body">               
+            <div class="card-body mx-0 px-0">               
                 {{textos['elegir_opcion_cambio']}} <br> <br>
                 <form id="Alternativas" action="{{ url_for('main.pedidos') }}" method="POST"> 
                     <input type="hidden" id="form_item" name="form_item" value="cambiar_item">
@@ -261,6 +262,104 @@
                 $(this).parent().find(".fa").removeClass("fa-minus").addClass("fa-plus");
             });       
         });
+
+
+
+                
+        $('#producto_desc').on('keydown', function (e) {
+              if (e.key === 'Enter' || e.keyCode === 13) {
+                  e.preventDefault();
+                  buscar_producto('#producto_desc', '#product_select');
+                  $("#elegir").focus();
+              }
+              
+      });
+          
+
+      function buscar_producto(desc_prod, destElem) {  
+          $('#loading').show();
+          $.post('/elegir_producto', {
+              prod: $(desc_prod).val()
+          }).done(function(response) {
+              data = JSON.parse(response);
+              //var str='<option value="0"> -- Selecciona el producto -- </option>'
+              var str='<option value="0"> -- Selecciona el producto -- </option>'
+              for(d in data)
+                  //str+='<option value="'+data[d]['id']+'">'+data[d]['name']['es']+'</option>'
+              // agregado
+                  str+='<option value="'+data[d]['id']+'" data-prod="'+data[d]['name']['es']+'">'+data[d]['name']['es']+'</option>'
+              // cambiar a str1
+              $('#loading').hide();
+              $(destElem).html(str);
+              $(destElem).prop('disabled', false);
+          }).fail(function(){
+              $('#loading').hide();
+              $(destElem).html('<option value="0"> -- No existe ese articulo -- </option>');
+          })   
+      }
+      
+      
+      $(document.body).on('change',"#product_select",function () {
+          $('#loading2').show();
+          var productId= $("#product_select option:selected").val();
+          
+          // inserta el nombre en el tag oculto #producto_nombre
+          var nombre = $("#product_select").find(':selected').data('prod');
+          $("#producto_nombre").val(nombre);
+
+          if (productId == "0") {
+              $("#alternativa_select").html('<option value="seleccionar"> -- Selecciona la variante -- </option>');
+              $("#alternativa_select").prop('disabled', 'disabled');
+              $('#loading2').hide();   
+              return;
+          }
+      
+          $.post('/elegir_alternativa', {
+              prod_id: productId
+          }).done(function(response) {
+              data = JSON.parse(response);
+              
+              if (data.length == 0) {
+                  str+='<option value="'+'0'+'"data-prod="'+'No hay stock para ese producto'+'">'+'No hay stock para ese producto'+'</option>';
+              }
+
+              if (data.length == 1) {
+                  jQuery.each(data, function(index, item) {
+                      if (item['desc']==''){
+                          var desc='No tiene Variantes'
+                      } else {
+                          var desc= item['desc']
+                      };
+                      str+='<option value="'+item['id']+'"data-prod="'+item['desc']+'">'+desc+'</option>';
+                      alert('setea nombre');
+                      $("#variante_nombre").val(item['desc']);
+                  });
+              }
+              
+              if (data.length > 1) {
+                  var str='<option value="seleccionar"> -- Selecciona la variante -- </option>'
+                  jQuery.each(data, function(index, item) {
+                  //str+='<option value="'+item['id']+'">'+item['desc']+'</option>';
+                  str+='<option value="'+item['id']+'" data-prod="'+item['desc']+'">'+item['desc']+'</option>';
+              });
+              }
+              
+              
+              $('#loading2').hide();
+              $("#alternativa_select").html(str);
+              //$("#alternativa_select").val(str);
+              $("#producto_id").val(productId);
+              $("#alternativa_select").prop('disabled', false);   
+          })
+          
+      });
+  
+      $(document.body).on('change',"#alternativa_select",function () {
+          alert('cambio nombre variante')
+          // inserta el nombre en el tag oculto #producto_nombre
+          var nombre = $("#alternativa_select").find(':selected').data('prod');
+          $("#variante_nombre").val(nombre);
+      });
 
     </script> 
 {% endblock %}  

@@ -4,18 +4,19 @@
 <br>
 <br>
 <div class="col d-flex "  >
-  <div class="card border-light rounded px-4 py-3">
+  <!-- <div class="card border-light rounded px-4 py-3">  -->
+  <div class="card border-light rounded px-sm-2 py-sm-2 px-md-4 py-md-3">
   
     <h3>Hola, {{ user.name }}!</h3>
     <h4> Esta es tu orden #{{ order.order_number}}</h4>
     <p> Seleccioná los articulos que querés cambiar o devolver y luego presioná Confirmar</p>
     
-    <div class="card-body">
+    <div class="card-body mx-0 px-0 ">
       {% for producto in productos %} 
       <form id="producto{{ producto['id'] }}" action="{{ url_for('main.pedidos_unitarios') }}" method="POST"> 
 
         <div class="card mb-2 ">
-          <div class="card-body">
+          <div class="card-body ">
             <div class="row">
 
               <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2">
@@ -94,3 +95,4 @@
 
         
 {% endblock %}
+
