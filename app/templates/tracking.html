@@ -13,17 +13,27 @@
                 </tr>
             </thead>
             <tbody>
-            {% for i in historia %}
-                {% if i.Estado !='No' %}
-                <tr class="active">
-                    <td class="track_dot">
-                        <span class="track_line"></span>
+            {% if historia|length == 0 %}
+                <tr>
+                    <td>
+                    <h5>
+                    Lo sentimos, en estos momentos no podemos ayudarte
+                    </h5>
                     </td>
-                    <td>{{i.Estado}}</td>
-                    <td>{{i.Fecha}}</td>
                 </tr>
-                {% endif %}
-            {% endfor %}
+            {% else %}
+                {% for i in historia %}
+                    {% if i.Estado !='No' %}
+                    <tr class="active">
+                        <td class="track_dot">
+                            <span class="track_line"></span>
+                        </td>
+                        <td>{{i.Estado}}</td>
+                        <td>{{i.Fecha}}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             </tbody>
         </table>
     </div>

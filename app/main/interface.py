@@ -1,8 +1,10 @@
+
 import requests
 import json
 import datetime
 import smtplib
 import uuid
+from os.path import exists
 from datetime import datetime
 from app import db
 from app.models import Customer, Order, Producto, Company
@@ -119,10 +121,10 @@ def buscar_empresa(empresa):
   
     ### Setea el nombre del SENDER en el mail saliente - SI no lo tiene configurado
     ### toma la parte anterior al @
-    if 'communication_name' in empresa_tmp.keys():
-      communication_name_tmp = empresa_tmp['communication_name']
+    if 'communication_email_name' in empresa_tmp.keys():
+      communication_email_name_tmp = empresa_tmp['communication_email_name']
     else:
-      communication_name_tmp =  empresa_tmp['communication_email'].split("@")[0]
+      communication_email_name_tmp =  empresa_tmp['communication_email'].split("@")[0]
 
     unaEmpresa = Company(
       platform = empresa_tmp['platform'],
@@ -136,7 +138,7 @@ def buscar_empresa(empresa):
       company_main_currency = empresa_tmp['company_main_currency'],
       admin_email = empresa_tmp['admin_email'],
       communication_email = empresa_tmp['communication_email'],
-      communication_name = communication_name_tmp,
+      communication_email_name = communication_email_name_tmp,
       logo = empresa_tmp['param_logo'],
       fondo = empresa_tmp['param_fondo'],
       correo_usado = empresa_tmp['correo_usado'],
@@ -241,6 +243,7 @@ def buscar_empresa(empresa):
       shipping_country = 'AR',
       shipping_info = 'Entregar en recepción'
     )
+    
   return unaEmpresa
 
 
@@ -256,18 +259,19 @@ def guardar_settings(store_id):
 
 ############################## crea_envio ##################################################
 def crea_envio(company, user, order, productos, metodo_envio): 
-  if metodo_envio == 'Moova':
-    solicitud_envio = crea_envio_moova(company, user, order, productos)
-    if solicitud_envio == 'Failed':
-      return 'Failed'
-  else:
-    solicitud_envio = {
-      "id":'Manual',
+  ### Una vez terminada la implementacion de correo quitar este if
+  #if metodo_envio['metodo_envio_id'] == 'Moova':
+  #  solicitud_envio = crea_envio_moova(company, user, order, productos)
+  #  if solicitud_envio == 'Failed':
+  #    return 'Failed'
+  #else:
+  solicitud_envio = {
+      "id":'',
       "status":'DRAFT',
-      "price":'0.0',
+      "price": metodo_envio['precio_envio'],
       "priceFormatted":'0.0',
       "currency":'ARS'
-    }
+   }
 
   mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
   if mandaBoris == 'Error':
@@ -277,49 +281,112 @@ def crea_envio(company, user, order, productos, metodo_envio):
     try:
       send_email('Tu orden ha sido iniciada', 
                 #sender=current_app.config['ADMINS'][0], 
-                sender=(company.communication_name, company.communication_email),
+                sender=(company.communication_email_name, company.communication_email),
                 #sender=company.communication_email,
                 recipients=[user.email], 
+                reply_to = company.admin_email,
                 text_body=render_template('email/pedido_listo.txt',
-                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio, textos=session['textos']),
+                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio['metodo_envio_id'], textos=session['textos']),
                 html_body=render_template('email/pedido_listo.html',
-                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio, textos=session['textos']), 
+                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio['metodo_envio_id'], textos=session['textos']), 
                 attachments=None,
                 sync=False,
                 bcc=[current_app.config['ADMINS'][0]])
+                
     except smtplib.SMTPException as e:
       error_mail = e
       flash('Mensaje {}'.format('a.error_mail'))
 
     send_email('Se ha generado una orden en Boris', 
-                sender=(company.communication_name, company.communication_email),
+                sender=(company.communication_email_name, company.communication_email),
                 #sender=current_app.config['ADMINS'][0], 
                 recipients=[company.admin_email], 
+                reply_to = company.admin_email,
                 text_body=render_template('email/nuevo_pedido.txt',
                                          user=user, envio=solicitud_envio, order=order, shipping=session['shipping']),
                 html_body=render_template('email/nuevo_pedido.html',
                                          user=user, envio=solicitud_envio, order=order, shipping=session['shipping']), 
                 attachments=None, 
                 sync=False,
-                bcc=[current_app.config['ADMINS'][0]])
+                bcc=[])
   return solicitud_envio
 
 
 ############################## cotiza_envio ##################################################
 #### Cotizar el precio del envío
+
 def cotiza_envio(company, user, order, productos, correo):
-  if 'shipping' in session:  
-    if session['shipping'] == 'company':
-      return 'Retiro Gratuito'
+  
+  if current_app.config['SERVER_ROLE'] == 'PREDEV':
+    url='http://backdev.borisreturns.com/cotiza_envio'
+  if current_app.config['SERVER_ROLE'] == 'DEV':
+    url="https://back.borisreturns.com/cotiza_envio"
+  if current_app.config['SERVER_ROLE'] == 'PROD':
+    url="https://backprod.borisreturns.com/cotiza_envio"
 
-  if correo == 'Moova':
-    #flash('cotiza')
-    precio = cotiza_envio_moova (company, user, order, productos)
-    return precio
-  #flash('No cotiza - {}'.format(correo))
-  return 'Failed'
+  headers = {
+    'Content-Type': 'application/json'
+  }
 
+  data = {
+    "correo":{
+      "correo_id": correo,
+      "store_id": company.store_id,
+      "orden_nro": order.order_number
+    },
+    "from": {
+        "street": user.address,
+        "number": user.number,
+        "floor": user.floor,
+        "city": user.city,
+        "state": user.province,
+        "postalCode": user.zipcode,
+        "country": user.country,
+        "contact": {
+          "firstName": user.name,
+          "email": user.email
+        }
+    },
+    "to": {
+        "street": company.shipping_address,
+        "number": company.shipping_number,
+        "floor": company.shipping_floor,
+        "city": company.shipping_city,
+        "state": company.shipping_province,
+        "postalCode": company.shipping_zipcode,
+        "country": company.shipping_country,
+        "contact": {
+          "firstName": company.contact_name,
+          "email": company.contact_email,
+          "phone": company.contact_phone
+        }
+      },
+  }
 
+  items_envio = []
+  for i in productos:
+    items_envio.append (   
+      {
+        "item": {
+          "descripcion": i.name,
+          "precio": i.price,
+          "cantidad": i.accion_cantidad,
+          "alto":i.alto,
+          "largo": i.largo,
+          "profundidad" : i.profundidad,
+          "peso": i.peso
+        }
+      }
+    )
+
+  data['conf']['items'] = items_envio
+
+  solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
+  if solicitud.status_code != 200:
+    return ('Failed')
+  else: 
+    return solicitud
+    
 
 ############################## almacena_envio ##################################################
 def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
@@ -343,6 +410,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   "orden_nro": order.order_number,
   "orden_fecha": str(order.timestamp.strftime("%Y-%m-%d %H:%M:%S.%f")),
   "orden_medio_de_pago": order.metodo_de_pago,
+  "order_salientes": order.salientes,
   "orden_tarjeta_de_pago": order.tarjeta_de_pago,
   "orden_gastos_cupon": order.gastos_cupon,
   "orden_gastos_gateway": order.gastos_gateway,
@@ -350,7 +418,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   "orden_gastos_shipping_customer": order.gastos_shipping_customer,
   "orden_gastos_promocion": order.gastos_promocion,
   "correo":{
-    "correo_metodo_envio": metodo_envio,
+    "correo_metodo_envio": metodo_envio['metodo_envio_id'],
     "correo_id": solicitud['id'],
     "correo_status": solicitud['status'],
     "correo_precio": solicitud['price'],
@@ -422,6 +490,10 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       "accion_cambiar_por_desc": i.accion_cambiar_por_desc,
       "monto_a_devolver": precio_final,
       "precio": i.price,
+      "alto":i.alto,
+      "largo": i.largo,
+      "profundidad" : i.profundidad,
+      "peso": i.peso,
       "promo_descuento": i.promo_descuento,
       "promo_nombre": i.promo_nombre,
       "promo_precio_final": i.promo_precio_final,
@@ -461,17 +533,19 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
           send_email('ERROR en creación solicitud '+respuesta, 
                   sender=current_app.config['ADMINS'][0],
                   recipients=current_app.config['ADMINS'], 
+                  reply_to = current_app.config['ADMINS'][0],
                   text_body=render_template('email/error_solicitud.txt',
                                           user=user, data=json.dumps(data), company=company),
                   html_body=render_template('email/error_solicitud.html',
                                           user=user, data=json.dumps(data), company=company), 
                   attachments=None, 
                   sync=False,
-                  bcc=[])
+                  bcc=[current_app.config['ADMINS'][0]])
         
           send_email('ERROR en creación solicitud ', 
                   sender=current_app.config['ADMINS'][0],
                   recipients=[company.admin_email], 
+                  reply_to = current_app.config['ADMINS'][0],
                   text_body=render_template('email/error_solicitud_cliente.txt',
                                           user=user, data=mensaje, order=order, company=company),
                   html_body=render_template('email/error_solicitud_cliente.html',
@@ -553,6 +627,10 @@ def cargar_pedido(unaEmpresa, pedido ):
       name = pedido['products'][x]['name'],
       price = pedido['products'][x]['price'],
       quantity = pedido['products'][x]['quantity'],
+      alto = pedido['products'][x]['height'],
+      largo = pedido['products'][x]['width'],
+      profundidad = pedido['products'][x]['depth'],
+      peso = pedido['products'][x]['weight'],
       variant = pedido['products'][x]['variant_id'],
       image = pedido['products'][x]['image']['src'],
       accion = "ninguna",
@@ -580,7 +658,12 @@ def busca_tracking(orden):
   if current_app.config['SERVER_ROLE'] == 'PROD':
     url='http://backprod.borisreturns.com/orden/tracking'
   params = {'orden_id': orden}
-  historia = requests.request("GET", url, params=params).json()
+  #historia = requests.request("GET", url, params=params).json()
+  historia = requests.request("GET", url, params=params)
+  if historia.status_code != 200:
+        historia = {}
+  else:
+        historia = historia.json()
   return historia
 
 
@@ -681,6 +764,11 @@ def crear_store(store):
     conf_url='app/static/conf/'+store['store_id']+'.json'
   if current_app.config['SERVER_ROLE'] == 'PROD':
     conf_url='app/static/conf/'+store['store_id']+'.json'
+
+  ### verficar si existe el archivo ####
+  if exists(conf_url):
+    print('ya existe el JSON')
+    return 'Failed'
   
   ## "envio": ["manual", "retiro", "coordinar"]
   ## manual: el cliente evia manualmente
@@ -729,7 +817,7 @@ def crear_store(store):
   with open(conf_url, "w+") as outfile:
     json.dump(conf_file, outfile)
 
-  
+  return 'Success'
 
 
 def actualiza_json_categoria(archivo_config, data):

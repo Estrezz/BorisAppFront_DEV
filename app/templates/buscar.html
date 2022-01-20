@@ -14,11 +14,15 @@
         <div class="card border-light rounded text-center px-4 py-4">
         
                 <!-- <h3 >{{empresa.company_name}}</h3> -->
-                <img src="{{empresa.logo}}" class="card-img-top mx-auto" alt="logo" >
+                {% if textos['portal_empresa'] %}
+                    <h3>{{textos['portal_empresa'] | safe}}</h3>
+                {% endif %}
+                
+                <img src="{{empresa.logo}}" class="card-img-top mx-auto px-3" style="max-width: 100%; height: auto" alt="logo" >
                 <div class="card-body">
                    <!-- <h5>Cambios y Devoluciones</h5> -->
-                   {% if textos['portal_texto'] %}
-                    <h5>{{textos['portal_titulo'] | safe}}</h5>
+                    {% if textos['portal_titulo'] %}
+                        <h5>{{textos['portal_titulo'] | safe}}</h5>
                     {% endif %}
                     <hr>
                 <strong class="card-title mb-2 ">Busca tu orden</strong>

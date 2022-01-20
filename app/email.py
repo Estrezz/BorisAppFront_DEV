@@ -8,10 +8,9 @@ def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
 
-
-def send_email(subject, sender, recipients, text_body, html_body,
+def send_email(subject, sender, recipients, reply_to, text_body, html_body,
                attachments=None, sync=False, bcc=None):
-    msg = Message(subject, sender=sender, bcc=bcc, recipients=recipients)
+    msg = Message(subject, sender=sender, bcc=bcc, recipients=recipients, reply_to=reply_to)
     msg.body = text_body
     msg.html = html_body
     if attachments:

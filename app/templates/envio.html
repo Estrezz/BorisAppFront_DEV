@@ -17,16 +17,18 @@
                     Tu orden número {{order.order_number}} ha sido iniciada<br>
                     En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
                 </h5>
+                <p style="text-align:center">{{textos['confirma_manual_note']}}</p>
+                
             {% endif %}
 
             {% if metodo_envio == 'Coordinar' %}
                 <br>
                 <h5 style="text-align:center">
                     Tu orden número {{order.order_number}} ha sido iniciada<br>
-                    En breve te contactaremos para coordinar el retiro de tus productos<br>
+                    En breve te contactaremos para coordinar el envío de tus productos<br>
                     <br>
                 </h5>
-                <p>{{textos['confirma_coordinar_note']}}</p>
+                <p style="text-align:center">{{textos['confirma_coordinar_note']}}</p>
                 
             {% endif %}
     
@@ -60,8 +62,8 @@
                 <br>
                 {{order.order_number}} - {{order.order_original_id}}
                 <br> -->
-                <a href="http://frontprod.borisreturns.com/tracking/{{order.order_number}}">
-                http://frontprod.borisreturns.com/tracking/{{order.order_number}}
+                <a href="http://frontprod.borisreturns.com/tracking/{{order.id}}">
+                http://frontprod.borisreturns.com/tracking/{{order.id}}
                 </a>
                 <br><br><br>
             </p>

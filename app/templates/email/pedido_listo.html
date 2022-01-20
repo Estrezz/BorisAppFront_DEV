@@ -28,7 +28,7 @@
 <!-- ---------------------------  Envío COORDINAR  ------------------------------------------ -->
 {% if metodo_envio == 'Coordinar' %}
     <p style="text-align:left">
-        En breve nos comunicamos contigo para coordinar el retiro de: <br>
+        En breve nos comunicamos contigo para coordinar el envío de las prendas: <br>
     </p>
     <p style="text-align:center">
                 {% for i in productos %}
@@ -80,7 +80,7 @@
 
 <br>
 <h5 style="text-align:left"> Podes hacer el seguimiento de tu orden acá: <br>
-        <a href="http://frontprod.borisreturns.com/tracking/{{order.order_number}}">
-        http://frontprod.borisreturns.com/tracking/{{order.order_number}}
+        <a href="http://frontprod.borisreturns.com/tracking/{{order.id}}">
+        http://frontprod.borisreturns.com/tracking/{{order.id}}
         </a>
 

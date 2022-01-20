@@ -43,6 +43,6 @@ Tu número de orden es #{{order.order_number}}
 {% endif %}
 
 Podes hacer el seguimiento de tu orden acá:
-        http://frontprod.borisreturns.com/tracking/{{order.order_number}}
+        http://frontprod.borisreturns.com/tracking/{{order.id}}
         
 
