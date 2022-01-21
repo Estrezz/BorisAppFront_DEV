@@ -77,6 +77,7 @@ class Order(db.Model):
     gastos_shipping_customer = db.Column(db.Float)
     gastos_promocion = db.Column(db.Float)
     owner_note = db.Column(db.String(500))
+    salientes = db.Column(db.String(10)) # Indica si la orden tiene articulos salientes
     customer_id = db.Column(db.String(150), db.ForeignKey('customer.customer_uid', ondelete='CASCADE'))
     products = db.relationship('Producto', backref='articulos', lazy='dynamic')
 
@@ -92,6 +93,10 @@ class Producto(db.Model):
     price = db.Column(db.Integer)
     quantity = db.Column(db.Integer)
     variant = db.Column(db.Integer)
+    alto = db.Column(db.Float)
+    largo = db.Column(db.Float)
+    profundidad = db.Column(db.Float)
+    peso = db.Column(db.Float)
     accion = db.Column(db.String(10))
     accion_reaccion = db.Column(db.Boolean)
     accion_cambiar_por = db.Column(db.Integer)
@@ -101,7 +106,7 @@ class Producto(db.Model):
     motivo = db.Column(db.String(150))
     politica_valida = db.Column(db.String(50))
     politica_valida_motivo = db.Column(db.String(100))
-    image = db.Column(db.String(200))
+    image = db.Column(db.String(300))
     promo_descuento = db.Column(db.Float)
     promo_nombre = db.Column(db.String(10))
     promo_precio_final = db.Column(db.Float)

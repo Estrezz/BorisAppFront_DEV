@@ -230,18 +230,30 @@ def confirma_cambios():
         productos = Producto.query.filter_by(order_id=session['orden']).all()
         return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
 
-    precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
+    
+    ## ConCorreo - Appendear al diccionario precio_envio / area_valida
+    for e in session['envio']:
+        if e['correo_id'] != 'NONE':
+            if e['costo_envio'] == "Merchant":
+                precio_envio = 'Sin Cargo'
+            else: 
+                precio_envio = cotiza_envio(company, user, order, productos, e['correo_id'])
+        else:
+            precio_envio = 0
+        e['precio_envio'] = precio_envio
+    #precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
     area_valida = validar_cobertura(user.province, user.zipcode)
 
     #############################################################################
     ### Si hay al menos un cambio de producto mara la orden entera como cambio
     #############################################################################
-    accion_general = 'Devolucion'
+    salientes = 'No'
     for p in productos:
-        if p.accion == 'cambiar':
-            accion_general = 'Cambio'
-    
-    return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
+        if p.accion == 'cambiar' and  p.accion_cambiar_por_desc != 'Cupón' :
+            salientes = 'Si'   
+    order.salientes = salientes
+    db.session.commit()
+    return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
 
 
@@ -282,17 +294,21 @@ def confirma_solicitud():
     
     #### valida que la dirección esta cargada si el método elegido es A Coordinar o Moova ################
     
-    if (metodo_envio == 'Coordinar' or metodo_envio =='Moova') and ((user.address == None or user.address == '') or (user.zipcode == None) ):
+
+    # Selecciona de los metodos de envio disponibles para la tienda el que se seleccionó
+    metodo = next(item for item in session['envio'] if item["metodo_envio_id"] == metodo_envio)
+    
+
+    if metodo['direccion_obligatoria'] == 'Si' and ((user.address == None or user.address == '') or (user.zipcode == None) ):        
         if request.args.get('area_valida') == 'True':
             area_valida = True
         else:
             area_valida = False
-        precio_envio = request.args.get('precio_envio')
         flash("Por favor completa tus datos de contacto")
-        return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, precio_envio=precio_envio, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
+        return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
-
-    envio = crea_envio(company, user, order, productos, metodo_envio)
+    
+    envio = crea_envio(company, user, order, productos, metodo)
     ##### Agrega nota en Orden Original
     agregar_nota(company, order)
 
@@ -309,7 +325,6 @@ def confirma_solicitud():
 
 @bp.route('/envio(<envio>/<metodo_envio>',methods=['GET', 'POST'])
 def envio( envio,metodo_envio ):
-    #company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     company= user.pertenece
     order = Order.query.get(session['orden'])

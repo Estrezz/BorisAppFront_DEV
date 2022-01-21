@@ -111,7 +111,7 @@ def buscar_empresa(empresa):
   if empresa != 'Ninguna':
 
     if current_app.config['SERVER_ROLE'] == 'PREDEV':
-      url='https://devback.borisreturns.com/datos_empresa'
+      url='http://devback.borisreturns.com/datos_empresa'
     if current_app.config['SERVER_ROLE'] == 'DEV':
       url='http://back.borisreturns.com/datos_empresa'
     if current_app.config['SERVER_ROLE'] == 'PROD':
@@ -259,18 +259,19 @@ def guardar_settings(store_id):
 
 ############################## crea_envio ##################################################
 def crea_envio(company, user, order, productos, metodo_envio): 
-  if metodo_envio == 'Moova':
-    solicitud_envio = crea_envio_moova(company, user, order, productos)
-    if solicitud_envio == 'Failed':
-      return 'Failed'
-  else:
-    solicitud_envio = {
-      "id":'Manual',
+  ### Una vez terminada la implementacion de correo quitar este if
+  #if metodo_envio['metodo_envio_id'] == 'Moova':
+  #  solicitud_envio = crea_envio_moova(company, user, order, productos)
+  #  if solicitud_envio == 'Failed':
+  #    return 'Failed'
+  #else:
+  solicitud_envio = {
+      "id":'',
       "status":'DRAFT',
-      "price":'0.0',
+      "price": metodo_envio['precio_envio'],
       "priceFormatted":'0.0',
       "currency":'ARS'
-    }
+   }
 
   mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
   if mandaBoris == 'Error':
@@ -285,9 +286,9 @@ def crea_envio(company, user, order, productos, metodo_envio):
                 recipients=[user.email], 
                 reply_to = company.admin_email,
                 text_body=render_template('email/pedido_listo.txt',
-                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio, textos=session['textos']),
+                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio['metodo_envio_id'], textos=session['textos']),
                 html_body=render_template('email/pedido_listo.html',
-                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio, textos=session['textos']), 
+                                         user=user, company=company, productos=productos, envio=solicitud_envio, order=order, shipping=session['shipping'], metodo_envio=metodo_envio['metodo_envio_id'], textos=session['textos']), 
                 attachments=None,
                 sync=False,
                 bcc=[current_app.config['ADMINS'][0]])
@@ -313,19 +314,79 @@ def crea_envio(company, user, order, productos, metodo_envio):
 
 ############################## cotiza_envio ##################################################
 #### Cotizar el precio del envío
+
 def cotiza_envio(company, user, order, productos, correo):
-  if 'shipping' in session:  
-    if session['shipping'] == 'company':
-      return 'Retiro Gratuito'
+  
+  if current_app.config['SERVER_ROLE'] == 'PREDEV':
+    url='http://devback.borisreturns.com/cotiza_envio'
+  if current_app.config['SERVER_ROLE'] == 'DEV':
+    url="https://back.borisreturns.com/cotiza_envio"
+  if current_app.config['SERVER_ROLE'] == 'PROD':
+    url="https://backprod.borisreturns.com/cotiza_envio"
 
-  if correo == 'Moova':
-    #flash('cotiza')
-    precio = cotiza_envio_moova (company, user, order, productos)
-    return precio
-  #flash('No cotiza - {}'.format(correo))
-  return 'Failed'
+  headers = {
+    'Content-Type': 'application/json'
+  }
 
+  data = {
+    "correo":{
+      "correo_id": correo,
+      "store_id": company.store_id,
+      "orden_nro": order.order_number
+    },
+    "from": {
+        "street": user.address,
+        "number": user.number,
+        "floor": user.floor,
+        "city": user.city,
+        "state": user.province,
+        "postalCode": user.zipcode,
+        "country": user.country,
+        "contact": {
+          "firstName": user.name,
+          "email": user.email
+        }
+    },
+    "to": {
+        "street": company.shipping_address,
+        "number": company.shipping_number,
+        "floor": company.shipping_floor,
+        "city": company.shipping_city,
+        "state": company.shipping_province,
+        "postalCode": company.shipping_zipcode,
+        "country": company.shipping_country,
+        "contact": {
+          "firstName": company.contact_name,
+          "email": company.contact_email,
+          "phone": company.contact_phone
+        }
+      },
+  }
 
+  items_envio = []
+  for i in productos:
+    items_envio.append (   
+      {
+        "item": {
+          "descripcion": i.name,
+          "precio": i.price,
+          "cantidad": i.accion_cantidad,
+          "alto":i.alto,
+          "largo": i.largo,
+          "profundidad" : i.profundidad,
+          "peso": i.peso
+        }
+      }
+    )
+
+  data['conf']['items'] = items_envio
+
+  solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
+  if solicitud.status_code != 200:
+    return ('Failed')
+  else: 
+    return solicitud
+    
 
 ############################## almacena_envio ##################################################
 def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
@@ -334,7 +395,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       url='../Boris_common/logs/pedido'+str(order.id)+'.json'
     else: 
       if current_app.config['SERVER_ROLE'] == 'PREDEV':
-        url='https://devback.borisreturns.com/pedidos'
+        url='http://devback.borisreturns.com/datos_empresa'
       if current_app.config['SERVER_ROLE'] == 'DEV':
         url="https://back.borisreturns.com/pedidos"
       if current_app.config['SERVER_ROLE'] == 'PROD':
@@ -349,6 +410,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   "orden_nro": order.order_number,
   "orden_fecha": str(order.timestamp.strftime("%Y-%m-%d %H:%M:%S.%f")),
   "orden_medio_de_pago": order.metodo_de_pago,
+  "order_salientes": order.salientes,
   "orden_tarjeta_de_pago": order.tarjeta_de_pago,
   "orden_gastos_cupon": order.gastos_cupon,
   "orden_gastos_gateway": order.gastos_gateway,
@@ -356,7 +418,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
   "orden_gastos_shipping_customer": order.gastos_shipping_customer,
   "orden_gastos_promocion": order.gastos_promocion,
   "correo":{
-    "correo_metodo_envio": metodo_envio,
+    "correo_metodo_envio": metodo_envio['metodo_envio_id'],
     "correo_id": solicitud['id'],
     "correo_status": solicitud['status'],
     "correo_precio": solicitud['price'],
@@ -428,6 +490,10 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       "accion_cambiar_por_desc": i.accion_cambiar_por_desc,
       "monto_a_devolver": precio_final,
       "precio": i.price,
+      "alto":i.alto,
+      "largo": i.largo,
+      "profundidad" : i.profundidad,
+      "peso": i.peso,
       "promo_descuento": i.promo_descuento,
       "promo_nombre": i.promo_nombre,
       "promo_precio_final": i.promo_precio_final,
@@ -561,6 +627,10 @@ def cargar_pedido(unaEmpresa, pedido ):
       name = pedido['products'][x]['name'],
       price = pedido['products'][x]['price'],
       quantity = pedido['products'][x]['quantity'],
+      alto = pedido['products'][x]['height'],
+      largo = pedido['products'][x]['width'],
+      profundidad = pedido['products'][x]['depth'],
+      peso = pedido['products'][x]['weight'],
       variant = pedido['products'][x]['variant_id'],
       image = pedido['products'][x]['image']['src'],
       accion = "ninguna",
@@ -582,7 +652,7 @@ def cargar_pedido(unaEmpresa, pedido ):
 ############################## buscar_tracking ##################################################
 def busca_tracking(orden):
   if current_app.config['SERVER_ROLE'] == 'PREDEV':
-    url='https://devback.borisreturns.com/orden/tracking'
+    url='http://devback.borisreturns.com/datos_empresa'
   if current_app.config['SERVER_ROLE'] == 'DEV':
     url='http://back.borisreturns.com/orden/tracking'
   if current_app.config['SERVER_ROLE'] == 'PROD':

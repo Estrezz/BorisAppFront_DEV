@@ -87,59 +87,31 @@
       <div class="card mb-2 ">
         <div class="card-body">       
           <h5>Alternativas disponibles para el envío de la orden</h5>
-       
-          <!-- Si la tienda tiene configurado un correo para retirar a domiclio -->
-          <!--  conf/archivo.json - envio: configura si tiene retiro o no  -->
-          <!--  correo_usado (en la base): configura la empresa de correo -->
-          {% if 'retiro' in envio %}
-            {% if correo == 'Moova' %}
-              {% if area_valida == True %}
-                {% if precio_envio != 'Failed'%}
-                     <div class="card border-info mt-3">
-                        <div class="card-body">       
-                        <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Moova', area_valida=area_valida, precio_envio=precio_envio) }}" >
-                          <button class="btn btn-info btn-lg"> <span class="bi bi-house-fill"></span> <br> </button>
-                          <p class="text-info" >
-                          <strong>  {{textos['boton_envio_retiro'] }} <br>
-                            Costo: {{precio_envio}} </strong>
-                          <br> {{textos['boton_envio_retiro_desc'] | safe }}
-                          </p>
-                        </a>
-                      </div>
-                    </div>
-                  {% endif %}
-                {% endif %}
-              {% endif %}
-            {% endif %}
-
-            {% if 'manual' in envio %}
-            <div class="card border-info mt-3 ">
+          
+          
+          {% for e in envio %}
+            <div class="card border-info mt-3">
               <div class="card-body">       
-                <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Manual') }}" >
-                  <button class="btn btn-info btn-lg" > <span class="bi bi-handbag"></span> </button>
+                <!--
+                <a href="{{ url_for('main.confirma_solicitud', metodo_envio=e['metodo_envio_id'], area_valida=area_valida, precio_envio=precio_envio) }}" >
+                -->
+                <a href="{{ url_for('main.confirma_solicitud', metodo_envio=e['metodo_envio_id'], area_valida=area_valida) }}" >  
+                  <button class="btn btn-info btn-lg"> <span class="{{e['icon']}}"></span> <br> </button>
                   <p class="text-info" >
-                  <strong> {{textos['boton_envio_manual']}} </strong>
-                  <br>{{textos['boton_envio_manual_desc'] | safe}}
+                    <!--  if area_valida == True  Ver como detectar si el area es valida
+                           if precio_envio != 'Failed' y si tiene cotizacion
+                    --> 
+                    <strong>  {{e['boton_titulo'] }} </strong> <br>
+                    {{e['boton_descripcion'] | safe }}
+                    {% if e['costo_envio'] %}
+                      <br>Costo: {{e['precio_envio']}}
+                    {% endif %}
                   </p>
                 </a>
               </div>
             </div>
-            {% endif %}
-              
-            {% if 'coordinar' in envio %}
-            <div class="card border-info mt-3 ">
-              <div class="card-body">       
-                <a href="{{ url_for('main.confirma_solicitud', metodo_envio='Coordinar', area_valida=area_valida, precio_envio=precio_envio) }}" >
-                  <button class="btn btn-info btn-lg" > <span class="bi bi-headphones"></span> </button>
-                  <p class="text-info" >
-                  <strong> {{textos['boton_envio_coordinar']}} </strong>
-                  <br>{{textos['boton_envio_coordinar_desc'] | safe}}
-                  </p>
-                </a>
-              </div>
-            </div>
-            {% endif %}
-              
+          {% endfor %}
+          
           </div>
         </div>
     </div>
