@@ -384,6 +384,9 @@ def cotiza_envio(company, user, order, productos, correo):
 
   data['conf']['items'] = items_envio
 
+  ### quitar###
+  flash('data a cotizar: {}'.format(json.dumps(data)))
+
   solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
   if solicitud.status_code != 200:
     return ('Failed')
@@ -398,7 +401,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       url='../Boris_common/logs/pedido'+str(order.id)+'.json'
     else: 
       if current_app.config['SERVER_ROLE'] == 'PREDEV':
-        url='http://devback.borisreturns.com/datos_empresa'
+        url='https://devback.borisreturns.com/pedidos'
       if current_app.config['SERVER_ROLE'] == 'DEV':
         url="https://back.borisreturns.com/pedidos"
       if current_app.config['SERVER_ROLE'] == 'PROD':
@@ -655,7 +658,7 @@ def cargar_pedido(unaEmpresa, pedido ):
 ############################## buscar_tracking ##################################################
 def busca_tracking(orden):
   if current_app.config['SERVER_ROLE'] == 'PREDEV':
-    url='http://devback.borisreturns.com/datos_empresa'
+    url='http://devback.borisreturns.com/orden/tracking'
   if current_app.config['SERVER_ROLE'] == 'DEV':
     url='http://back.borisreturns.com/orden/tracking'
   if current_app.config['SERVER_ROLE'] == 'PROD':
