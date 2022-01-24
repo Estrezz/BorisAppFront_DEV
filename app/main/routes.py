@@ -233,7 +233,7 @@ def confirma_cambios():
     
     ## ConCorreo - Appendear al diccionario precio_envio / area_valida
     for e in session['envio']:
-        if e['correo_id'] != 'NONE':
+        if e['carrier'] != False:
             if e['costo_envio'] == "Merchant":
                 precio_envio = 'Sin Cargo'
             else: 
