@@ -266,7 +266,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
   #    return 'Failed'
   #else:
   solicitud_envio = {
-      "id":'',
+      "id":metodo_envio['correo_id'],
       "status":'DRAFT',
       "price": metodo_envio['precio_envio'],
       "priceFormatted":'0.0',
@@ -385,11 +385,12 @@ def cotiza_envio(company, user, order, productos, correo):
   data['conf']['items'] = items_envio
 
   ### quitar###
-  flash('data a cotizar: {}'.format(json.dumps(data)))
+  #flash('data a cotizar: {}'.format(json.dumps(data)))
 
   solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
   if solicitud.status_code != 200:
-    return ('Failed')
+    flash('Error al cotizar {} - {}'.format(solicitud.status_code, solicitud.content))
+    return 'Failed'
   else: 
     return solicitud
     
