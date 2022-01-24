@@ -361,7 +361,9 @@ def cotiza_envio(company, user, order, productos, correo):
           "phone": company.contact_phone
         }
       },
-    "conf":[]
+    "conf":{
+      "items":[]
+    }
   }
 
   items_envio = []
