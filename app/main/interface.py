@@ -318,7 +318,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
 def cotiza_envio(company, user, order, productos, correo):
   
   if current_app.config['SERVER_ROLE'] == 'PREDEV':
-    url='http://devback.borisreturns.com/cotiza_envio'
+    url='https://devback.borisreturns.com/cotiza_envio'
   if current_app.config['SERVER_ROLE'] == 'DEV':
     url="https://back.borisreturns.com/cotiza_envio"
   if current_app.config['SERVER_ROLE'] == 'PROD':
