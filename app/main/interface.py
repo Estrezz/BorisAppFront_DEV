@@ -368,19 +368,17 @@ def cotiza_envio(company, user, order, productos, correo):
   for i in productos:
     items_envio.append (   
       {
-        "item": {
-          "descripcion": i.name,
-          "precio": i.price,
-          "cantidad": i.accion_cantidad,
-          "alto":i.alto,
-          "largo": i.largo,
-          "profundidad" : i.profundidad,
-          "peso": i.peso
-        }
+        "descripcion": i.name,
+        "precio": i.price,
+        "cantidad": i.accion_cantidad,
+        "alto":i.alto,
+        "largo": i.largo,
+        "profundidad" : i.profundidad,
+        "peso": i.peso
       }
     )
 
-  data['conf'] = items_envio
+  data['items'] = items_envio
 
   ### quitar###
   flash('data a cotizar: {}'.format(json.dumps(data)))
