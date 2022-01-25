@@ -389,7 +389,6 @@ def cotiza_envio(company, user, order, productos, correo):
     return 'Failed'
   else: 
     solicitud = solicitud.json()
-    flash(solicitud)
     return solicitud
     
 

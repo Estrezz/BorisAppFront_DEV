@@ -309,7 +309,8 @@ def confirma_solicitud():
         flash("Por favor completa tus datos de contacto")
         return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
-    
+    ##### quitar ############
+    flash('Precio {} - {}'.format(metodo['precio_envio'], type(metodo['precio_envio'])) )
     envio = crea_envio(company, user, order, productos, metodo)
     ##### Agrega nota en Orden Original
     agregar_nota(company, order)
