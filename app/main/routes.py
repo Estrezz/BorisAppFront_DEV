@@ -238,6 +238,8 @@ def confirma_cambios():
                 precio_envio = 'Sin Cargo'
             else: 
                 precio_envio = cotiza_envio(company, user, order, productos, e)
+                if precio_envio == 'Failed':
+                    precio_envio = 'A cotizar'
         else:
             precio_envio = 0
         e['precio_envio'] = precio_envio
