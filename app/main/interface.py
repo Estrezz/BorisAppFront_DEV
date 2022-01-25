@@ -381,13 +381,15 @@ def cotiza_envio(company, user, order, productos, correo):
   data['items'] = items_envio
 
   ### quitar###
-  flash('data a cotizar: {}'.format(json.dumps(data)))
+  #flash('data a cotizar: {}'.format(json.dumps(data)))
 
   solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
   if solicitud.status_code != 200:
     #flash('Error al cotizar {} - {}'.format(solicitud.status_code, solicitud.content))
     return 'Failed'
   else: 
+    solicitud = solicitud.json()
+    flash(solicitud)
     return solicitud
     
 
