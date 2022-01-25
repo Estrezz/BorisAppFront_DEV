@@ -330,8 +330,9 @@ def cotiza_envio(company, user, order, productos, correo):
 
   data = {
     "correo":{
-      "correo_id": correo,
+      "correo_id": correo['correo_id'],
       "store_id": company.store_id,
+      "metodo_envio": correo['metodo_envio_id'],
       "orden_nro": order.order_number
     },
     "from": {
@@ -361,9 +362,6 @@ def cotiza_envio(company, user, order, productos, correo):
           "phone": company.contact_phone
         }
       },
-    "conf":{
-      "items":[]
-    }
   }
 
   items_envio = []
@@ -382,14 +380,14 @@ def cotiza_envio(company, user, order, productos, correo):
       }
     )
 
-  data['conf']['items'] = items_envio
+  data['conf'] = items_envio
 
   ### quitar###
-  #flash('data a cotizar: {}'.format(json.dumps(data)))
+  flash('data a cotizar: {}'.format(json.dumps(data)))
 
   solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
   if solicitud.status_code != 200:
-    flash('Error al cotizar {} - {}'.format(solicitud.status_code, solicitud.content))
+    #flash('Error al cotizar {} - {}'.format(solicitud.status_code, solicitud.content))
     return 'Failed'
   else: 
     return solicitud

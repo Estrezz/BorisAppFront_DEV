@@ -237,7 +237,7 @@ def confirma_cambios():
             if e['costo_envio'] == "Merchant":
                 precio_envio = 'Sin Cargo'
             else: 
-                precio_envio = cotiza_envio(company, user, order, productos, e['correo_id'])
+                precio_envio = cotiza_envio(company, user, order, productos, e)
         else:
             precio_envio = 0
         e['precio_envio'] = precio_envio
