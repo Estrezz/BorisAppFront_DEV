@@ -265,13 +265,15 @@ def crea_envio(company, user, order, productos, metodo_envio):
   #  if solicitud_envio == 'Failed':
   #    return 'Failed'
   #else:
+  
   solicitud_envio = {
-      "id":metodo_envio['correo_id'],
-      "status":'DRAFT',
-      "price": metodo_envio['precio_envio'],
-      "priceFormatted":'0.0',
-      "currency":'ARS'
-   }
+        "id": metodo_envio['correo_id'],
+        "status":'DRAFT',
+        "price": metodo_envio['precio_envio'],
+        "priceFormatted":'0.0',
+        "currency":'ARS'
+  }
+    
 
   mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
   if mandaBoris == 'Error':

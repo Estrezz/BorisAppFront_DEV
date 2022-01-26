@@ -219,6 +219,10 @@ def pedidos_unitarios():
 
 @bp.route('/Confirmar',methods=['GET', 'POST'])
 def confirma_cambios():
+    ### prueba si la cookie expiro
+    if not session.get('cliente'):
+        flash('La sesion expiro, por favor entre al portal nuevamente')
+        return redirect(url_for('main.home'))
     #company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     company= user.pertenece
@@ -309,8 +313,6 @@ def confirma_solicitud():
         flash("Por favor completa tus datos de contacto")
         return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
-    ##### quitar ############
-    flash('Precio {} - {}'.format(metodo['precio_envio'], type(metodo['precio_envio'])) )
     envio = crea_envio(company, user, order, productos, metodo)
     ##### Agrega nota en Orden Original
     agregar_nota(company, order)
@@ -328,6 +330,10 @@ def confirma_solicitud():
 
 @bp.route('/envio(<envio>/<metodo_envio>',methods=['GET', 'POST'])
 def envio( envio,metodo_envio ):
+    ### prueba si la cookie expiro
+    if not session.get('cliente'):
+        flash('La sesion expiro, por favor entre al portal nuevamente')
+        return redirect(url_for('main.home'))
     user = Customer.query.get(session['cliente'])
     company= user.pertenece
     order = Order.query.get(session['orden'])
