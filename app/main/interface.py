@@ -274,17 +274,13 @@ def crea_envio(company, user, order, productos, metodo_envio):
         "currency":'ARS'
   }
     
-
   mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
   if mandaBoris == 'Error':
     flash('ya existe un cambio para esa orden')
   else: 
-    ## agregado try / except
     try:
       send_email('Tu orden ha sido iniciada', 
-                #sender=current_app.config['ADMINS'][0], 
                 sender=(company.communication_email_name, company.communication_email),
-                #sender=company.communication_email,
                 recipients=[user.email], 
                 reply_to = company.admin_email,
                 text_body=render_template('email/pedido_listo.txt',
@@ -301,7 +297,6 @@ def crea_envio(company, user, order, productos, metodo_envio):
 
     send_email('Se ha generado una orden en Boris', 
                 sender=(company.communication_email_name, company.communication_email),
-                #sender=current_app.config['ADMINS'][0], 
                 recipients=[company.admin_email], 
                 reply_to = company.admin_email,
                 text_body=render_template('email/nuevo_pedido.txt',
@@ -381,9 +376,6 @@ def cotiza_envio(company, user, order, productos, correo):
     )
 
   data['items'] = items_envio
-
-  ### quitar###
-  #flash('data a cotizar: {}'.format(json.dumps(data)))
 
   solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
   if solicitud.status_code != 200:

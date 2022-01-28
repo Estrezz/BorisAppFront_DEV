@@ -222,7 +222,7 @@ def confirma_cambios():
     ### prueba si la cookie expiro
     if not session.get('cliente'):
         flash('La sesion expiro, por favor entre al portal nuevamente')
-        return redirect(url_for('main.home'))
+        return render_template('sesion_expirada.html')
     #company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     company= user.pertenece
@@ -333,7 +333,7 @@ def envio( envio,metodo_envio ):
     ### prueba si la cookie expiro
     if not session.get('cliente'):
         flash('La sesion expiro, por favor entre al portal nuevamente')
-        return redirect(url_for('main.home'))
+        return render_template('sesion_expirada.html')
     user = Customer.query.get(session['cliente'])
     company= user.pertenece
     order = Order.query.get(session['orden'])

@@ -1,9 +1,6 @@
 import requests
 import json
-
-
 from app import db
-
 from flask import session, current_app
 
 
@@ -61,7 +58,7 @@ def validar_categorias_tiendanube(company):
             ids.append(d['id'])
     return ids
 
-##### prueba busqueda producto #####
+
 def buscar_producto_tiendanube(empresa, desc_prod):
     url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/products?q="+desc_prod+"&fields=id,name"
     payload={}
@@ -70,9 +67,8 @@ def buscar_producto_tiendanube(empresa, desc_prod):
         'Authentication': empresa.platform_token_type+' '+empresa.platform_access_token
     }
     product = requests.request("GET", url, headers=headers, data=payload).json()
-    #for i in product:
-    #    flash('producto en Tiendanube {}- {}'.format(i, type(i)) )
     return product
+
 
 def agregar_nota_tiendanube(company, order):
     url = "https://api.tiendanube.com/v1/"+str(company.store_id)+"/orders/"+str(order.order_original_id)
