@@ -735,16 +735,21 @@ def validar_politica_rubro(prod_id):
 
 
 def validar_cobertura(provincia,zipcode):
-  if provincia in session['provincia_codigos_postales']:
-    if session['provincia_codigos_postales'][provincia] == "All":
+
+  if zipcode.isdigit():
+    if zipcode < 1900:
       return True
-    else: 
-      for x in range(len(session['provincia_codigos_postales'][provincia])):
-        if zipcode == session['provincia_codigos_postales'][provincia][x] or zipcode == str(session['provincia_codigos_postales'][provincia][x]):
-          return True
-      return False
-  else:
-    return False
+  return False
+  # if provincia in session['provincia_codigos_postales']:
+  #   if session['provincia_codigos_postales'][provincia] == "All":
+  #     return True
+  #   else: 
+  #     for x in range(len(session['provincia_codigos_postales'][provincia])):
+  #       if zipcode == session['provincia_codigos_postales'][provincia][x] or zipcode == str(session['provincia_codigos_postales'][provincia][x]):
+  #         return True
+  #     return False
+  # else:
+  #   return False
   
 ### Selecciona el texto a mostrar segun la empresa
 def traducir_texto(string, fp):
