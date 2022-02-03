@@ -237,7 +237,14 @@ def confirma_cambios():
     
     ## ConCorreo - Appendear al diccionario precio_envio / area_valida
     for e in session['envio']:
-        if e['carrier'] != False:
+        ##############################################################
+        # valida si el código postal esta dentro del area aceptada 
+        # La idea es que cada metodo de envio pueda tener un area valida
+        #############################################################
+        
+
+        if e['carrier'] != False:           
+            area_valida = validar_cobertura(user.province, user.zipcode)
             if e['costo_envio'] == "Merchant":
                 precio_envio = 'Sin Cargo'
             else: 
@@ -246,9 +253,13 @@ def confirma_cambios():
                     precio_envio = 'A cotizar'
         else:
             precio_envio = 0
+            area_valida = True
+
         e['precio_envio'] = precio_envio
+        e['area_valida'] = area_valida
+        
     #precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
-    area_valida = validar_cobertura(user.province, user.zipcode)
+    
 
     #############################################################################
     ### Si hay al menos un cambio de producto mara la orden entera como cambio

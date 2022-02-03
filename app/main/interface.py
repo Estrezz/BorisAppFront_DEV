@@ -777,7 +777,26 @@ def crear_store(store):
     "shipping": "customer",
     "test": "False",
     "correo_test": "True",
-    "envio": ["manual", "coordinar"],
+    "envio": [{
+            "metodo_envio_id": "Coordinar",
+            "icon": "bi bi-headphones",
+            "boton_titulo": "Coordinar método de retiro",
+            "boton_descripcion": "Coordiná con nosotros el método de envío que te quede mas cómodo",
+            "direccion_obligatoria": True,
+            "carrier": False,
+            "correo_id": "",
+            "costo_envio": "Merchant"
+        }, {
+            "metodo_envio_id": "Manual",
+            "icon": "bi bi-handbag",
+            "boton_titulo": "Traer la orden a nuestro local",
+            "boton_descripcion": "Acercanos el/los productos a nuestros locales/depósito",
+            "direccion_obligatoria": False,
+            "carrier": False,
+            "correo_id": "",
+            "costo_envio": "Merchant"
+        }
+    ],
     "provincia_codigos_postales": {
       "Capital Federal":"All",
       "Buenos Aires": [1636, 1637, 1638, 1602, 1605, 1606]

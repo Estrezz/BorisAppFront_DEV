@@ -56,7 +56,7 @@ class Customer(db.Model):
     city = db.Column(db.String(64))
     province = db.Column(db.String(64))
     country = db.Column(db.String(64))
-    instructions = db.Column(db.String(150))
+    instructions = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
