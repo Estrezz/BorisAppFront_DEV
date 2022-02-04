@@ -246,14 +246,19 @@ def confirma_cambios():
         else:
             mostrar = 'Si' 
         flash('metodo de envio {} - Carrier {} - False? {}'.format(e['metodo_envio_id'],e['carrier'],mostrar))
+
         if e['carrier'] != False:           
             area_valida = validar_cobertura(user.province, user.zipcode)
+
             if e['costo_envio'] == "Merchant":
                 precio_envio = 'Sin Cargo'
             else: 
-                precio_envio = cotiza_envio(company, user, order, productos, e)
-                if precio_envio == 'Failed':
-                    precio_envio = 'A cotizar'
+                if area_valida == True:
+                    precio_envio = cotiza_envio(company, user, order, productos, e)
+                    if precio_envio == 'Failed':
+                        precio_envio = 'A cotizar'
+                else:
+                    precio_envio = 'No entrega en esta area'
         else:
             precio_envio = 0
             area_valida = True
