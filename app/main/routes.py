@@ -241,11 +241,6 @@ def confirma_cambios():
         # valida si el código postal esta dentro del area aceptada 
         # La idea es que cada metodo de envio pueda tener un area valida
         #############################################################
-        if e['carrier'] != False:
-            mostrar = 'No'
-        else:
-            mostrar = 'Si' 
-        flash('metodo de envio {} - Carrier {} - False? {}'.format(e['metodo_envio_id'],e['carrier'],mostrar))
 
         if e['carrier'] != False:           
             area_valida = validar_cobertura(user.province, user.zipcode)
