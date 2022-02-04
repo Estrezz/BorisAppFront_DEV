@@ -245,7 +245,7 @@ def confirma_cambios():
             mostrar = 'No'
         else:
             mostrar = 'Si' 
-        flash('Carrier {} - False? {}'.format(e['carrier'],mostrar))
+        flash('metodo de envio {} - Carrier {} - False? {}'.format(e['metodo_envio_id'],e['carrier'],mostrar))
         if e['carrier'] != False:           
             area_valida = validar_cobertura(user.province, user.zipcode)
             if e['costo_envio'] == "Merchant":
