@@ -737,7 +737,7 @@ def validar_politica_rubro(prod_id):
 def validar_cobertura(provincia,zipcode):
 
   if zipcode.isdigit():
-    if zipcode < 1900:
+    if zipcode < int(1900):
       return True
   return False
   # if provincia in session['provincia_codigos_postales']:
