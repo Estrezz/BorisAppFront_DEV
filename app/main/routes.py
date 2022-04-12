@@ -109,7 +109,15 @@ def buscar():
 def pedidos():
 
     #company = Company.query.filter_by(store_id=session['store']).first()
+     ### prueba si la cookie expiro
+    if not session.get('cliente'):
+        return render_template('sesion_expirada.html')
+
     user = Customer.query.get(session['cliente'])
+    ### prueba si la cookie expiro
+    if not user:
+        return render_template('sesion_expirada.html')
+    
     company= user.pertenece
     order = Order.query.get(session['orden'])
     productos = Producto.query.filter_by(order_id=session['orden']).all()
@@ -119,11 +127,15 @@ def pedidos():
         accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
         accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
         motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
+
+       
         item = Producto.query.get((session['orden'],prod_id))
         item.accion = accion
         item.accion_reaccion = False 
         item.accion_cantidad = accion_cantidad
         item.motivo = motivo
+        if request.form.get("observaciones"):
+            item.observaciones = request.form.get("observaciones")
         db.session.commit()
 
         if accion == 'cambiar' and item.accion_reaccion == False:   
@@ -206,13 +218,8 @@ def pedidos_unitarios():
     company= user.pertenece
     order = Order.query.get(session['orden'])
     item = Producto.query.get((session['orden'], prod_id))
-    
-    #if request.method == "POST": 
-    #    company = Company.query.filter_by(store_id=session['store']).first()
-    #    prod_id = request.form.get("Prod_Id")
-    #    user = Customer.query.get(session['cliente'])
-    #    order = Order.query.get(session['orden'])
-    #    item = Producto.query.get((session['orden'], prod_id))
+        
+   
     return render_template('devolucion.html', title='Accion', empresa=company, NombreStore=company.company_name, user=user, order = order, item = item, textos=session['textos'],  lista_motivos=session['motivos'], cupon=session['cupon'])
 
 
@@ -221,10 +228,15 @@ def pedidos_unitarios():
 def confirma_cambios():
     ### prueba si la cookie expiro
     if not session.get('cliente'):
-        flash('La sesion expiro, por favor entre al portal nuevamente')
         return render_template('sesion_expirada.html')
+
     #company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
+
+    ### prueba si la cookie expiro
+    if not user:
+        return render_template('sesion_expirada.html')
+
     company= user.pertenece
     order = Order.query.get(session['orden'])
     productos = db.session.query(Producto).filter((Producto.order_id==session['orden'])).filter((Producto.accion != 'ninguna'))
@@ -280,6 +292,10 @@ def confirma_cambios():
 @bp.route('/direccion', methods=['GET', 'POST'])
 def direccion():
     #company = Company.query.filter_by(store_id=session['store']).first()
+     ### prueba si la cookie expiro
+    if not session.get('cliente'):
+        return render_template('sesion_expirada.html')
+
     user = Customer.query.get(session['cliente'])
     company= user.pertenece
        
@@ -305,6 +321,8 @@ def direccion():
 
 @bp.route('/confirma_solicitud', methods=['GET', 'POST'])
 def confirma_solicitud():
+    if not session.get('cliente'):
+        return render_template('sesion_expirada.html')
     metodo_envio = request.args.get('metodo_envio')
     #company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
@@ -318,8 +336,8 @@ def confirma_solicitud():
     # Selecciona de los metodos de envio disponibles para la tienda el que se seleccionó
     metodo = next(item for item in session['envio'] if item["metodo_envio_id"] == metodo_envio)
     
-
-    if metodo['direccion_obligatoria'] == 'Si' and ((user.address == None or user.address == '') or (user.zipcode == None) ):        
+    # if metodo['direccion_obligatoria'] == 'Si' and ((user.address == None or user.address == '') or (user.zipcode == None) ):        
+    if metodo['direccion_obligatoria'] == True and ((user.address == None or user.address == '') or (user.zipcode == None) ):        
         if request.args.get('area_valida') == 'True':
             area_valida = True
         else:
@@ -346,9 +364,13 @@ def confirma_solicitud():
 def envio( envio,metodo_envio ):
     ### prueba si la cookie expiro
     if not session.get('cliente'):
-        flash('La sesion expiro, por favor entre al portal nuevamente')
         return render_template('sesion_expirada.html')
+
     user = Customer.query.get(session['cliente'])
+    ### prueba si la cookie expiro
+    if not user:
+        return render_template('sesion_expirada.html')
+
     company= user.pertenece
     order = Order.query.get(session['orden'])
     return render_template('envio.html', empresa=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
@@ -412,6 +434,10 @@ def actualizar_empresa_json():
 
 @bp.route('/elegir_producto', methods=['POST'])
 def elegir_producto():
+    
+    if not session.get('store'):
+        return render_template('sesion_expirada.html')
+    
     desc_prod = request.form.get('prod')
     company = Company.query.filter_by(store_id=session['store']).first()
     producto = buscar_producto(company, desc_prod)

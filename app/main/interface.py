@@ -183,6 +183,11 @@ def buscar_empresa(empresa):
     else: 
       session['otracosa'] = 'No'
     
+    if 'observaciones' in settings.keys():
+      session['observaciones'] = settings['observaciones']
+    else: 
+      session['observaciones'] = 'No'
+    
     session['rubros'] = settings['politica']['rubros']
     session['ids_filtrados'] = validar_categorias_tiendanube(unaEmpresa)
     
@@ -495,7 +500,8 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       "promo_descuento": i.promo_descuento,
       "promo_nombre": i.promo_nombre,
       "promo_precio_final": i.promo_precio_final,
-      "motivo": i.motivo
+      "motivo": i.motivo,
+      "observaciones": i.observaciones
     }
     )
 
@@ -524,6 +530,9 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
           
           loguear_error('almacena_envio', 'Ya existe una solicitud', solicitud.status_code, json.dumps(data) )
         else:
+          respuesta_tmp = solicitud.content
+          respuesta = respuesta_tmp.decode("utf-8")
+          mensaje = 'Hubo un error en la generacion del pedido'
           flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
           loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
 
@@ -833,7 +842,10 @@ def crear_store(store):
       "boton_envio_retiro": "Retirar en tu domicilio",
       "boton_envio_retiro_desc": "Un servicio de correo pasara a buscar los productos por tu domicilio",
       "boton_envio_coordinar": "Coordinar método de retiro",
-      "boton_envio_coordinar_desc": "Coordiná con nosotros el método de envío que te quede mas cómodo"
+      "boton_envio_coordinar_desc": "Coordiná con nosotros el método de envío que te quede mas cómodo",
+      "portal_empresa": store['store_name'],
+      "portal_titulo": "Cambios y Devoluciones",
+      "portal_texto": "",
     }
   }
   with open(conf_url, "w+") as outfile:

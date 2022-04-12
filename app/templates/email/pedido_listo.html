@@ -21,14 +21,14 @@
     </p>
     <br>
     <p style="text-align:left">
-        {{textos['confirma_manual_note']}} <br>
+        {{textos['confirma_manual_note'] | safe}} <br>
     </p>
 {% endif %}
 
 <!-- ---------------------------  Envío COORDINAR  ------------------------------------------ -->
 {% if metodo_envio == 'Coordinar' %}
     <p style="text-align:left">
-        En breve nos comunicamos contigo para coordinar el envío de las prendas: <br>
+        En breve nos pondremos en contacto para coordinar el envío de las prendas: <br>
     </p>
     <p style="text-align:center">
                 {% for i in productos %}
@@ -37,7 +37,24 @@
     </p>
     <br>
     <p style="text-align:left">
-        {{textos['confirma_coordinar_note']}} <br>
+        {{textos['confirma_coordinar_note'] | safe}} <br>
+    </p>
+    
+{% endif %}
+
+<!-- ---------------------------  Envío RETIRO  ------------------------------------------ -->
+{% if metodo_envio == 'Domicilio' %}
+    <p style="text-align:left">
+        En breve recibiras por mail las instrucciones para que puedas enviar tus productos: <br>
+    </p>
+    <p style="text-align:center">
+                {% for i in productos %}
+                    {{i.quantity}} - {{i.name}} <br>
+                {% endfor %}
+    </p>
+    <br>
+    <p style="text-align:left">
+        {{textos['confirma_retiro_note'] | safe}} <br>
     </p>
     
 {% endif %}

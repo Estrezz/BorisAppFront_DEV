@@ -110,6 +110,7 @@ class Producto(db.Model):
     promo_descuento = db.Column(db.Float)
     promo_nombre = db.Column(db.String(10))
     promo_precio_final = db.Column(db.Float)
+    observaciones = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     
     def __repr__(self):

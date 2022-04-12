@@ -1,7 +1,8 @@
 import requests
 import json
 from app import db
-from flask import session, current_app
+from flask import session, flash, current_app
+from app.main.errores import loguear_error_general
 
 
 
@@ -53,9 +54,15 @@ def validar_categorias_tiendanube(company):
         'Content-Type': 'application/json',
         'Authentication': company.platform_token_type+' '+company.platform_access_token
         }
-        ids_tmp = requests.request("GET", url, headers=headers, data=payload).json()
-        for d in ids_tmp:
-            ids.append(d['id'])
+        ids_tmp = requests.request("GET", url, headers=headers, data=payload)
+        if ids_tmp.status_code == 200:
+            ids_tmp = ids_tmp.json()
+            for d in ids_tmp:
+                ids.append(d['id']) 
+        else:
+            loguear_error_general('Error en CATEGORIAS', 'No existe la categoria', company.store_id, url )
+               
+        # else registrar que categoris es la que no existe   
     return ids
 
 

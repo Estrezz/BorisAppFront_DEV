@@ -101,6 +101,17 @@
                                     </select>
                                 </div>
                             </div>
+
+                            {% if session['observaciones'] == 'Si' %}
+                            <br>
+                            <div class="row">
+                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="text-align:left">
+                                    <strong><label for="observaciones">Observaciones:</label></strong>
+                                    <textarea class="form-control" id="observaciones" name="observaciones" placeholder="Dejanos tus comentarios" >{{item['observaciones'] or ''}}</textarea>
+                                </div>
+                            </div>
+                            {% endif %}
+
                             {% if title == 'Accion' %}
                                 <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-center">
                                     <button class="btn btn-info bt-sm mt-4" type="submit">Confirmar</button>
