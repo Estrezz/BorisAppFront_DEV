@@ -284,7 +284,8 @@ def crea_envio(company, user, order, productos, metodo_envio):
     flash('ya existe un cambio para esa orden')
   else: 
     try:
-      send_email('Tu orden ha sido iniciada', 
+      #send_email('Tu orden ha sido iniciada', 
+      send_email(session['textos']['orden_solicitada_asunto'], 
                 sender=(company.communication_email_name, company.communication_email),
                 recipients=[user.email], 
                 reply_to = company.admin_email,

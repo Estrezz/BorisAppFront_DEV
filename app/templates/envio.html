@@ -31,6 +31,16 @@
                 <p style="text-align:center">{{textos['confirma_coordinar_note']}}</p>
                 
             {% endif %}
+
+            {% if metodo_envio == 'Domicilio' %}
+                <br>
+                <h5 style="text-align:center">
+                    Tu orden número {{order.order_number}} ha sido iniciada<br>
+                    En breve recibiras por mail las instrucciones para que puedas enviar tus productos
+                    <br>
+                </h5>
+                <p style="text-align:center">{{textos['confirma_domicilio_note']}}</p>
+            {% endif %}
     
             {% if metodo_envio == 'Moova' %}
                 <br>
