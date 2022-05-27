@@ -96,7 +96,7 @@
                 <!--
                 <a href="{{ url_for('main.confirma_solicitud', metodo_envio=e['metodo_envio_id'], area_valida=area_valida, precio_envio=precio_envio) }}" >
                 -->
-                <a href="{{ url_for('main.confirma_solicitud', metodo_envio=e['metodo_envio_id'], area_valida=area_valida) }}" >  
+                <a href="{{ url_for('main.confirma_solicitud', metodo_envio=e['metodo_envio_id'], area_valida=area_valida) }}" id="boton+{{e['metodo_envio_id']}}" name="boton+{{e['metodo_envio_id']}}" class="one-click"> 
                   <button class="btn btn-info btn-lg"> <span class="{{e['icon']}}"></span> <br> </button>
                   <p class="text-info" >
                     <!--  if area_valida == True  Ver como detectar si el area es valida
@@ -121,6 +121,28 @@
   </div>
 </div>
 
-
-
 {% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>      
+
+        $(document).ready(function () {
+
+          $(document).on('click', ".one-click", function(e){
+            if($(this).data('lastClick') + 2000 > new Date().getTime()){
+                e.stopPropagation();
+                return false;
+            }
+            $(this).data('lastClick', new Date().getTime());
+            return true;
+          });
+          
+        });
+    </script>
+{% endblock %}
+    
+
+
+
+

@@ -373,6 +373,8 @@ def envio( envio,metodo_envio ):
 
     company= user.pertenece
     order = Order.query.get(session['orden'])
+    #### fin borrar session ? ####
+    
     return render_template('envio.html', empresa=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
 
 

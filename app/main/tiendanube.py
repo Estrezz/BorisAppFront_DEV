@@ -67,14 +67,23 @@ def validar_categorias_tiendanube(company):
 
 
 def buscar_producto_tiendanube(empresa, desc_prod):
-    url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/products?q="+desc_prod+"&fields=id,name"
+    ### ocultos
+    #url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/products?q="+desc_prod+"&fields=id,name"
+    url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/products?q="+desc_prod+"&fields=id,name,published"
     payload={}
     headers = {
         'Content-Type': 'application/json',
         'Authentication': empresa.platform_token_type+' '+empresa.platform_access_token
     }
-    product = requests.request("GET", url, headers=headers, data=payload).json()
-    return product
+    
+    productos_tmp = requests.request("GET", url, headers=headers, data=payload).json()
+    ## filtra los productos ocultos
+    if 'code' in productos_tmp:
+       productos = {}
+    else: 
+        productos = [p for p in productos_tmp if p['published'] == True]
+        
+    return productos
 
 
 def agregar_nota_tiendanube(company, order):

@@ -90,6 +90,7 @@
           
           
           {% for e in envio %}
+            {% if e['area_valida'] == True %}
             <div class="card border-info mt-3">
               <div class="card-body">       
                 <!--
@@ -103,13 +104,15 @@
                     --> 
                     <strong>  {{e['boton_titulo'] }} </strong> <br>
                     {{e['boton_descripcion'] | safe }}
-                    {% if e['costo_envio'] %}
+                    {% if e['precio_envio'] != 0 %}
                       <br>Costo: {{e['precio_envio']}}
                     {% endif %}
+                    
                   </p>
                 </a>
               </div>
             </div>
+            {% endif %}
           {% endfor %}
           
           </div>
