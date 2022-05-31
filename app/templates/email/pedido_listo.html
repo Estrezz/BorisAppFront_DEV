@@ -42,10 +42,13 @@
     
 {% endif %}
 
-<!-- ---------------------------  Envío RETIRO  ------------------------------------------ -->
+<!-- ---------------------------  Envío a DOMICILIO  ------------------------------------------ -->
 {% if metodo_envio == 'Domicilio' %}
     <p style="text-align:left">
         En breve recibiras por mail las instrucciones para que puedas enviar tus productos: <br>
+        Domicilio {{textos['confirma_domicilio_note'] | safe}} <br>
+        Coordinar {{textos['confirma_domicilio_note'] | safe}}
+
     </p>
     <p style="text-align:center">
                 {% for i in productos %}
@@ -54,7 +57,7 @@
     </p>
     <br>
     <p style="text-align:left">
-        {{textos['confirma_retiro_note'] | safe}} <br>
+        {{textos['confirma_domicilio_note'] | safe}} <br>
     </p>
     
 {% endif %}
