@@ -280,9 +280,7 @@ def crea_envio(company, user, order, productos, metodo_envio):
   }
     
   mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
-  if mandaBoris == 'Error':
-    flash('ya existe un cambio para esa orden')
-  else: 
+  if mandaBoris != 'Failed':
     try:
       #send_email('Tu orden ha sido iniciada', 
       send_email(session['textos']['orden_solicitada_asunto'], 
@@ -336,6 +334,8 @@ def cotiza_envio(company, user, order, productos, correo):
       "correo_id": correo['correo_id'],
       "store_id": company.store_id,
       "metodo_envio": correo['metodo_envio_id'],
+      #### Salientes identifica si hay articulos que deben enviarse al cliente
+      "salientes":order.salientes,
       "orden_nro": order.order_number
     },
     "from": {
@@ -384,6 +384,7 @@ def cotiza_envio(company, user, order, productos, correo):
   data['items'] = items_envio
 
   solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
+  #flash(json.dumps(data))
   if solicitud.status_code != 200:
     #flash('Error al cotizar {} - {}'.format(solicitud.status_code, solicitud.content))
     return 'Failed'
@@ -516,10 +517,12 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
       solicitud = requests.request("POST", url, headers=headers, data=json.dumps(data))
       if solicitud.status_code != 200:
         if solicitud.status_code == 409:
-          flash('Ya existe una solicitud para esa orden. Error {}'.format(solicitud.status_code))
+          
           respuesta_tmp = solicitud.content
           respuesta = respuesta_tmp.decode("utf-8")
 
+          if respuesta == 'Cambia metodo':
+            mensaje = 'El cliente está intentando cambiar el método de envío'
           if respuesta == 'Cambio de accion':
             mensaje = 'El cliente está intentando cambiar su decisión inicial'
           if respuesta == 'Cambio de producto':
@@ -528,7 +531,8 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
             mensaje = 'El cliente está intentando agregar o quitar un producto'
           if respuesta == 'Solicitud duplicada':
             mensaje = 'Las solicitudes parecen iguales'
-          
+
+          flash('Ya existe una solicitud para esa orden. Error {} - {}'.format(solicitud.status_code, mensaje))
           loguear_error('almacena_envio', 'Ya existe una solicitud', solicitud.status_code, json.dumps(data) )
         else:
           respuesta_tmp = solicitud.content
@@ -537,30 +541,33 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
           flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
           loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
 
-        if current_app.config['SERVER_ROLE'] == 'PROD':
-          send_email('ERROR en creación solicitud '+respuesta, 
-                  sender=current_app.config['ADMINS'][0],
-                  recipients=current_app.config['ADMINS'], 
-                  reply_to = current_app.config['ADMINS'][0],
-                  text_body=render_template('email/error_solicitud.txt',
-                                          user=user, data=json.dumps(data), company=company),
-                  html_body=render_template('email/error_solicitud.html',
-                                          user=user, data=json.dumps(data), company=company), 
-                  attachments=None, 
-                  sync=False,
-                  bcc=[current_app.config['ADMINS'][0]])
-        
-          send_email('ERROR en creación solicitud ', 
-                  sender=current_app.config['ADMINS'][0],
-                  recipients=[company.admin_email], 
-                  reply_to = current_app.config['ADMINS'][0],
-                  text_body=render_template('email/error_solicitud_cliente.txt',
-                                          user=user, data=mensaje, order=order, company=company),
-                  html_body=render_template('email/error_solicitud_cliente.html',
-                                          user=user, data=mensaje, order=order, company=company), 
-                  attachments=None, 
-                  sync=False,
-                  bcc=[current_app.config['ADMINS'][0]])
+        #if current_app.config['SERVER_ROLE'] == 'PROD':
+          ###### no manda mail si las solicitudes son iguales ###########
+          #if mensaje != 'Las solicitudes parecen iguales':
+        ### Mail para admin con el JSON del pedido ####
+        #send_email('ERROR en creación solicitud '+respuesta, 
+        #            sender=current_app.config['ADMINS'][0],
+        #            recipients=current_app.config['ADMINS'], 
+        #            reply_to = current_app.config['ADMINS'][0],
+        #            text_body=render_template('email/error_solicitud.txt',
+        #                                    user=user, data=json.dumps(data), company=company),
+        #            html_body=render_template('email/error_solicitud.html',
+        #                                    user=user, data=json.dumps(data), company=company), 
+        #            attachments=None, 
+        #            sync=False,
+        #            bcc=[current_app.config['ADMINS'][0]])
+          
+        send_email('ERROR en creación solicitud ', 
+                    sender=current_app.config['ADMINS'][0],
+                    recipients=[company.admin_email], 
+                    reply_to = current_app.config['ADMINS'][0],
+                    text_body=render_template('email/error_solicitud_cliente.txt',
+                                            user=user, data=mensaje, order=order, company=company),
+                    html_body=render_template('email/error_solicitud_cliente.html',
+                                            user=user, data=mensaje, order=order, company=company), 
+                    attachments=None, 
+                    sync=False,
+                    bcc=[current_app.config['ADMINS'][0]])
           
         return 'Failed'
       else: 
@@ -844,6 +851,7 @@ def crear_store(store):
       "boton_envio_retiro_desc": "Un servicio de correo pasara a buscar los productos por tu domicilio",
       "boton_envio_coordinar": "Coordinar método de retiro",
       "boton_envio_coordinar_desc": "Coordiná con nosotros el método de envío que te quede mas cómodo",
+      "orden_solicitada_asunto": "Tu orden ha sido iniciada",
       "portal_empresa": store['store_name'],
       "portal_titulo": "Cambios y Devoluciones",
       "portal_texto": "",

@@ -232,6 +232,7 @@ def confirma_cambios():
 
     #company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
+    #flash(user.email)
 
     ### prueba si la cookie expiro
     if not user:
@@ -246,36 +247,6 @@ def confirma_cambios():
         productos = Producto.query.filter_by(order_id=session['orden']).all()
         return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
 
-    
-    ## ConCorreo - Appendear al diccionario precio_envio / area_valida
-    for e in session['envio']:
-        ##############################################################
-        # valida si el código postal esta dentro del area aceptada 
-        # La idea es que cada metodo de envio pueda tener un area valida
-        #############################################################
-
-        if e['carrier'] != False:           
-            area_valida = validar_cobertura(user.province, user.zipcode)
-
-            if e['costo_envio'] == "Merchant":
-                precio_envio = 'Sin Cargo'
-            else: 
-                if area_valida == True:
-                    precio_envio = cotiza_envio(company, user, order, productos, e)
-                    if precio_envio == 'Failed':
-                        precio_envio = 'A cotizar'
-                else:
-                    precio_envio = 'No entrega en esta area'
-        else:
-            precio_envio = 0
-            area_valida = True
-
-        e['precio_envio'] = precio_envio
-        e['area_valida'] = area_valida
-        
-    #precio_envio = cotiza_envio(company, user, order, productos, company.correo_usado)
-    
-
     #############################################################################
     ### Si hay al menos un cambio de producto mara la orden entera como cambio
     #############################################################################
@@ -285,6 +256,31 @@ def confirma_cambios():
             salientes = 'Si'   
     order.salientes = salientes
     db.session.commit()
+    
+
+    ## ConCorreo - Appendear al diccionario precio_envio / area_valida
+    for e in session['envio']:
+        ##################################################################
+        # valida si el código postal esta dentro del area aceptada 
+        # La idea es que cada metodo de envio pueda tener un area valida
+        ##################################################################
+
+        if e['carrier'] != False:        
+            precio_envio = cotiza_envio(company, user, order, productos, e)
+            if precio_envio == 'Failed':
+                precio_envio = 'A cotizar'
+                area_valida = False
+            else : 
+                if e['costo_envio'] == "Merchant":
+                    precio_envio = 'Sin Cargo'
+                area_valida == True
+        else:
+            precio_envio = 0
+            area_valida = True
+
+        e['precio_envio'] = precio_envio
+        e['area_valida'] = area_valida
+        
     return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
 
@@ -301,7 +297,7 @@ def direccion():
        
     if request.method == "POST":
         user.name = request.form.get('user_name')
-        user.mail = request.form.get('user_mail')
+        user.email = request.form.get('user_mail')
         user.phone = request.form.get('user_phone')
         user.address = request.form.get('user_address')
         user.number = request.form.get('user_number')
@@ -312,8 +308,10 @@ def direccion():
         user.province = request.form.get('user_province')
         user.country = request.form.get('user_country')
         user.instructions = request.form.get('user_instructions')
-        
+
         db.session.commit() 
+        user = Customer.query.get(session['cliente'])
+
         return redirect(url_for('main.confirma_cambios'))
     return render_template('direccion.html',  empresa=company, user=user)
 
