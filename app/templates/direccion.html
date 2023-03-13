@@ -32,44 +32,44 @@
                 <div class="form-group row">
                     <div class="col">
                         <label for="user_address" >Calle</label>
-                        <input type="text" class="form-control form-control-sm" id="user_address" name="user_address" value="{{  user.address }}">
+                        <input type="text" class="form-control form-control-sm" id="user_address" name="user_address" value="{{  user.address }}" maxlength="250">
                     </div>
                     <div class="col">
                         <label for="user_number" >Número</label>
-                        <input type="text" class="form-control form-control-sm" id="user_number" name="user_number" value="{{  user.number }}">
+                        <input type="text" class="form-control form-control-sm" id="user_number" name="user_number" value="{{  user.number }}" maxlength="35">
                     </div>
                     <div class="col">
                         <label for="user_floor" >Piso</label>
-                        <input type="text" class="form-control form-control-sm" id="user_floor" name="user_floor" value="{{  user.floor }}">
+                        <input type="text" class="form-control form-control-sm" id="user_floor" name="user_floor" value="{{  user.floor }}" maxlength="250">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <div class="col">
                         <label for="user_locality" >Localidad</label>
-                        <input type="text" class="form-control form-control-sm" id="user_locality" name="user_locality" value="{{  user.locality }}">
+                        <input type="text" class="form-control form-control-sm" id="user_locality" name="user_locality" value="{{  user.locality }}" maxlength="250">
                     </div>
                     <div class="col">
                         <label for="user_zipcode" >Cod. Postal</label>
-                        <input type="text" class="form-control form-control-sm" id="user_zipcode" name="user_zipcode" value="{{  user.zipcode }}">
+                        <input type="text" class="form-control form-control-sm" id="user_zipcode" name="user_zipcode" value="{{  user.zipcode }}" maxlength="8">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <div class="col">
                         <label for="user_city" >Ciudad</label>
-                        <input type="text" class="form-control form-control-sm" id="user_city" name="user_city" value="{{  user.city }}">
+                        <input type="text" class="form-control form-control-sm" id="user_city" name="user_city" value="{{  user.city }}" maxlength="64">
                     </div>
                     <div class="col">
                         <label for="user_province" >Provincia</label>
-                        <input type="text" class="form-control form-control-sm" id="user_province" name="user_province" value="{{  user.province }}">
+                        <input type="text" class="form-control form-control-sm" id="user_province" name="user_province" value="{{  user.province }}" maxlength="64">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <div class="col">
                         <label for="user_country" >País</label>
-                        <input type="text" class="form-control form-control-sm" id="user_country" name="user_country" value="{{  user.country }}">
+                        <input type="text" class="form-control form-control-sm" id="user_country" name="user_country" value="{{  user.country or 'AR'}}">
                     </div>
                 </div>
                 <br>

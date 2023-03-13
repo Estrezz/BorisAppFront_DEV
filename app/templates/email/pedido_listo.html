@@ -28,7 +28,7 @@
 <!-- ---------------------------  Envío COORDINAR  ------------------------------------------ -->
 {% if metodo_envio == 'Coordinar' %}
     <p style="text-align:left">
-        En breve nos pondremos en contacto para coordinar el envío de las prendas: <br>
+        En breve nos pondremos en contacto para coordinar el envío de tus productos: <br>
     </p>
     <p style="text-align:center">
                 {% for i in productos %}
@@ -46,9 +46,6 @@
 {% if metodo_envio == 'Domicilio' %}
     <p style="text-align:left">
         En breve recibiras por mail las instrucciones para que puedas enviar tus productos: <br>
-        Domicilio {{textos['confirma_domicilio_note'] | safe}} <br>
-        Coordinar {{textos['confirma_domicilio_note'] | safe}}
-
     </p>
     <p style="text-align:center">
                 {% for i in productos %}

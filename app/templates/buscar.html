@@ -10,15 +10,16 @@
 <div class="row">
     <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3"></div>
     
-    <div class="col  justify-content-center"  >
+    <div class="col justify-content-center"  >
         <div class="card border-light rounded text-center px-4 py-4">
         
                 <!-- <h3 >{{empresa.company_name}}</h3> -->
                 {% if textos['portal_empresa'] %}
                     <h3>{{textos['portal_empresa'] | safe}}</h3>
                 {% endif %}
-                
-                <img src="{{empresa.logo}}" class="card-img-top mx-auto px-3" style="max-width: 100%; height: auto" alt="logo" >
+               
+                <img src="{{empresa.logo}}" class="card-img-top mx-auto px-3" style="max-width: 80vw; height: auto"  alt="logo" >
+               
                 <div class="card-body">
                    <!-- <h5>Cambios y Devoluciones</h5> -->
                     {% if textos['portal_titulo'] %}
@@ -44,6 +45,11 @@
                     {{textos['portal_texto'] | safe}}
                     </small>
                 {% endif %}
+                <br><br>
+                <a href="https://www.borisreturns.com/" target="_blank">        
+                    <img src="/static/images/powered_by.png" class="mx-auto px-3" style="max-width: 50%; height: auto; width: auto; max-height: 50%" >
+                </a><br>
+                
             </div>
         </div>
     </div>

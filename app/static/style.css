@@ -6,6 +6,7 @@
     padding: 0;
     text-align: center;
 }
+
 .track_tbl td.track_dot:after {
     content: "\f111";
     font-family: FontAwesome;
@@ -13,6 +14,7 @@
     margin-left: -5px;
     top: 11px;
 }
+
 .track_tbl td.track_dot span.track_line {
     background: #000;
     width: 3px;
@@ -32,5 +34,24 @@
 
 .foto {
     max-width: 50%;
-  }
+}
 
+.contenedorDiv {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+  
+.logoMarca {
+    height: auto;
+    width: auto;
+    max-height: 10%;
+    max-width: 10%;
+}
+
+  

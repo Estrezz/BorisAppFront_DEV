@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+        {% block head %}
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+            <link rel="stylesheet" href="/static/style.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+            {% endblock %}
+
+    </head>
+
+    <body>
+    
+        {% block app_content %}
+            <h1 style="text-align:center" class="text-muted"> 
+                <br>
+                <br>
+                <img src="/static/images/sad-face.png" class="mx-auto px-3" style="max-width: 20%; height: auto"> <br>
+                 
+            </h1>
+       
+            <p style="text-align:center" class="text-muted"> 
+               
+                    Lo sentimos <br>
+                    No se encontró el portal para esa tienda &nbsp;
+                    <br>
+                    Por favor revisa el enlace e intentá nuevamente
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <a href="https://www.borisreturns.com/">        
+                        <img src="/static/images/powered_by.png" class="mx-auto px-3" style="max-width: 40%; height: auto" >
+                    </a><br>
+                <small>La solución para tus Cambios y Devoluciones en Tiendanube</small>
+
+                
+                
+            </p> 
+        {% endblock%}
+
+    </body>

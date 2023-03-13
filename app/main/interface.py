@@ -117,7 +117,17 @@ def buscar_empresa(empresa):
     if current_app.config['SERVER_ROLE'] == 'PROD':
       url='http://backprod.borisreturns.com/datos_empresa'
     params = {'store_id': empresa}
-    empresa_tmp = requests.request("GET", url, params=params).json()
+    empresa_tmp = requests.request("GET", url, params=params)
+    ############
+    ### Valida si existe la empresa
+    ### empresa_tmp = empresa_tmp.json()
+    ############
+    try:
+        empresa_tmp = empresa_tmp.json()
+    except json.JSONDecodeError:
+        return "Failed"
+    
+  
   
     ### Setea el nombre del SENDER en el mail saliente - SI no lo tiene configurado
     ### toma la parte anterior al @
@@ -228,7 +238,7 @@ def buscar_empresa(empresa):
       company_name = 'Tu Tienda',
       company_url= 'https://demoboris.mitiendanube.com',
       admin_email = 'info@borisreturns.com',
-      logo = 'https://frontprod.borisreturns.com/static/images/Boris_Naranja.png',
+      logo = 'https://frontprod.borisreturns.com/static/images/BorisReturns.png',
       fondo = '/static/images/Boris_back.png',
       correo_usado = 'Moova',
       correo_apikey = 'b23920003684e781d87e7e5b615335ad254bdebc',
@@ -636,11 +646,18 @@ def cargar_pedido(unaEmpresa, pedido ):
     promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
     valida = validar_politica(unaOrden.order_fecha_compra, pedido['products'][x]['product_id'] )
     
+    ## valida si el precio es null y pone 0
+    if pedido['products'][x]['price'] is None:
+      precio_tmp = 0
+    else :
+      precio_tmp = pedido['products'][x]['price']
+
     unProducto = Producto(
       id =  pedido['products'][x]['id'],
       prod_id = pedido['products'][x]['product_id'],
       name = pedido['products'][x]['name'],
-      price = pedido['products'][x]['price'],
+      # price = pedido['products'][x]['price'],
+      price = precio_tmp,
       quantity = pedido['products'][x]['quantity'],
       alto = pedido['products'][x]['height'],
       largo = pedido['products'][x]['width'],

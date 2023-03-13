@@ -25,6 +25,10 @@ def home():
         return redirect(url_for('main.buscar', empresa = empresa))
     else: 
         unaEmpresa = buscar_empresa(empresa)
+        ##### Empresa no existe ##################
+        if unaEmpresa == "Failed":
+            return render_template('no_encontrado.html')
+
         pedido = buscar_pedido_conNro(unaEmpresa, request.args.get('order_id'))
         cargar_pedido(unaEmpresa, pedido)
         return redirect(url_for('main.pedidos'))
@@ -77,6 +81,10 @@ def buscar():
 
     ID_empresa = request.args['empresa']
     unaEmpresa = buscar_empresa(ID_empresa)
+    
+    ##### Empresa no existe ##################
+    if unaEmpresa == "Failed":
+        return render_template('no_encontrado.html')
 
     if request.method == "POST":
         ordernum = request.form.get("ordernum")
@@ -211,6 +219,9 @@ def pedidos():
 
 @bp.route('/pedidos_unitarios', methods=['GET', 'POST'])
 def pedidos_unitarios():   
+    ### prueba si la cookie expiro
+    if not session.get('cliente'):
+        return render_template('sesion_expirada.html')
 
     #company = Company.query.filter_by(store_id=session['store']).first()
     prod_id = request.form.get("Prod_Id")
