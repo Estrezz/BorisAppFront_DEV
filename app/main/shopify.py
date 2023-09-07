@@ -60,13 +60,17 @@ def cargar_pedido_shopify(unaEmpresa, pedido ):
     nota_actual = pedido['note'] if pedido['note'] != None else ""
     nota = f"{nota_actual} - " if nota_actual != "Esta orden tienen una gestión iniciada en BORIS" else ""
     nota += "Esta orden tienen una gestión iniciada en BORIS"
+
+    datetime_str = pedido['processed_at']
+    datetime_obj = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M:%S%z')
+    
     
     unaOrden = Order(
       order_uid = str(session['uid']),
       id = pedido['id'],
       order_number = pedido['order_number'],
       order_original_id = pedido['id'],
-      order_fecha_compra = datetime.fromisoformat(pedido['processed_at']).replace(tzinfo=None),
+      order_fecha_compra = datetime_obj.replace(tzinfo=None),
       ### REVISAR - payment_gateways_name es un array y puede ser mas de uno
       metodo_de_pago = ['payment_gateway_names'][0],
       ### REVISAR - ver de donde sacar datos de la tarjeta
