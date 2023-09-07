@@ -62,6 +62,7 @@ def cargar_pedido_shopify(unaEmpresa, pedido ):
     nota += "Esta orden tienen una gestión iniciada en BORIS"
 
     datetime_str = pedido['processed_at']
+    datetime_str = datetime_str[:-3] + datetime_str[-2:]
     datetime_obj = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M:%S%z')
     
     
