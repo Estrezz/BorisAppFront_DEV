@@ -9,8 +9,9 @@ from datetime import datetime
 from app import db
 from app.models import Customer, Order, Producto, Company
 from flask import session, flash, current_app, render_template
-from app.main.moova import crea_envio_moova, cotiza_envio_moova
-from app.main.tiendanube import buscar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube, validar_categorias_tiendanube, buscar_producto_tiendanube, agregar_nota_tiendanube
+# from app.main.moova import crea_envio_moova, cotiza_envio_moova
+from app.main.tiendanube import buscar_pedido_tiendanube, buscar_producto_nombre_tiendanube, cargar_pedido_tiendanube, buscar_pedido_conNro_tiendanube, buscar_alternativas_tiendanube, validar_categorias_tiendanube, buscar_producto_tiendanube, agregar_nota_tiendanube
+from app.main.shopify import buscar_pedido_shopify, cargar_pedido_shopify, buscar_alternativas_shopify, buscar_producto_shopify, buscar_producto_nombre_shopify
 from app.email import send_email
 
 
@@ -23,77 +24,76 @@ def buscar_nro_pedido(lista, valor):
 
 
 def buscar_pedido(empresa, ordernum, ordermail):
+
+  ################## TiendaNube ##############################
   if empresa.platform == 'tiendanube':
     order_tmp = buscar_pedido_tiendanube(empresa, ordermail)
+
+    if type(order_tmp) == dict:
+
+      ### Reintenta 5 veces para evitar el problema del error 5xxx de Teindanube
+      contador = 1
+      while (order_tmp['description'][:8] == 'Obtained'):
+        contador = contador + 1
+        order_tmp = buscar_pedido_tiendanube(empresa, ordermail)
+        if type(order_tmp) != dict:
+          break
+        if contador == 5:
+          return 'Reintentar'
+
+      return 'None'
+    else:
+      order = buscar_nro_pedido(order_tmp, int(ordernum))
     
-
-  if type(order_tmp) == dict:
-    return 'None'
-  else:
-    order = buscar_nro_pedido(order_tmp, int(ordernum))
-    return order
-
+  ################## Shopify ##############################
+  if empresa.platform == 'shopify':
+    order_tmp = buscar_pedido_shopify(empresa, ordernum, ordermail)
+    order = order_tmp
+  
+  return order
+    
 
 def buscar_pedido_conNro(empresa, orderid):
   if empresa.platform == 'tiendanube':
     order = buscar_pedido_conNro_tiendanube(empresa, orderid)
-  
-  
+   
   return order
 
+###### Busca el nombre del Producto
+def buscar_producto_nombre(company, storeid, prod_id, item_variant):
 
-#############################################################################
-# Busca la promo con la que se vendió un articulo 
-# devuelve [nombre promo. precio promocional]
-#############################################################################
-def buscar_promo(promociones, Id_Producto ):
-  promo = ("",0,0)
-  for x in promociones:
-    if x['id'] == Id_Producto:
-      ### correccion PROMO -- si la orden tiene error el tipo de x['discount_script_type'] es DICT####
-      if isinstance(x['discount_script_type'], str):
-        #flash('Descuento {}'.format(type(x['discount_script_type'])))
-        promo = (x['discount_script_type'], x['discount_amount'], x['final_price'])
-        #promo = (type(x['discount_script_type']), x['discount_amount'], x['final_price'])
-      return promo
-  return promo
+  ### Para Tiendanube
+  if company.platform == 'tiendanube':
+    name = buscar_producto_nombre_tiendanube(company, storeid, prod_id)
   
+  ### Para Shopify
+  if company.platform == 'shopify':
+    name = buscar_producto_nombre_shopify(company, storeid, prod_id)
+
+  # Si el producto no existe (fue eliminado despues de la compra)
+  if name == 404:
+    return ('', [])
+
+  return name
 
 #####################################################################################################
 # Busca alternativas para cambiar un articulo según el motivo de cambio
 # devuelve lista con productos alternativos y le oden de los atributos (para tener como encabezados)
 #####################################################################################################
-def buscar_alternativas(company, storeid, prod_id, item_variant, param):
+def buscar_alternativas(company, storeid, prod_id, item_variant):
+  
   if company.platform == 'tiendanube':
-    product = buscar_alternativas_tiendanube(company, storeid, prod_id)
-    #### Si el producto fue eliminado luego de la compra #####
-    if product == 404:
-      atributos = []
-      devolver = ['',atributos]
-      return devolver
-  variantes = []
+    alternatives = buscar_alternativas_tiendanube(company, storeid, prod_id, item_variant)
 
-  if param == "nombre":
-    return product['name']['es']
+  if company.platform == 'shopify':
+    alternatives = buscar_alternativas_shopify(company, storeid, prod_id, item_variant)
+
+    #### Si el producto fue eliminado luego de la compra #####
+  if alternatives == 404:
+    return ('', [])
+    
+  return alternatives    
   
-  for x in product['variants']:
-    # validar stock infinito (NoneType) y permitir cambiar por lo mismo
-    # if x['stock'] > 1 and x['id'] != item_variant :
-    if isinstance(x['stock'], type(None)) == True:
-      if x['id'] == item_variant:
-        x['values']= [{"es": "Mismo Articulo"}]
-      variantes.append(x)
-    else: 
-      # Se coorigio el 13 -08
-      # if x['stock'] > 1 :
-      if x['stock'] > 0 :
-        if x['id'] == item_variant:
-          x['values']= [{"es": "Mismo Articulo"}]
-        variantes.append(x)
-  
-  
-  devolver = [variantes, product['attributes']]
-  return devolver
 
 
 ############################## describir_variante ##################################################
@@ -106,29 +106,26 @@ def describir_variante(values):
     desc = desc + i['es'] 
   return desc
 
+
 ############################## buscar_empresa ##################################################
 def buscar_empresa(empresa):
   if empresa != 'Ninguna':
 
     if current_app.config['SERVER_ROLE'] == 'PREDEV':
-      url='http://devback.borisreturns.com/datos_empresa'
+      url='https://devback.borisreturns.com/datos_empresa'
     if current_app.config['SERVER_ROLE'] == 'DEV':
-      url='http://back.borisreturns.com/datos_empresa'
+      url='https://back.borisreturns.com/datos_empresa'
     if current_app.config['SERVER_ROLE'] == 'PROD':
-      url='http://backprod.borisreturns.com/datos_empresa'
+      url='https://backprod.borisreturns.com/datos_empresa'
     params = {'store_id': empresa}
     empresa_tmp = requests.request("GET", url, params=params)
-    ############
-    ### Valida si existe la empresa
-    ### empresa_tmp = empresa_tmp.json()
-    ############
+
     try:
         empresa_tmp = empresa_tmp.json()
     except json.JSONDecodeError:
         return "Failed"
     
-  
-  
+     
     ### Setea el nombre del SENDER en el mail saliente - SI no lo tiene configurado
     ### toma la parte anterior al @
     if 'communication_email_name' in empresa_tmp.keys():
@@ -170,7 +167,6 @@ def buscar_empresa(empresa):
       shipping_info = empresa_tmp['shipping_info']
     )
     
-    #empresa_tmp = Store.query.filter(Store.store_id == empresa).first()
     #### guarda settings de la empresa
     settings = guardar_settings(empresa)
     session['shipping'] = settings['shipping']
@@ -199,10 +195,14 @@ def buscar_empresa(empresa):
       session['observaciones'] = 'No'
     
     session['rubros'] = settings['politica']['rubros']
-    session['ids_filtrados'] = validar_categorias_tiendanube(unaEmpresa)
-    
-    
-    
+
+    ### Multiplataforma #####################################
+    if empresa_tmp['platform'] == "tiendanube": 
+      session['ids_filtrados'] = validar_categorias_tiendanube(unaEmpresa)
+    ###### ver Shopify ##########################33
+    else: 
+      session['ids_filtrados'] = []
+     
   else: 
     settings = guardar_settings('1447373')
     session['shipping'] = settings['shipping']
@@ -274,13 +274,6 @@ def guardar_settings(store_id):
 
 ############################## crea_envio ##################################################
 def crea_envio(company, user, order, productos, metodo_envio): 
-  ### Una vez terminada la implementacion de correo quitar este if
-  #if metodo_envio['metodo_envio_id'] == 'Moova':
-  #  solicitud_envio = crea_envio_moova(company, user, order, productos)
-  #  if solicitud_envio == 'Failed':
-  #    return 'Failed'
-  #else:
-  
   solicitud_envio = {
         "id": metodo_envio['correo_id'],
         "status":'DRAFT',
@@ -292,7 +285,6 @@ def crea_envio(company, user, order, productos, metodo_envio):
   mandaBoris = almacena_envio(company, user, order, productos, solicitud_envio, metodo_envio)
   if mandaBoris != 'Failed':
     try:
-      #send_email('Tu orden ha sido iniciada', 
       send_email(session['textos']['orden_solicitada_asunto'], 
                 sender=(company.communication_email_name, company.communication_email),
                 recipients=[user.email], 
@@ -323,9 +315,9 @@ def crea_envio(company, user, order, productos, metodo_envio):
   return solicitud_envio
 
 
-############################## cotiza_envio ##################################################
-#### Cotizar el precio del envío
-
+################################################
+#### Cotizar el precio del envío               #
+################################################
 def cotiza_envio(company, user, order, productos, correo):
   
   if current_app.config['SERVER_ROLE'] == 'PREDEV':
@@ -551,22 +543,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
           flash('Hubo un problema con la generación del pedido. Error {}'.format(solicitud.status_code))
           loguear_error('almacena_envio', 'Hubo un problema con la generación de la orden en Boris', solicitud.status_code, json.dumps(data) )
 
-        #if current_app.config['SERVER_ROLE'] == 'PROD':
-          ###### no manda mail si las solicitudes son iguales ###########
-          #if mensaje != 'Las solicitudes parecen iguales':
-        ### Mail para admin con el JSON del pedido ####
-        #send_email('ERROR en creación solicitud '+respuesta, 
-        #            sender=current_app.config['ADMINS'][0],
-        #            recipients=current_app.config['ADMINS'], 
-        #            reply_to = current_app.config['ADMINS'][0],
-        #            text_body=render_template('email/error_solicitud.txt',
-        #                                    user=user, data=json.dumps(data), company=company),
-        #            html_body=render_template('email/error_solicitud.html',
-        #                                    user=user, data=json.dumps(data), company=company), 
-        #            attachments=None, 
-        #            sync=False,
-        #            bcc=[current_app.config['ADMINS'][0]])
-          
+        
         send_email('ERROR en creación solicitud ', 
                     sender=current_app.config['ADMINS'][0],
                     recipients=[company.admin_email], 
@@ -593,91 +570,13 @@ def cargar_pedido(unaEmpresa, pedido ):
   session['store'] = unaEmpresa.store_id
   session['plataforma'] = unaEmpresa.platform
 
-  unCliente = Customer(
-      customer_uid = str(session['uid']),
-      id = pedido['customer']['id'],
-      name =pedido['customer']['name'],
-      identification = pedido['customer']['identification'],
-      email = pedido['customer']['email'],
-      phone = pedido['customer']['phone'],
-      address = pedido['shipping_address']['address'],
-      number = pedido['shipping_address']['number'],
-      floor = pedido['shipping_address']['floor'],
-      zipcode = pedido['shipping_address']['zipcode'],
-      locality = pedido['shipping_address']['locality'],
-      city = pedido['shipping_address']['city'],
-      province = pedido['shipping_address']['province'],
-      country = pedido['shipping_address']['country'],
-      pertenece = unaEmpresa
-      )
-  session['cliente'] = unCliente.customer_uid
+  if unaEmpresa.platform == 'tiendanube':
+    cargar_pedido_tiendanube(unaEmpresa, pedido )
+  if unaEmpresa.platform == 'shopify':
+    cargar_pedido_shopify(unaEmpresa, pedido )
+  
+  return "OK"
 
-
-  #### Si el pedido ya tiene una nota la carga #########################
-  if pedido['owner_note'] != None:
-    if pedido['owner_note'] != "Esta orden tienen una gestión iniciada en BORIS":
-      nota = pedido['owner_note'] + " - Esta orden tienen una gestión iniciada en BORIS"
-    else :
-      nota = "Esta orden tienen una gestión iniciada en BORIS"
-  else :
-    nota = "Esta orden tienen una gestión iniciada en BORIS"
-
-
-  unaOrden = Order(
-      order_uid = str(session['uid']),
-      id = pedido['id'],
-      order_number = pedido['number'],
-      order_original_id = pedido['id'],
-      order_fecha_compra = datetime.strptime((pedido['completed_at']['date']), '%Y-%m-%d %H:%M:%S.%f'),
-      metodo_de_pago = pedido['gateway'],
-      tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
-      gastos_cupon = pedido['discount_coupon'],
-      gastos_gateway = pedido['discount_gateway'],
-      gastos_shipping_owner = pedido['shipping_cost_owner'],
-      gastos_shipping_customer = pedido['shipping_cost_customer'],
-      gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
-      #### owner_note
-      owner_note = nota,
-      buyer = unCliente
-      )
-  session['orden'] = unaOrden.order_uid      
-
-  for x in range(len(pedido['products'])): 
-    promo_tmp = buscar_promo(pedido['promotional_discount']['contents'], pedido['products'][x]['id'] )
-    valida = validar_politica(unaOrden.order_fecha_compra, pedido['products'][x]['product_id'] )
-    
-    ## valida si el precio es null y pone 0
-    if pedido['products'][x]['price'] is None:
-      precio_tmp = 0
-    else :
-      precio_tmp = pedido['products'][x]['price']
-
-    unProducto = Producto(
-      id =  pedido['products'][x]['id'],
-      prod_id = pedido['products'][x]['product_id'],
-      name = pedido['products'][x]['name'],
-      # price = pedido['products'][x]['price'],
-      price = precio_tmp,
-      quantity = pedido['products'][x]['quantity'],
-      alto = pedido['products'][x]['height'],
-      largo = pedido['products'][x]['width'],
-      profundidad = pedido['products'][x]['depth'],
-      peso = pedido['products'][x]['weight'],
-      variant = pedido['products'][x]['variant_id'],
-      image = pedido['products'][x]['image']['src'],
-      accion = "ninguna",
-      motivo =  "",
-      politica_valida = valida[0],
-      politica_valida_motivo = valida[1],
-      accion_cantidad = pedido['products'][x]['quantity'],
-      promo_precio_final = promo_tmp[2],
-      promo_descuento = promo_tmp[1],
-      promo_nombre = promo_tmp[0],
-      articulos = unaOrden
-      )
-
-    db.session.add(unProducto)
-  db.session.commit()
 
 
 
@@ -690,7 +589,6 @@ def busca_tracking(orden):
   if current_app.config['SERVER_ROLE'] == 'PROD':
     url='http://backprod.borisreturns.com/orden/tracking'
   params = {'orden_id': orden}
-  #historia = requests.request("GET", url, params=params).json()
   historia = requests.request("GET", url, params=params)
   if historia.status_code != 200:
         historia = {}
@@ -708,64 +606,6 @@ def loguear_error(modulo, mensaje, codigo, texto):
 
 
 
-######################### valida si la fecha de compra esta dentro ###############################
-######################### de la ventana establecida en la politica ###############################
-def validar_politica(fecha, prod_id):
-  valida_rubro = validar_politica_rubro(prod_id)
-  if valida_rubro[0] == 'Ninguno':
-    return valida_rubro
-  valida_fecha = validar_politica_fecha(fecha)
-  return valida_fecha
-
-
-######################### valida si la fecha de compra esta dentro ###############################
-######################### de la ventana establecida en la politica ###############################
-def validar_politica_fecha(orden_fecha):
-  
-  hoy = datetime.utcnow()
-  #### valida ventana de cambios ####
-  periodo_cambio = session['ventana_cambio']
-  if abs((hoy - orden_fecha).days) > periodo_cambio:
-    cambio = "NOK"
-  else: 
-    cambio = "OK"
-  
-  #flash('Cambio {} - periodo {} - {}'.format(cambio, periodo_cambio, abs((hoy - orden_fecha).days) ))
-  #### valida ventana de devolcuiones ####
-  periodo_devolucion = session['ventana_devolucion']
-  if abs((hoy - orden_fecha).days) > periodo_devolucion:
-    devolucion = "NOK"
-  else: 
-    devolucion = "OK"
-  
-  #flash('Devolucion {} - periodo {} - {}'.format(devolucion, periodo_devolucion, abs((hoy - orden_fecha).days) ))
-  ### devuelve valor
-  if cambio == "OK" and devolucion == "OK":
-    resultado_politica = ["Ambos",'']
-  else: 
-    if cambio == "OK" and devolucion == "NOK":
-      resultado_politica =  ["Solo Cambio",' El período para realizar devoluciones expiró ']
-    else: 
-      if cambio == "NOK" and devolucion == "OK":
-        resultado_politica =  ["Solo Devolucion",' El período para realizar cambios expiró ']
-      else: 
-        if cambio == "NOK" and devolucion == "NOK":
-          resultado_politica =  ["Ninguno",' El período para realizar cambios/devoluciones expiró ']
-          #flash('periodo {} {}'.format(orden_fecha,periodo_cambio))
-    
-
-  #flash('resultado {}'.format(resultado_politica)) 
-  return resultado_politica
-
-
-######################### valida si el articulo esta dentro ###############################
-# ############################# de los rubros excluidos ###################################
-def validar_politica_rubro(prod_id):
-  if prod_id in session['ids_filtrados']:
-    return ["Ninguno",'La categoria no acepta cambio / devolucion']
-  else: 
-    return ["rubro OK",'']
-
 
 
 def validar_cobertura(provincia,zipcode):
@@ -774,16 +614,6 @@ def validar_cobertura(provincia,zipcode):
     if int(zipcode) < 1900:
       return True
   return False
-  # if provincia in session['provincia_codigos_postales']:
-  #   if session['provincia_codigos_postales'][provincia] == "All":
-  #     return True
-  #   else: 
-  #     for x in range(len(session['provincia_codigos_postales'][provincia])):
-  #       if zipcode == session['provincia_codigos_postales'][provincia][x] or zipcode == str(session['provincia_codigos_postales'][provincia][x]):
-  #         return True
-  #     return False
-  # else:
-  #   return False
   
 ### Selecciona el texto a mostrar segun la empresa
 def traducir_texto(string, fp):
@@ -804,13 +634,8 @@ def crear_store(store):
 
   ### verficar si existe el archivo ####
   if exists(conf_url):
-    print('ya existe el JSON')
     return 'Failed'
   
-  ## "envio": ["manual", "retiro", "coordinar"]
-  ## manual: el cliente evia manualmente
-  ## retiro: agrega opcion Moova
-  ## coordinar: Opcion a Coordinar
   conf_file = {
     "currency": store['store_main_currency'],
     "shipping": "customer",
@@ -912,8 +737,11 @@ def actualiza_json(archivo_config, clave, data, key):
 def buscar_producto(empresa, desc_prod):     
   if empresa.platform == 'tiendanube':
     product = buscar_producto_tiendanube(empresa, desc_prod)
-    # flash('producto en interface {}'.format(product) )
-    return product
+  
+  if empresa.platform == 'shopify':
+    product = buscar_producto_shopify(empresa, desc_prod)
+
+  return product
 
 
 def agregar_nota(company, order):

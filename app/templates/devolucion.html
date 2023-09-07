@@ -156,12 +156,13 @@
                                                     <tr>
                                                         <th></th>
                                                         {% for x in atributos %}
-                                                            <th scope="col"> {{ x['es'] }} </th>
+                                                            <th scope="col"> {{ x }} </th>
                                                         {% endfor %}
                                                     </tr>
                                                     {% for x in alternativas %}     
                                                         <tr>
                                                             <td>
+                                                                <!-- REVISAR Text antes del cambio <input type="radio"  id="variante" name="variante" value="{{ x['id'] }}" > -->
                                                                 <input type="radio"  id="variante" name="variante" value="{{ x }}" > 
                                                             </td>
                                                             {% for i in x['values'] %}
@@ -298,7 +299,8 @@
               for(d in data)
                   //str+='<option value="'+data[d]['id']+'">'+data[d]['name']['es']+'</option>'
               // agregado
-                  str+='<option value="'+data[d]['id']+'" data-prod="'+data[d]['name']['es']+'">'+data[d]['name']['es']+'</option>'
+                  //str+='<option value="'+data[d]['id']+'" data-prod="'+data[d]['name']['es']+'">'+data[d]['name']['es']+'</option>'
+                  str+='<option value="'+data[d]['id']+'" data-prod="'+data[d]['name']+'">'+data[d]['name']+'</option>'
               // cambiar a str1
               $('#loading').hide();
               $(destElem).html(str);

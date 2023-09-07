@@ -1,8 +1,11 @@
 import requests
 import json
+from datetime import datetime
 from app import db
 from flask import session, flash, current_app
 from app.main.errores import loguear_error_general
+from app.models import Customer, Order, Producto
+from app.main.funciones import validar_politica
 
 
 
@@ -17,6 +20,86 @@ def buscar_pedido_tiendanube(empresa, ordermail):
     return order_tmp
 
 
+############################## carga_pedido ##################################################
+def cargar_pedido_tiendanube(unaEmpresa, pedido ):
+
+  unCliente = Customer(
+      customer_uid = str(session['uid']),
+      id = pedido['customer']['id'],
+      name =pedido['customer']['name'],
+      identification = pedido['customer']['identification'],
+      email = pedido['customer']['email'],
+      phone = pedido['customer']['phone'],
+      address = pedido['shipping_address']['address'],
+      number = pedido['shipping_address']['number'],
+      floor = pedido['shipping_address']['floor'],
+      zipcode = pedido['shipping_address']['zipcode'],
+      locality = pedido['shipping_address']['locality'],
+      city = pedido['shipping_address']['city'],
+      province = pedido['shipping_address']['province'],
+      country = pedido['shipping_address']['country'],
+      pertenece = unaEmpresa
+      )
+  session['cliente'] = unCliente.customer_uid
+
+
+  #### Si el pedido ya tiene una nota la carga #########################
+  if pedido['owner_note'] and pedido['owner_note'] != "Esta orden tienen una gestión iniciada en BORIS":
+    nota = pedido['owner_note'] + " - Esta orden tienen una gestión iniciada en BORIS"
+  else:
+    nota = "Esta orden tienen una gestión iniciada en BORIS"
+
+  
+  unaOrden = Order(
+      order_uid = str(session['uid']),
+      id = pedido['id'],
+      order_number = pedido['number'],
+      order_original_id = pedido['id'],
+      order_fecha_compra = datetime.strptime((pedido['completed_at']['date']), '%Y-%m-%d %H:%M:%S.%f'),
+      metodo_de_pago = pedido['gateway'],
+      tarjeta_de_pago = pedido['payment_details']['credit_card_company'],
+      gastos_cupon = pedido['discount_coupon'],
+      gastos_gateway = pedido['discount_gateway'],
+      gastos_shipping_owner = pedido['shipping_cost_owner'],
+      gastos_shipping_customer = pedido['shipping_cost_customer'],
+      gastos_promocion = pedido['promotional_discount']['total_discount_amount'],
+      owner_note = nota,
+      buyer = unCliente
+      )
+  session['orden'] = unaOrden.order_uid      
+
+  for producto in pedido['products']:
+    promo_tmp = buscar_promo_tiendanube(pedido['promotional_discount']['contents'], producto['id'])
+    valida = validar_politica(unaOrden.order_fecha_compra, producto['product_id'] )
+    precio_tmp = producto['price'] if producto['price'] else 0
+
+    unProducto = Producto(
+        id =  producto['id'],
+        prod_id = producto['product_id'],
+        name = producto['name'],
+        price = precio_tmp,
+        quantity = producto['quantity'],
+        alto = producto['height'],
+        largo = producto['width'],
+        profundidad = producto['depth'],
+        peso = producto['weight'],
+        variant = producto['variant_id'],
+        image = producto['image']['src'],
+        accion = "ninguna",
+        motivo =  "",
+        politica_valida = valida[0],
+        politica_valida_motivo = valida[1],
+        accion_cantidad = producto['quantity'],
+        promo_precio_final = promo_tmp[2],
+        promo_descuento = promo_tmp[1],
+        promo_nombre = promo_tmp[0],
+        articulos = unaOrden
+      )
+
+    db.session.add(unProducto)
+  db.session.commit()
+  return("Pedido Tiendanube Cargado")
+
 
 def buscar_pedido_conNro_tiendanube(empresa, orderid):
     url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/orders/"+orderid
@@ -29,20 +112,57 @@ def buscar_pedido_conNro_tiendanube(empresa, orderid):
     return order
 
 
-def buscar_alternativas_tiendanube(empresa, storeid, prod_id):
-    url = "https://api.tiendanube.com/v1/"+str(storeid)+"/products/"+str(prod_id)
-    payload={}
+################## Devuelve las alternativas configuradas en la tienda para el articulo  ##################
+def buscar_alternativas_tiendanube(empresa, storeid, prod_id, item_variant):
+    url = f"https://api.tiendanube.com/v1/{storeid}/products/{prod_id}"
     headers = {
         'Content-Type': 'application/json',
         'Authentication': empresa.platform_token_type+' '+empresa.platform_access_token
     }
-    product = requests.request("GET", url, headers=headers, data=payload).json()
-    ### Si no exsite el producto -- Se da cuando el Merchant elimina el producto adquirido ###
-    if 'code' in product.keys():
-        if product['code'] == 404:
-            return product['code']
-    #####
-    return product
+    response = requests.get(url, headers=headers)
+    if response.status_code == 404:
+        return response.status_code
+    
+    product = response.json()
+
+    #### Si no se gestiona el stock o el Id de la variante es igual
+    #### en la descripcion cambia el texto a "Mismo Articulo" 
+    variantes = []
+    for x in product['variants']:
+        if (x['stock'] is None or x['stock'] > 0) and x['id'] == item_variant:
+            x['values'] = [{"es": "Mismo Articulo"}]
+        #if x['stock'] > 0:
+           #variantes.append(x)
+        if x['stock'] <= 0:
+            continue
+           #variantes.append(x)
+        element = {"id": x['id'], "values":x['values']}
+        
+        variantes.append(element)
+    
+    atributos = []
+    for atributo in product['attributes']:
+        atributos.append(atributo['es'])
+
+    return variantes, atributos
+    
+
+############################ Devuelve el nombre del producto en español ###########################
+def buscar_producto_nombre_tiendanube(empresa, storeid, prod_id):
+    url = f"https://api.tiendanube.com/v1/{storeid}/products/{prod_id}?fields=name"
+    #payload={}
+    headers = {
+        'Content-Type': 'application/json',
+        'Authentication': empresa.platform_token_type+' '+empresa.platform_access_token
+    }
+
+    response = requests.get(url, headers=headers)
+   
+    if response.status_code == 404:
+        return response.status_code
+    
+    product = response.json()
+    return product['name']['es']
 
 
 def validar_categorias_tiendanube(company):
@@ -68,7 +188,6 @@ def validar_categorias_tiendanube(company):
 
 def buscar_producto_tiendanube(empresa, desc_prod):
     ### ocultos
-    #url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/products?q="+desc_prod+"&fields=id,name"
     url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/products?q="+desc_prod+"&fields=id,name,published"
     payload={}
     headers = {
@@ -81,8 +200,9 @@ def buscar_producto_tiendanube(empresa, desc_prod):
     if 'code' in productos_tmp:
        productos = {}
     else: 
-        productos = [p for p in productos_tmp if p['published'] == True]
-        
+        productos = [{"id":p['id'],"name":p['name']['es']} for p in productos_tmp if p['published'] == True]
+
+    print(productos)     
     return productos
 
 
@@ -101,3 +221,20 @@ def agregar_nota_tiendanube(company, order):
         "owner_note": order.owner_note,
     }
     requests.request("PUT", url, headers=headers, data=json.dumps(data))
+
+
+#############################################################################
+# Busca la promo con la que se vendió un articulo 
+# devuelve [nombre promo. precio promocional]
+#############################################################################
+def buscar_promo_tiendanube(promociones, Id_Producto ):
+  promo = ("",0,0)
+  for x in promociones:
+    if x['id'] == Id_Producto:
+      ### correccion PROMO -- si la orden tiene error el tipo de x['discount_script_type'] es DICT####
+      if isinstance(x['discount_script_type'], str):
+        promo = (x['discount_script_type'], x['discount_amount'], x['final_price'])
+      # return promo
+  return promo
+
+  

@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from app import db
 from app.models import Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota
+from app.main.interface import buscar_pedido, buscar_alternativas, buscar_producto_nombre, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota
 from app.main import bp
 from flask import request, session
 from datetime import datetime,timedelta
@@ -16,10 +16,9 @@ import ast
 @bp.route('/home', methods=['GET', 'POST'])
 def home():
 
-    if request.args.get('store_id') == None:
-        empresa ='Ninguna'
-    else: 
-        empresa = request.args.get('store_id')
+    ########### Por si hace falta ver la Plataforma desde donde se llama ######################
+    # plataforma = request.args.get('plataforma', 'Ninguna')
+    empresa = request.args.get('store_id', 'Ninguna')
 
     if request.args.get('order_id') == None:
         return redirect(url_for('main.buscar', empresa = empresa))
@@ -34,182 +33,160 @@ def home():
         return redirect(url_for('main.pedidos'))
 
 
+############################## Search for company / order ################################
 @bp.route('/buscar', methods=['GET', 'POST'])
 def buscar():
-
-    ############## limpieza de Base #######################################
-    #  Limpia todo lo que tiene mas de 120 minutos ########################
-    # Ver que coincida con el tiempo de permanent session en config.py    #
-    #######################################################################
-    hoy = datetime.utcnow()
-    old = hoy - timedelta(minutes=120)
-    empresa_tmp = Company.query.filter(Company.timestamp <= old).all()
-    orden_tmp = Order.query.filter(Order.timestamp <= old).all()
-    cliente_tmp = Customer.query.filter(Customer.timestamp <= old).all()
-    producto_tmp = Producto.query.filter(Producto.timestamp <= old).all()
-   
-    if(len(producto_tmp)) != 0:
-        for p in producto_tmp:
-            Producto.query.filter(Producto.timestamp <= old).delete()
-            print('Se borarron productos',p)
-    if(len(orden_tmp)) != 0:
-        for o in orden_tmp:
-            Order.query.filter(Order.timestamp <= old).delete()
-            print('Se borarron ordenes',o)
-    if(len(cliente_tmp)) != 0:
-        for c in cliente_tmp:
-            Customer.query.filter(Customer.timestamp <= old).delete()
-            print('Se borarron clientes',c)
-    if(len(empresa_tmp)) != 0:
-        for e in empresa_tmp:
-            Company.query.filter(Company.timestamp <= old).delete()
-            print('Se borarron empresas',e)
+    # Clean up old records
+    for model in [Company, Order, Customer, Producto]:
+        model.query.filter(model.timestamp <= datetime.utcnow() - timedelta(minutes=120)).delete()
     db.session.commit()
-    ################################# fin limpieza ###########################
 
+    # Clean up Session
     if 'uid' in session:
-        if 'orden' in session:
-            Producto.query.filter_by(order_id=session['orden']).delete()
         Order.query.filter_by(order_uid=str(session['uid'])).delete()
         Customer.query.filter_by(customer_uid=str(session['uid'])).delete()
-        Company.query.filter_by(company_uid=str(session['uid'])).delete()        
-        db.session.commit()
-        session.pop('orden', None)
-        session.pop('cliente', None)
-        session.pop('store', None)
-        session.clear()
+        Company.query.filter_by(company_uid=str(session['uid'])).delete()
+        if 'orden' in session:
+            Producto.query.filter_by(order_id=session['orden']).delete()
+    db.session.commit()
+    session.pop('orden', None)
+    session.pop('cliente', None)
+    session.pop('store', None)
+    session.clear()
 
-    ID_empresa = request.args['empresa']
-    unaEmpresa = buscar_empresa(ID_empresa)
-    
-    ##### Empresa no existe ##################
-    if unaEmpresa == "Failed":
+    # Get the value of 'empresa' from request arguments
+    try:
+        ID_empresa = request.args['empresa']
+    except KeyError:
         return render_template('no_encontrado.html')
 
+    # Look up the company in the database
+    unaEmpresa = buscar_empresa(ID_empresa)
+            
+    # Handle POST requests to search for a specific order
     if request.method == "POST":
         ordernum = request.form.get("ordernum")
         ordermail = request.form.get('ordermail')
-        
+
         if ordernum == '' or ordermail == '':
             flash('Por favor ingresá el Número de Orden y el Email')
-            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos = session['textos'])
-        
-        if ordernum.isdigit():
-            pedido = buscar_pedido(unaEmpresa, ordernum, ordermail)
-        else:
+            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos=session.get('textos'))
+
+        if not ordernum.isdigit():
             flash('Por favor ingresá el Número de Orden correctamente - Solo el número')
-            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos = session['textos'])
+            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos=session.get('textos'))
 
-        #pedido = buscar_pedido(unaEmpresa, ordernum, ordermail)
-
-        if pedido == 'None':
-            flash('No se encontro un pedido para esa combinación Pedido-Email')
-            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos = session['textos'])
+        pedido = buscar_pedido(unaEmpresa, ordernum, ordermail)
+       
+        if pedido == 'None' or pedido =='Reintentar':
+            if pedido == 'None':
+                flash('No se encontro un pedido para esa combinación Pedido-Email')
+            if pedido == 'Reintentar':
+                flash('No se pudo encontrar el pedido, por favor reintente en unso momentos')
+            return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos=session.get('textos'))
         else:
             cargar_pedido(unaEmpresa, pedido)
             return redirect(url_for('main.pedidos'))
 
-    return render_template('buscar.html', title='Inicia tu Gestión', empresa=unaEmpresa, textos = session['textos'])
+    # Render the search page
+    return render_template('buscar.html', title='Inicia tu Gestión', empresa=unaEmpresa, textos=session.get('textos'))
 
 
 
 @bp.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
 
-    #company = Company.query.filter_by(store_id=session['store']).first()
-     ### prueba si la cookie expiro
-    if not session.get('cliente'):
+    # Check if session has expired
+    if 'cliente' not in session or not Customer.query.get(session['cliente']):
         return render_template('sesion_expirada.html')
 
     user = Customer.query.get(session['cliente'])
-    ### prueba si la cookie expiro
-    if not user:
-        return render_template('sesion_expirada.html')
-    
     company= user.pertenece
     order = Order.query.get(session['orden'])
     productos = Producto.query.filter_by(order_id=session['orden']).all()
 
-    if request.method == "POST" and request.form.get("form_item") == "elegir_item" : 
+    if request.method == "POST":
+        form_item = request.form.get("form_item")
         prod_id = request.form.get("Prod_Id")
-        accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
-        accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
-        motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
-
-       
         item = Producto.query.get((session['orden'],prod_id))
-        item.accion = accion
-        item.accion_reaccion = False 
-        item.accion_cantidad = accion_cantidad
-        item.motivo = motivo
-        if request.form.get("observaciones"):
-            item.observaciones = request.form.get("observaciones")
-        db.session.commit()
 
-        if accion == 'cambiar' and item.accion_reaccion == False:   
-            user = Customer.query.get(session['cliente'])
-            order = Order.query.get(session['orden'])
-            item = Producto.query.get((session['orden'],prod_id))
-            alternativas = buscar_alternativas(company, session['store'], item.prod_id, item.variant, 'variantes')
-            return render_template('devolucion.html', title='Cambio', empresa=company, NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'], lista_motivos=session['motivos'], cupon=session['cupon'], otracosa=session['otracosa'])
+        if form_item == "elegir_item" : 
+            accion = request.form.get(str("accion"+request.form.get("Prod_Id")))
+            accion_cantidad = request.form.get(str("accion_cantidad"+request.form.get("Prod_Id")))
+            motivo = request.form.get(str("motivo"+request.form.get("Prod_Id")))
 
-    if request.method == "POST" and request.form.get("form_item") == "cambiar_item" :
-        prod_id = request.form.get("Prod_Id")
-        opcion_cambio = request.form.get("opcion_cambio")
-        item = Producto.query.get((session['orden'],prod_id))
-        ## Si se seleccionó el Boton de VARIANTE
-        if opcion_cambio == 'Variante':
-            if request.form.get("variante"):
-                variante = ast.literal_eval(request.form.get("variante"))
-                item.accion_cambiar_por = variante['id']
-                item.accion_cambiar_por_prod_id = item.prod_id
-                ### Busca el nombre del producto  ###
-                producto_name = buscar_alternativas(company, session['store'], item.prod_id, item.variant,'nombre')
-                item.accion_cambiar_por_desc = producto_name + " ("+ describir_variante(variante['values']) +")"
+            item.accion = accion
+            item.accion_reaccion = False 
+            item.accion_cantidad = accion_cantidad
+            item.motivo = motivo
+            if request.form.get("observaciones"):
+                item.observaciones = request.form.get("observaciones")
+
+            db.session.commit()
+
+            if accion == 'cambiar' and item.accion_reaccion == False:   
+                alternativas = buscar_alternativas(company, session['store'], item.prod_id, item.variant)
+                return render_template('devolucion.html', title='Cambio', empresa=company, NombreStore=company.company_name, user=user, order=order, item=item, alternativas=alternativas[0], atributos=alternativas[1], textos=session['textos'], lista_motivos=session['motivos'], cupon=session['cupon'], otracosa=session['otracosa'])
+
+        elif form_item == "cambiar_item":
+            opcion_cambio = request.form.get("opcion_cambio")
+        
+            ## Si se seleccionó cambio x VARIANTE
+            if opcion_cambio == 'Variante':
+                if request.form.get("variante"):
+                    variante = ast.literal_eval(request.form.get("variante"))
+                    item.accion_cambiar_por = variante['id']
+                    item.accion_cambiar_por_prod_id = item.prod_id
+                    ### Busca el nombre del producto  ###
+                    producto_name = buscar_producto_nombre(company, session['store'], item.prod_id, item.variant)
+                    item.accion_cambiar_por_desc = producto_name + " ("+ describir_variante(variante['values']) +")"
+
+            ## Si se seleccionó cambio x CUPON
+            elif opcion_cambio == 'Cupon':
+                item.accion_cambiar_por = '1'
+                item.accion_cambiar_por_prod_id = '1'
+                item.accion_cambiar_por_desc = 'Cupón'
+            ## Si se seleccionó el Boton de Otra Cosa
+
+            elif opcion_cambio == 'otraCosa':  
+                alternativa_select = request.form.get("alternativa_select")
+            
+                # Handle "No stock" case
+                if alternativa_select == '0':
+                    flash('No hay stock disponible para ese articulo')
+                    item.accion = 'ninguna'
+                    db.session.commit()
+                    return render_template('pedido.html', title='Pedido', empresa=company,  NombreStore=company.company_name, user=user, order=order, productos=productos)
+
+                # Handle if NONE is selected case
+                elif alternativa_select is None:
+                    flash('Debe seleccionar un producto' )
+                    item.accion = 'ninguna'
+                    db.session.commit() 
+                    return render_template('pedido.html', title='Pedido', empresa=company,  NombreStore=company.company_name, user=user, order = order, productos = productos)
+
+                ##### Si no se seleccionó ninguna variante
+                elif alternativa_select == 'seleccionar':
+                    flash('Debe seleccionar alguna variante ' )
+                    item.accion = 'ninguna'
+                    db.session.commit() 
+                    return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
+
+                variante_id = request.form.get("alternativa_select")
+                producto = request.form.get("producto_nombre")
+                variante = request.form.get("variante_nombre")
+                producto_id = request.form.get("producto_id")
+                
+                item.accion_cambiar_por = variante_id
+                item.accion_cambiar_por_prod_id = producto_id
+                item.accion_cambiar_por_desc = producto+"("+variante+")"
+
             else:
                 ## Si se seleccionó el Boton de VARIANTE pero no se seleccionó ningún articulo
                 flash('Por favor, indica por que item queres realizar el cambio' )
                 item.accion = 'ninguna'
                 db.session.commit() 
                 return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
-
-        ## Si se seleccionó el Boton de CUPON
-        if opcion_cambio == 'Cupon':
-            item.accion_cambiar_por = '1'
-            item.accion_cambiar_por_prod_id = '1'
-            item.accion_cambiar_por_desc = 'Cupón'
-
-        ## Si se seleccionó el Boton de Otra Cosa
-        if opcion_cambio == 'otraCosa':
-            ##### Si no hay stock del articulo seleccionado"
-            if request.form.get("alternativa_select") == '0':
-                flash('No hay stock disponible para ese articulo' )
-                item.accion = 'ninguna'
-                db.session.commit() 
-                return render_template('pedido.html', title='Pedido', empresa=company,  NombreStore=company.company_name, user=user, order = order, productos = productos)
-
-            ##### Si no se seleccionó ninguna producto
-            if request.form.get("alternativa_select") == None:
-                flash('Debe seleccionar un producto' )
-                item.accion = 'ninguna'
-                db.session.commit() 
-                return render_template('pedido.html', title='Pedido', empresa=company,  NombreStore=company.company_name, user=user, order = order, productos = productos)
-
-            ##### Si no se seleccionó ninguna variante
-            if request.form.get("alternativa_select") == 'seleccionar':
-                flash('Debe seleccionar alguna variante ' )
-                item.accion = 'ninguna'
-                db.session.commit() 
-                return render_template('pedido.html', title='Pedido', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos)
-
-            variante_id = request.form.get("alternativa_select")
-            producto = request.form.get("producto_nombre")
-            variante = request.form.get("variante_nombre")
-            producto_id = request.form.get("producto_id")
-            
-            item.accion_cambiar_por = variante_id
-            item.accion_cambiar_por_prod_id = producto_id
-            item.accion_cambiar_por_desc = producto+"("+variante+")"
 
         item.accion_reaccion = True
         db.session.commit() 
@@ -333,19 +310,14 @@ def confirma_solicitud():
     if not session.get('cliente'):
         return render_template('sesion_expirada.html')
     metodo_envio = request.args.get('metodo_envio')
-    #company = Company.query.filter_by(store_id=session['store']).first()
     user = Customer.query.get(session['cliente'])
     company= user.pertenece
     order = Order.query.get(session['orden'])
     productos = db.session.query(Producto).filter((Producto.order_id == session['orden'])).filter((Producto.accion != 'ninguna'))
-    
-    #### valida que la dirección esta cargada si el método elegido es A Coordinar o Moova ################
-    
 
     # Selecciona de los metodos de envio disponibles para la tienda el que se seleccionó
     metodo = next(item for item in session['envio'] if item["metodo_envio_id"] == metodo_envio)
     
-    # if metodo['direccion_obligatoria'] == 'Si' and ((user.address == None or user.address == '') or (user.zipcode == None) ):        
     if metodo['direccion_obligatoria'] == True and ((user.address == None or user.address == '') or (user.zipcode == None) ):        
         if request.args.get('area_valida') == 'True':
             area_valida = True
@@ -358,14 +330,8 @@ def confirma_solicitud():
     ##### Agrega nota en Orden Original
     agregar_nota(company, order)
 
-    #### borra el pedido de la base
-    #Producto.query.filter_by(order_id=session['orden']).delete()
-    #Order.query.filter_by(order_uid=str(session['uid'])).delete()
-    #Customer.query.filter_by(customer_uid=str(session['uid'])).delete()
-
     db.session.commit()
-    
-    #return render_template('envio.html', empresa=company, NombreStore=company.company_name, company=company, user=user, order=order, envio=envio, metodo_envio=metodo_envio, textos=session['textos'])
+
     return redirect(url_for('main.envio', envio=envio, metodo_envio=metodo_envio))
 
 
@@ -463,11 +429,11 @@ def elegir_alternativa():
     prod_id = request.form.get('prod_id')
     variant = 0
     company = Company.query.filter_by(store_id=session['store']).first()
-    data = buscar_alternativas(company, company.store_id, prod_id, variant, 'variantes')
+    data = buscar_alternativas(company, company.store_id, prod_id, variant)
 
-    atributos_tmp = []
-    for i in data[1]:
-        atributos_tmp.append(i['es'])
+    #atributos_tmp = []
+    #for i in data[1]:
+    #    atributos_tmp.append(i)
     
     alternativas_tmp = []
    
@@ -481,7 +447,7 @@ def elegir_alternativa():
                 alternativa_desc = alternativa_desc +','+ str(x['es'])
         alternativas_tmp.append({'id': alternativa_id,'desc': alternativa_desc})
 
-    atributos = json.dumps(atributos_tmp)
+    #atributos = json.dumps(atributos_tmp)
     alternativas = json.dumps(alternativas_tmp)
 
     return alternativas

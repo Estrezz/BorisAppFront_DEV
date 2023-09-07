@@ -34,10 +34,13 @@ class Company(db.Model):
     shipping_city = db.Column(db.String(64))
     shipping_province = db.Column(db.String(64))
     shipping_country = db.Column(db.String(64))
-    shipping_info = db.Column(db.String(120))
+    shipping_info = db.Column(db.String(200))
     company_uid = db.Column(db.String(150))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     clientes = db.relationship('Customer', backref='pertenece', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Company {} - id {}>'.format(self.company_name, self.store_id)    
 
 class Customer(db.Model):
     customer_uid = db.Column(db.String(150), primary_key=True)
@@ -85,11 +88,10 @@ class Order(db.Model):
         return '<Order {}>'.format(self.order_number)
 
 class Producto(db.Model):
-    #order_id = db.Column(db.Integer, db.ForeignKey('order.order_uid', ondelete='CASCADE'), primary_key=True)
     order_id = db.Column(db.String(150), db.ForeignKey('order.order_uid', ondelete='CASCADE'), primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     prod_id = db.Column(db.Integer, index=True)
-    name = db.Column(db.String(120))
+    name = db.Column(db.String(200))
     price = db.Column(db.Integer)
     quantity = db.Column(db.Integer)
     variant = db.Column(db.Integer)

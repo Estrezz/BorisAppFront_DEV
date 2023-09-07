@@ -41,7 +41,8 @@
                   <div> 
                     Precio : $ {{ producto['price']}}
                     {% if producto['promo_descuento'] %}
-                      <br> Precio Abonado: {{ producto['promo_descuento'] }} - ({{ producto['promo_nombre'] }}) 
+                      <!-- <br> Precio Abonado: {{ producto['promo_descuento'] }} - ({{ producto['promo_nombre'] }}) -->
+                      <br> Precio Abonado: $ {{ producto['promo_precio_final'] }} - ({{ producto['promo_nombre'] }}) 
                     {% endif %}
                   </div>
                   <br>
