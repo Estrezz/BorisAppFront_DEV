@@ -17,7 +17,7 @@
                     Tu orden número {{order.order_number}} ha sido iniciada<br>
                     En breve recibiras por mail las instrucciones para que puedas hacernos llegar tus productos<br>
                 </h5>
-                <p style="text-align:center">{{textos['confirma_manual_note']}}</p>
+                <p style="text-align:center">{{textos['confirma_manual_note'] | safe }}</p>
                 
             {% endif %}
 
@@ -28,7 +28,7 @@
                     En breve te contactaremos para coordinar el envío de tus productos<br>
                     <br>
                 </h5>
-                <p style="text-align:center">{{textos['confirma_coordinar_note']}}</p>
+                <p style="text-align:center">{{textos['confirma_coordinar_note'] | safe}}</p>
                 
             {% endif %}
 
@@ -39,7 +39,7 @@
                     En breve recibiras por mail las instrucciones para que puedas enviar tus productos
                     <br>
                 </h5>
-                <p style="text-align:center">{{textos['confirma_domicilio_note']}}</p>
+                <p style="text-align:center">{{textos['confirma_domicilio_note'] | safe}}</p>
             {% endif %}
     
             {% if metodo_envio == 'Moova' %}
