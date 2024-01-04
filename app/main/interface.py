@@ -27,31 +27,21 @@ def buscar_pedido(empresa, ordernum, ordermail):
 
   ################## TiendaNube ##############################
   if empresa.platform == 'tiendanube':
-    order_tmp = buscar_pedido_tiendanube(empresa, ordermail)
+    order = buscar_pedido_tiendanube(empresa, ordermail, int(ordernum))
+       
+    if order == "REINTENTAR" :
+      return 'Reintentar'
+    if  order == "TIMEOUT" :  
+      return 'Timeout'
+    if  order == "NOTFOUND" :
+      return 'Notfound'  
 
-    if type(order_tmp) == dict:
-
-      ### Reintenta 5 veces para evitar el problema del error 5xxx de Teindanube
-      contador = 1
-      while (order_tmp['description'][:8] == 'Obtained'):
-        contador = contador + 1
-        order_tmp = buscar_pedido_tiendanube(empresa, ordermail)
-        if type(order_tmp) != dict:
-          break
-        if contador == 5:
-          return 'Reintentar'
-
-      return 'None'
-    else:
-      order = buscar_nro_pedido(order_tmp, int(ordernum))
-    
-  ################## Shopify ##############################
+    ################## Shopify ##############################
   if empresa.platform == 'shopify':
-    order_tmp = buscar_pedido_shopify(empresa, ordernum, ordermail)
-    order = order_tmp
+    order = buscar_pedido_shopify(empresa, ordernum, ordermail)
   
   return order
-    
+
 
 def buscar_pedido_conNro(empresa, orderid):
   if empresa.platform == 'tiendanube':
@@ -599,7 +589,11 @@ def busca_tracking(orden):
 
 ############################## loguea_error ##################################################
 def loguear_error(modulo, mensaje, codigo, texto):
-  url = "logs/app/"+str(session['store'])+"_log.txt"
+  if 'store' in session:
+        url = "logs/app/" + str(session['store']) + "_log.txt"
+  else:
+        url = "logs/app/unknown_store_log.txt"
+  #url = "logs/app/"+str(session['store'])+"_log.txt"
   outfile = open(url, "a+")
   outfile.write(str(datetime.utcnow())+','+ modulo +','+ mensaje +','+ str(codigo) +','+str(texto)+ '\n')
   outfile.close()

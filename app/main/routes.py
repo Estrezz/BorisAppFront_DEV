@@ -85,6 +85,11 @@ def buscar():
                 flash('No se pudo encontrar el pedido, por favor reintente en unso momentos')
             return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos=session.get('textos'))
         else:
+            ##### Loguear error en pedido cuando aparece id = pedido['customer']['id'], TypeError: 'NoneType' object is not subscriptable
+            if pedido is None:
+                loguear_error("Buscar Pedido", "pedido es NoneType", ID_empresa, str(ordernum)+ordermail)
+                flash('No se encontro un pedido para esa combinación Pedido-Email')
+                return render_template('buscar.html', title='Inicia tu gestión', empresa=unaEmpresa, textos = session['textos'])
             cargar_pedido(unaEmpresa, pedido)
             return redirect(url_for('main.pedidos'))
 
