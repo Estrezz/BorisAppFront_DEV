@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from app import db
 from app.models import Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_alternativas, buscar_producto_nombre, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota
+from app.main.interface import buscar_pedido, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota, loguear_error, buscar_producto_nombre
 from app.main import bp
 from flask import request, session
 from datetime import datetime,timedelta
