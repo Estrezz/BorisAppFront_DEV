@@ -29,17 +29,24 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
         if response.status_code == 404:
                 reason = response.reason
                 if "Obtained" in response.json().get("description", ""):
-                    url = f"https://api.tiendanube.com/v1/{empresa.store_id}/orders?q={ordermail}&fields=id,number&per_page=50&created_at_min=2023-10-15"
+                     # Calculate today's date and 30 days ago
+                    today = datetime.date.today()
+                    thirty_days_ago = today - datetime.timedelta(days=30)
+                    
+                    # Format the dates as strings
+                    today_str = today.isoformat()
+                    thirty_days_ago_str = thirty_days_ago.isoformat()
+                    
+                    # Update the URL with the new created_at_min parameter
+                    url = f"https://api.tiendanube.com/v1/{empresa.store_id}/orders?q={ordermail}&fields=id,number&per_page=50&created_at_min={thirty_days_ago_str}"
                     response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
                     if response.status_code != 200:
-                        print('reintentar')
                         return"REINTENTAR"
                 else :
                     return "NOTFOUND"
 
         # Si el response es exitoso, filtra las ordenes y busca la orden por ID
         if response.status_code == 200:
-           
             order_list = response.json()
 
             if not order_list:
@@ -54,104 +61,9 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
 
             
     except requests.exceptions.RequestException as e:
-        print(f"An error occurred during the request: {e}")
         return 'None'
     except json.JSONDecodeError as e:
-        print(f"Failed to parse JSON: {e}")
         return 'None'
-
-
-### SEGUNDA VERSION Funcion para buscr Ordenes
-### DOS requests: Busca todas las ordenes para 1 cliente, solo ID y numero de orden
-###  filtra por numero de orden y trae la orden con el ID
-### Se backupeo Creada la copia el 17/28/2023 por problemas en el la respuest error 5XX
-### Esperando que Tiendanube lo solucione
-# def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
-#     url = f"https://api.tiendanube.com/v1/{empresa.store_id}/orders?q={ordermail}&fields=id,number&per_page=100"
-#     payload={}
-#     headers = {
-#         'Content-Type': 'application/json',
-#         'Authentication': f"{empresa.platform_token_type} {empresa.platform_access_token}"
-#     }
-
-#     try:
-#         response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
-
-#         # Check if the response status code indicates success (e.g., 200)
-#         if response.status_code == 200:
-           
-#             order_list = response.json()
-
-#             if not order_list:
-#                 return "NOTFOUND"
-
-#             for x in order_list:
-#                 if x['number'] == ordernum:
-#                     order_url = f"https://api.tiendanube.com/v1/{empresa.store_id}/orders/{x['id']}"
-#                     order_response = requests.get(order_url, headers=headers, data=json.dumps(payload))
-#                     order = order_response.json()
-#                     return order
-            
-#             #return 'None'   
-           
-#         else:
-#             reason = response.reason
-
-#             if response.status_code == 504:
-#                 return "TIMEOUT"
-                
-#             if response.status_code == 404:
-#                 if "Obtained" in response.json().get("description", ""):
-#                     print('reintentar')
-#                     return"REINTENTAR"
-#                 else :
-#                     return "NOTFOUND"
-            
-#     except requests.exceptions.RequestException as e:
-#         print(f"An error occurred during the request: {e}")
-#         return 'None'
-#     except json.JSONDecodeError as e:
-#         print(f"Failed to parse JSON: {e}")
-#         return 'None'
-  
-### Funcion Original para buscr Ordenes
-### Un solo request: Busca todas las ordenes para 1 cliente y luego filtra por numero de orden
-### Se backupeo Creada la copia el 17/11/2023 por problemas en el request con el parametro q
-### Esperando que Tiendanube lo solucione
-#def buscar_pedido_tiendanube_Backup(empresa, ordermail):
-#    url = "https://api.tiendanube.com/v1/"+str(empresa.store_id)+"/orders?q="+ordermail    
-#    payload={}
-#    headers = {
-#        'Content-Type': 'application/json',
-#        'Authentication': empresa.platform_token_type+' '+empresa.platform_access_token
-#    }
-#    ## order_tmp = requests.request("GET", url, headers=headers, data=payload).json()
-#    try:
-#        response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
-#
-#    # Check if the response status code indicates success (e.g., 200)
-#        if response.status_code == 200:
-#            order_tmp = response.json()
-#        else:
-#            reason = response.reason
-#            if response.status_code == 504:
-#                order_tmp = "TIMEOUT"
-#            if response.status_code == 404:
-#                print(reason)
-#                print(response.description)
-#                if reason.startswith("Obtained"):
-#                    print('reintentar')
-#                    order_tmp = "REINTENTAR"
-#                else :
-#                    print('notfound')
-#                    order_tmp = "NOTFOUND"
-#
-#    except requests.exceptions.RequestException as e:
-#            print(f"An error occurred during the request: {e}")
-#    except json.JSONDecodeError as e:
-#            print(f"Failed to parse JSON: {e}")
-            
-#    return order_tmp
 
 
 ############################## carga_pedido ##################################################
