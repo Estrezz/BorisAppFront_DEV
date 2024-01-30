@@ -1,6 +1,6 @@
 import requests
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from app import db
 from flask import session, flash, current_app
 from app.main.errores import loguear_error_general
@@ -29,9 +29,9 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
         if response.status_code == 404:
                 reason = response.reason
                 if "Obtained" in response.json().get("description", ""):
-                     # Calculate today's date and 30 days ago
-                    today = datetime.date.today()
-                    thirty_days_ago = today - datetime.timedelta(days=30)
+                    # Calculate today's date and 30 days ago
+                    today = datetime.now().date()
+                    thirty_days_ago = today - timedelta(days=30)
                     
                     # Format the dates as strings
                     today_str = today.isoformat()
@@ -58,8 +58,7 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
                     order_response = requests.get(order_url, headers=headers, data=json.dumps(payload))
                     order = order_response.json()
                     return order
-
-            
+      
     except requests.exceptions.RequestException as e:
         return 'None'
     except json.JSONDecodeError as e:
@@ -68,6 +67,20 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
 
 ############################## carga_pedido ##################################################
 def cargar_pedido_tiendanube(unaEmpresa, pedido ):
+
+  print("entro en cargar_pedido")
+  # CHeck error
+#   if isinstance(pedido, dict):
+#         # Check if 'customer' is a dictionary within pedido
+#         if 'customer' in pedido and isinstance(pedido['customer'], dict):
+#             # Check if 'id' is present in the 'customer' dictionary
+#            if 'id' not in pedido['customer']:
+#                 loguear_error_general('Error en Pedido-Customer-ID', "'id' not present in 'customer' dictionary.", unaEmpresa.store_id, pedido )
+#         else:
+#             loguear_error_general('Error en Pedido-Customer-ID', "'customer' is not a dictionary within pedido.", unaEmpresa.store_id, pedido )
+#   else:
+#         loguear_error_general('Error en Pedido-Customer-ID', " pedido is not a dictionary", unaEmpresa.store_id, pedido )
+#     ### End of check error  
 
   unCliente = Customer(
       customer_uid = str(session['uid']),

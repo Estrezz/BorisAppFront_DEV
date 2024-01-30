@@ -1,5 +1,5 @@
-<div class='container-fluid'>
-    <img  class="center-block img-responsive" src='http:{{company.logo}}'>
+<div class='container-fluid' style="max-width: 400px; margin: 0 auto; text-align: center;">
+    <img class="center-block" src="http:{{company.logo}}" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
 </div>
 
 <h3 style="text-align:left">
@@ -52,6 +52,12 @@
                     {{i.quantity}} - {{i.name}} <br>
                 {% endfor %}
     </p>
+    <p style="text-align:left">
+        {% if envio.price != "Sin Cargo" %}
+            <br> El costo del envio es {{"${:,.2f}".format(envio.price)}} + Iva
+        {% endif %}
+    </p>
+
     <br>
     <p style="text-align:left">
         {{textos['confirma_domicilio_note'] | safe}} <br>
