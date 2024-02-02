@@ -26,7 +26,7 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
                 return "TIMEOUT"
 
         # If NOT FOUND trata de resolver el problema del 5xx
-        if response.status_code == 404:
+        if response.status_code == 404 or response.status_code == 500:
                 reason = response.reason
                 if "Obtained" in response.json().get("description", ""):
                     # Calculate today's date and 30 days ago
