@@ -421,6 +421,7 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
     "correo_precio": solicitud['price'],
     "correo_precio_formateado": solicitud['priceFormatted'],
     "correo_moneda":solicitud['currency'],
+    "metodo_envio_sucursal": order.metodo_envio_sucursal
   },
   "cliente": {
     "id": user.id,
@@ -744,3 +745,26 @@ def agregar_nota(company, order):
       return
     else:
       return
+
+############################## buscar_empresa ##################################################
+def buscar_sucursales(empresa):
+  ##sucursal = http://127.0.0.1:5000/api/sucursales/listar?tienda=1447373&metodo_envio=Locales
+  
+  if current_app.config['SERVER_ROLE'] == 'PREDEV':
+    url=f"https://devback.borisreturns.com/api/sucursales/listar?tienda={empresa}&metodo_envio=Locales"
+  if current_app.config['SERVER_ROLE'] == 'DEV':
+    url=f"http://back.borisreturns.com/api/sucursales/listar?tienda={empresa}&metodo_envio=Locales"
+  if current_app.config['SERVER_ROLE'] == 'PROD':
+    url=f"http://backprod.borisreturns.com/api/sucursales/listar?tienda={empresa}&metodo_envio=Locales"
+
+  sucursales_tmp = requests.request("GET", url)
+
+  if sucursales_tmp.status_code != 200:
+        sucursales_list = [{"sucursal_name": "No se encontró ninguna sucursal"}]
+  else:
+        sucursales = sucursales_tmp.json()
+        sucursales_list = [{"sucursal_id":s['sucursal_id'],"sucursal_name":s['sucursal_name'],"sucursal_direccion":s['sucursal_direccion'],"sucursal_observaciones":s['sucursal_observaciones']} for s in sucursales ]
+
+  return sucursales_list
+
+     

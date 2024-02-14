@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block app_content  %}
+<br>
+<br>
+<div class="col d-flex "  >
+    <div class="container">
+        <div class="row">
+
+          <div class="col"></div>
+
+          <div class="col-8">
+            <div class="card border-light rounded px-sm-2 py-sm-2 px-md-4 py-md-3">
+                <form method="POST" action="{{ url_for('main.confirma_solicitud', metodo_envio="Locales") }}">
+                    <h4>Sucursales Disponibles </h4>
+                    <p>Seleccioná la que te quede más cómoda</p>
+            
+                    <div class="card-body mx-0 px-0 ">  
+                        {% for sucursal in sucursales %}
+                       
+                            <div class="card border-info mt-2">
+                                <div class="card-body py-2">
+                                    <div class="form-check">                   
+                                            <input class="form-check-input" type="radio" name="selected_sucursal" id="{{ sucursal.sucursal_id }}" value="{{ sucursal.sucursal_id }}">
+                                            <label class="form-check-label text-info" for="{{ sucursal.sucursal_id }}">
+                                                <strong>
+                                                {{ sucursal.sucursal_name }} - {{ sucursal.sucursal_address }}
+                                                </strong>
+                                                {{sucursal.sucursal_observaciones}}
+                                            </label>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        
+                        {% endfor %}
+                        <br>
+                        <button type="submit" class="btn btn-primary">Seleccionar Sucursal</button>   
+              
+                    </div>
+                </form>
+            </div>
+          </div>
+
+          <div class="col"></div>
+
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

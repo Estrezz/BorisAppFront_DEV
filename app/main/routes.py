@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from app import db
 from app.models import Customer, Order, Producto, Company
-from app.main.interface import buscar_pedido, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota, loguear_error, buscar_producto_nombre
+from app.main.interface import buscar_pedido, buscar_alternativas, buscar_empresa, crea_envio, cotiza_envio, cargar_pedido, buscar_pedido_conNro, describir_variante, busca_tracking, validar_cobertura, crear_store, actualiza_json_categoria, actualiza_json, buscar_producto, agregar_nota, loguear_error, buscar_producto_nombre, buscar_sucursales
 from app.main import bp
 from flask import request, session
 from datetime import datetime,timedelta
@@ -314,6 +314,7 @@ def direccion():
 def confirma_solicitud():
     if not session.get('cliente'):
         return render_template('sesion_expirada.html')
+
     metodo_envio = request.args.get('metodo_envio')
     user = Customer.query.get(session['cliente'])
     company= user.pertenece
@@ -331,6 +332,32 @@ def confirma_solicitud():
         flash("Por favor completa tus datos de contacto")
         return render_template('pedido_confirmar.html', title='Confirmar', empresa=company, NombreStore=company.company_name, user=user, order = order, productos = productos, correo=company.correo_usado, area_valida=area_valida, textos=session['textos'], envio=session['envio'])
 
+    #### Sucursales ########
+    if metodo['metodo_envio_id'] == "Locales": 
+        sucursales = buscar_sucursales(session['store'])
+        ##sucursal = http://127.0.0.1:5000/api/sucursales/listar?tienda=1447373&metodo_envio=Locales
+
+        sucursal = request.form.get('selected_sucursal')
+        if not sucursal:
+            #sucursales = get_sucursales()
+            sucursales_tmp = [ {"sucursal_id": "1", 
+                                "sucursal_name": "Local UNO", 
+                                "sucursal_direccion": "calle uno 1122", 
+                                "sucursal_localidad":"localuno", 
+                                "sucursal_provincia": "prov uno", 
+                                "sucursal_observaciones": "Mar y Jue de 10 a 20"
+                            }, 
+                            {"sucursal_id": "2",
+                            "sucursal_name": "Local DOS", 
+                            "sucursal_direccion": "calle dos 2233", 
+                            "sucursal_localidad": "localdos",
+                            "sucursal_provincia": "prov dos", 
+                            "sucursal_observaciones": "lu, Mie y Vie de 10 a 20"}
+                        ]
+            return render_template('sucursales.html', title='Confirmar', empresa=company, NombreStore=company.company_name, sucursales=sucursales)
+        else: 
+            order.metodo_envio_sucursal = sucursal
+        
     envio = crea_envio(company, user, order, productos, metodo)
     ##### Agrega nota en Orden Original
     agregar_nota(company, order)

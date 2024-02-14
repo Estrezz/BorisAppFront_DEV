@@ -21,14 +21,19 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
     try:
         response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
 
+        #print(response.status_code, response.reason)
         
         if response.status_code == 504:
                 return "TIMEOUT"
 
         # If NOT FOUND trata de resolver el problema del 5xx
         if response.status_code == 404 or response.status_code == 500:
+                #print('----------500-----------------')
                 reason = response.reason
-                if "Obtained" in response.json().get("description", ""):
+                description = response.json().get("description")
+
+                if (description and "Obtained" in description) or response.status_code == 500:
+                # if "Obtained" in response.json().get("description", ""):
                     # Calculate today's date and 30 days ago
                     today = datetime.now().date()
                     thirty_days_ago = today - timedelta(days=30)
@@ -40,6 +45,8 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
                     # Update the URL with the new created_at_min parameter
                     url = f"https://api.tiendanube.com/v1/{empresa.store_id}/orders?q={ordermail}&fields=id,number&per_page=50&created_at_min={thirty_days_ago_str}"
                     response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+                    #print('response2--------------')
+                    #print(response.status_code)
                     if response.status_code != 200:
                         return"REINTENTAR"
                 else :
@@ -68,7 +75,6 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
 ############################## carga_pedido ##################################################
 def cargar_pedido_tiendanube(unaEmpresa, pedido ):
 
-  print("entro en cargar_pedido")
   # CHeck error
 #   if isinstance(pedido, dict):
 #         # Check if 'customer' is a dictionary within pedido

@@ -93,15 +93,10 @@
             {% if e['area_valida'] == True %}
             <div class="card border-info mt-3">
               <div class="card-body">       
-                <!--
-                <a href="{{ url_for('main.confirma_solicitud', metodo_envio=e['metodo_envio_id'], area_valida=area_valida, precio_envio=precio_envio) }}" >
-                -->
                 <a href="{{ url_for('main.confirma_solicitud', metodo_envio=e['metodo_envio_id'], area_valida=area_valida) }}" id="boton+{{e['metodo_envio_id']}}" name="boton+{{e['metodo_envio_id']}}" class="one-click"> 
                   <button class="btn btn-info btn-lg"> <span class="{{e['icon']}}"></span> <br> </button>
                   <p class="text-info" >
-                    <!--  if area_valida == True  Ver como detectar si el area es valida
-                           if precio_envio != 'Failed' y si tiene cotizacion
-                    --> 
+                   
                     <strong>  {{e['boton_titulo'] }} </strong> <br>
                     {{e['boton_descripcion'] | safe }}
                     {% if e['precio_envio'] != 0 %}
