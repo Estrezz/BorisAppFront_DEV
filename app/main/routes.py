@@ -335,30 +335,19 @@ def confirma_solicitud():
     #### Sucursales ########
     if metodo['metodo_envio_id'] == "Locales": 
         sucursales = buscar_sucursales(session['store'])
-        ##sucursal = http://127.0.0.1:5000/api/sucursales/listar?tienda=1447373&metodo_envio=Locales
-
+        
         sucursal = request.form.get('selected_sucursal')
+
         if not sucursal:
-            #sucursales = get_sucursales()
-            sucursales_tmp = [ {"sucursal_id": "1", 
-                                "sucursal_name": "Local UNO", 
-                                "sucursal_direccion": "calle uno 1122", 
-                                "sucursal_localidad":"localuno", 
-                                "sucursal_provincia": "prov uno", 
-                                "sucursal_observaciones": "Mar y Jue de 10 a 20"
-                            }, 
-                            {"sucursal_id": "2",
-                            "sucursal_name": "Local DOS", 
-                            "sucursal_direccion": "calle dos 2233", 
-                            "sucursal_localidad": "localdos",
-                            "sucursal_provincia": "prov dos", 
-                            "sucursal_observaciones": "lu, Mie y Vie de 10 a 20"}
-                        ]
             return render_template('sucursales.html', title='Confirmar', empresa=company, NombreStore=company.company_name, sucursales=sucursales)
         else: 
+            selected_sucursal = next((s for s in sucursales if s['sucursal_id'] == sucursal), None)
+
             order.metodo_envio_sucursal = sucursal
+            order.metodo_envio_sucursal_name = selected_sucursal['sucursal_name']
         
     envio = crea_envio(company, user, order, productos, metodo)
+
     ##### Agrega nota en Orden Original
     agregar_nota(company, order)
 

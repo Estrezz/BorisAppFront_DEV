@@ -36,7 +36,7 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
                 # if "Obtained" in response.json().get("description", ""):
                     # Calculate today's date and 30 days ago
                     today = datetime.now().date()
-                    thirty_days_ago = today - timedelta(days=30)
+                    thirty_days_ago = today - timedelta(days=45)
                     
                     # Format the dates as strings
                     today_str = today.isoformat()
@@ -44,6 +44,7 @@ def buscar_pedido_tiendanube(empresa, ordermail, ordernum):
                     
                     # Update the URL with the new created_at_min parameter
                     url = f"https://api.tiendanube.com/v1/{empresa.store_id}/orders?q={ordermail}&fields=id,number&per_page=50&created_at_min={thirty_days_ago_str}"
+                    print (url)
                     response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
                     #print('response2--------------')
                     #print(response.status_code)

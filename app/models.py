@@ -81,6 +81,7 @@ class Order(db.Model):
     gastos_promocion = db.Column(db.Float)
     owner_note = db.Column(db.String(500))
     metodo_envio_sucursal = db.Column(db.String(200))
+    metodo_envio_sucursal_name = db.Column(db.String(400))
     salientes = db.Column(db.String(10)) # Indica si la orden tiene articulos salientes
     customer_id = db.Column(db.String(150), db.ForeignKey('customer.customer_uid', ondelete='CASCADE'))
     products = db.relationship('Producto', backref='articulos', lazy='dynamic')

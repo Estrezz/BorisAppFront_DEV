@@ -421,7 +421,8 @@ def almacena_envio(company, user, order, productos, solicitud, metodo_envio):
     "correo_precio": solicitud['price'],
     "correo_precio_formateado": solicitud['priceFormatted'],
     "correo_moneda":solicitud['currency'],
-    "metodo_envio_sucursal": order.metodo_envio_sucursal
+    "metodo_envio_sucursal": order.metodo_envio_sucursal,
+    "metodo_envio_sucursal_name": order.metodo_envio_sucursal_name
   },
   "cliente": {
     "id": user.id,

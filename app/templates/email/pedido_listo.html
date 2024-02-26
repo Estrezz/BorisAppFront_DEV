@@ -65,6 +65,25 @@
     
 {% endif %}
 
+<!-- ---------------------------  Envío a Locales  ------------------------------------------ -->
+{% if metodo_envio == 'Locales' %}
+    <p style="text-align:left">
+        En breve recibiras por mail las instrucciones para la gestión de tus productos: <br>
+    </p>
+    <p style="text-align:center">
+                {% for i in productos %}
+                    {{i.quantity}} - {{i.name}} <br>
+                {% endfor %}
+    </p>
+
+    El local que has seleccionado es: {{order.metodo_envio_sucursal_name}}
+    <br>
+    <p style="text-align:left">
+        {{textos['confirma_locales_note'] | safe}} <br>
+    </p>
+    
+{% endif %}
+
 <!-- ---------------------------  Envío CORREO ------------------------------------------ -->
 {% if metodo_envio == 'Moova' %}
 <!-- ---------------------------  Envío CORREO - a cargo del CONSUMIDOR ----------------- -->   
