@@ -54,18 +54,4 @@
     max-width: 10%;
 }
 
-/* Card for "Locales" */
-
-.carditem {
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    background-color: #ffffff;
-}
-
-.carditem-body {
-    padding: 0;
-}
-
+  
